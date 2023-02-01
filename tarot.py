@@ -118,6 +118,11 @@ class MajorArchana(TarotCard):
     TheWorld = 21
 
 
+class MinorArchana(TarotCard):
+    """An enumeration representing the 56 cards of the minor archana."""
+    pass
+
+
 def generate_minor_archana():
     """generator for the minor archana: 4 suits x 14 card values."""
     cards = {}
@@ -128,7 +133,6 @@ def generate_minor_archana():
 
 
 MinorArchana = TarotCard('MinorArchana', generate_minor_archana())
-    """An enumeration representing the 56 cards of the minor archana."""
 
 
 class TarotDeck:
