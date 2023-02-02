@@ -4,8 +4,14 @@ An openai-enhanced tarot card bot for fun.
 ![dall-e oil painting of a fortune-telling robot reading a tarot card spread while sitting at a round table with a glowing crystal ball in a dark room](docs/tarobot%20portrait.png)
 
 ## setup
-First ensure that you have created an openai API key, and make it available in the environment variable
-`OPENAI_KEY`, you can use a dot-env file (`.env`) to do so:
+First make sure the required dependencies have been installed:
+```sh
+pip install -r requirements.txt
+```
+
+Once the dependencies have been installed, ensure that you have created an openai API key. Make the
+api key available in the environment variable `OPENAI_KEY`, you can use a dot-env file (`.env`) to
+do so:
 ```env
 OPENAI_KEY=< your api key goes here >
 ```
