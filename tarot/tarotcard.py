@@ -40,7 +40,7 @@ def generate_tarot_cards():
     # minor archana
     for s in Suit:
         for cv in CardValue:
-            cards["%sOf%s" % (cv, s)] = 22 + 14 * (s.value - 1) + cv.value - 1
+            cards["%sOf%s" % (cv, s)] = 21 + 14 * (s.value - 1) + cv.value
     return cards
 
 

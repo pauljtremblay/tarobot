@@ -50,10 +50,8 @@ class TestTarot(unittest.TestCase):
         self.assertNotIn(drawn_card, deck.cards)
 
 
-    # TODO deprecate MinorArchana, MajorArchana enums in favor of single TarotCard
-    # (use generate() + Enum('TarotCard', generate())
-    def test_major_archana_card_ordinal(self):
-        # When:  an arbitrary proper name for a major archana tarot card is requested
+    def test_major_archana_card_by_ordinal(self):
+        # When:  an arbitrary major archana card is specified by its ordinal value
         major_card = TarotCard(1)
 
         # Then:  the expected card is retrieved
@@ -67,8 +65,8 @@ class TestTarot(unittest.TestCase):
         self.assertEqual(str(major_card), "The Magician")
 
 
-    def test_minor_archana_card_ordinal(self):
-        # When:  an arbitrary proper name for a minor archana tarot card is requested
+    def test_minor_archana_card_by_ordinal(self):
+        # When:  an arbitrary minor archana card is specified by its ordinal value
         minor_card = TarotCard(55)
 
         # Then:  the expected card is retrieved
@@ -80,6 +78,19 @@ class TestTarot(unittest.TestCase):
         self.assertEqual(minor_card.card_value(), CardValue.Six)
         # And:    the string representation is human-readable
         self.assertEqual(str(minor_card), "Six of Swords")
+
+
+    def test_card_by_name(self):
+        # When:  an arbitrary card is specified by its proper name
+        card = TarotCard.TheMagician
+
+        # Then:  the expected card properties exist
+        self.assertEqual(card.value, 1)
+        self.assertEqual(card.archana(), Archana.Major)
+        self.assertEqual(card.suit(), None)
+        self.assertEqual(card.card_value(), None)
+        # And:    the string representation is human-readable
+        self.assertEqual(str(card), "The Magician")
 
 
 if __name__ == '__main__':
