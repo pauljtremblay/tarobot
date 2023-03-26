@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
-import unittest
 from tarot import *
+import unittest
 
 CARDS_IN_DECK = 78
 

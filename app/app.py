@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 
-from argparse import ArgumentParser
+from argparse import ArgumentParser, ArgumentError
 from dotenv import load_dotenv
 import openai
 import os
+import sys
 from tarot import TarotDeck
 
 APP_NAME = "Tarobot"
@@ -26,15 +27,20 @@ class App:
         except KeyError:
             raise MissingEnvVar("%s requires an api key set in env var %s" % (APP_NAME, API_KEY_ENV_VAR))
         self.__model = "text-davinci-003"
-        self.__subject = None
-        self.__teller = None
+        self.parser = None
+        self.subject = None
+        self.teller = None
         self.deck = None
         self.card_count = None
         self.spread = None
 
     def main(self):
         """The main method: draws 3 tarot cards at random and has openai generate a tarot card reading."""
-        self.parse_command_line_args()
+        try:
+            self.parse_command_line_args(sys.argv[1:])
+        except ArgumentError as arg_error:
+            # exit the app with an error code and a formatted message
+            self.parser.error(arg_error)
         self.draw_tarot_spread()
         self.interpret_tarot_spread()
 
@@ -46,43 +52,44 @@ class App:
     def interpret_tarot_spread(self):
         """Generates a tarot card reading for the given spread and prints to standard output."""
         print("Generating a tarot card reading for {} for the following spread:\n\t{}\n".format(
-            self.__subject, str(self.spread).strip("[]")))
-        tarot_reading_prompt = self.__generate_tarot_reading_prompt()
+            self.subject, str(self.spread).strip("[]")))
+        tarot_reading_prompt = self.generate_tarot_reading_prompt()
         _, response = self.__ask_openai_to_generate_response(tarot_reading_prompt)
         print("Response:\n{}".format(response))
 
-    def parse_command_line_args(self):
+    def parse_command_line_args(self, command_line_args):
         """Parses command line arguments into instructions for the application."""
-        parser = ArgumentParser(prog='tarobot',
-                                description='Tarot deck cartomancy application')
-        parser.add_argument('--card_count',
-                            help='number of tarot cards to draw in the spread [1-5]\n\tdefault: 3 card spread',
-                            type=int,
-                            choices=range(1, 5 + 1),
-                            default=3)
-        parser.add_argument('--subject',
-                            help='the name of the person receiving the tarot card reading\n\tdefault: "the seeker"',
-                            type=str,
-                            default='the seeker')
-        parser.add_argument('--teller',
-                            help='the "person" conducting the tarot card reading\n\t(optional)',
-                            type=str)
-        args = parser.parse_args()
+        self.parser = ArgumentParser(prog='tarobot',
+                                     description='Tarot deck cartomancy application',
+                                     exit_on_error=False)
+        self.parser.add_argument('--card_count',
+                                 help='number of tarot cards to draw in the spread [1-5]\n\tdefault: 3 card spread',
+                                 type=int,
+                                 choices=range(1, 5 + 1),
+                                 default=3)
+        self.parser.add_argument('--subject',
+                                 help='the name of the person receiving the tarot card reading\n\tdefault: "the seeker"',
+                                 type=str,
+                                 default='the seeker')
+        self.parser.add_argument('--teller',
+                                 help='the "person" conducting the tarot card reading\n\t(optional)',
+                                 type=str)
+        args = self.parser.parse_args(command_line_args)
         self.card_count = args.card_count
-        self.__subject = args.subject
+        self.subject = args.subject
         if args.teller is not None:
-            self.__teller = args.teller
+            self.teller = args.teller
 
-    def __generate_tarot_reading_prompt(self):
+    def generate_tarot_reading_prompt(self):
         """Generates the prompt to openai for how to generate a tarot card reading for the given spread."""
-        prompt = "Tarot card reading for {} with the cards ".format(self.__subject)
+        prompt = "Tarot card reading for {} with the cards ".format(self.subject)
         if len(self.spread) < 2:
             prompt += self.spread[0]
         else:
             [*head, tail] = self.spread
             prompt += ", ".join(str(card) for card in head) + ", and " + str(tail)
-        if self.__teller is not None:
-            prompt += " in the style of " + self.__teller
+        if self.teller is not None:
+            prompt += " in the style of " + self.teller
         return prompt
 
     def __ask_openai_to_generate_response(self, prompt):

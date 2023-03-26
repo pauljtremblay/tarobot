@@ -6,7 +6,7 @@ An openai-enhanced tarot card bot for fun.
 ## setup
 First make sure the required dependencies have been installed:
 ```sh
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 ```
 
 Once the dependencies have been installed, ensure that you have created an openai API key. Make the
