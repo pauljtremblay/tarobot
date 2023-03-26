@@ -7,8 +7,7 @@ from .cardvalue import CardValue
 
 
 class TarotCard(TarotTrait, Enum):
-    """An enumeration representing the 78 cards of a standard tarot deck."""
-    pass
+    ...
 
 
 def generate_tarot_cards():
@@ -46,3 +45,4 @@ def generate_tarot_cards():
 
 
 TarotCard = TarotTrait('TarotCard', generate_tarot_cards())
+"""An enumeration representing the 78 cards of a standard tarot deck."""
