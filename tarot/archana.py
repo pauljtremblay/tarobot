@@ -2,6 +2,7 @@
 
 from enum import Enum
 
+
 class Archana(Enum):
     """An enumeration representing the different archana."""
 

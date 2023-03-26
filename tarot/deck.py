@@ -3,6 +3,7 @@
 import random
 from .tarotcard import TarotCard
 
+
 class TarotDeck:
     """Model that represents a shuffled tarot card deck."""
 

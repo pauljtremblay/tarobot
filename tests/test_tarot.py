@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
 
-import sys
 import unittest
-
-sys.path.append("..")
-from tarot import Archana, CardValue, Suit, TarotCard, TarotDeck
+from tarot import *
 
 CARDS_IN_DECK = 78
+
 
 class TestTarot(unittest.TestCase):
 
@@ -24,7 +22,6 @@ class TestTarot(unittest.TestCase):
                     break
             self.assertTrue(found, msg="card with ordinal value %i is missing from deck" % ordinal)
 
-
     def test_deck_is_shuffled(self):
         # When:  a tarot deck is instantiated
         deck = TarotDeck()
@@ -37,7 +34,6 @@ class TestTarot(unittest.TestCase):
                 break
         self.assertFalse(ordered, msg="tarot deck is in perfect order")
 
-
     def test_dealt_card_is_removed(self):
         # Given: a shuffled tarot deck
         deck = TarotDeck()
@@ -48,7 +44,6 @@ class TestTarot(unittest.TestCase):
         # Then:  the drawn card is no longer present in the deck
         self.assertEqual(len(deck.cards), CARDS_IN_DECK - 1)
         self.assertNotIn(drawn_card, deck.cards)
-
 
     def test_major_archana_card_by_ordinal(self):
         # When:  an arbitrary major archana card is specified by its ordinal value
@@ -64,7 +59,6 @@ class TestTarot(unittest.TestCase):
         # And:    the string representation is human-readable
         self.assertEqual(str(major_card), "The Magician")
 
-
     def test_minor_archana_card_by_ordinal(self):
         # When:  an arbitrary minor archana card is specified by its ordinal value
         minor_card = TarotCard(55)
@@ -78,7 +72,6 @@ class TestTarot(unittest.TestCase):
         self.assertEqual(minor_card.card_value(), CardValue.Six)
         # And:    the string representation is human-readable
         self.assertEqual(str(minor_card), "Six of Swords")
-
 
     def test_card_by_name(self):
         # When:  an arbitrary card is specified by its proper name

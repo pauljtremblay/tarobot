@@ -5,6 +5,7 @@ from .tarottrait import TarotTrait
 from .suit import Suit
 from .cardvalue import CardValue
 
+
 class TarotCard(TarotTrait, Enum):
     """An enumeration representing the 78 cards of a standard tarot deck."""
     pass

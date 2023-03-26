@@ -3,7 +3,6 @@
 from dotenv import load_dotenv
 import openai
 import os
-import random
 from tarot import TarotDeck
 
 """This module provides a script that draws N cards from a shuffled tarot card deck and returns an
@@ -26,7 +25,7 @@ def main():
     deck = TarotDeck()
     tarot_spread = deck.draw(3)
     tarot_reading_prompt = generate_tarot_reading_prompt(tarot_spread)
-    completion = ask_openai_to_generate_response(tarot_reading_prompt)
+    ask_openai_to_generate_response(tarot_reading_prompt)
 
 
 def initialize_app():
@@ -35,18 +34,18 @@ def initialize_app():
     try:
         openai.api_key = os.environ[API_KEY_ENV_VAR]
     except KeyError:
-        raise MissingEnvVar("%s requires an api key set in env var %s" %(APP_NAME, API_KEY_ENV_VAR))
+        raise MissingEnvVar("%s requires an api key set in env var %s" % (APP_NAME, API_KEY_ENV_VAR))
 
 
 def generate_tarot_reading_prompt(spread, teller="an optimist"):
-    """Generate's the prompt to openai for how to generate a tarot card reading for the given spread."""
+    """Generates the prompt to openai for how to generate a tarot card reading for the given spread."""
     prompt = "Tarot card reading for the seeker with the cards "
     if len(spread) < 2:
         prompt += spread[0]
     else:
         [*head, tail] = spread
         prompt += ", ".join(str(card) for card in head) + ", and " + str(tail)
-    prompt += " in the style of " + teller;
+    prompt += " in the style of " + teller
     return prompt
 
 

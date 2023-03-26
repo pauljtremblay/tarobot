@@ -2,6 +2,7 @@
 
 from enum import Enum
 
+
 class CardValue(Enum):
     """An enumeration representing the different card values of a minor archana suit."""
 

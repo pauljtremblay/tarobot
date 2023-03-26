@@ -8,7 +8,7 @@ archana consists of 4 suites (Wands, Cups, Swords, and Pentacles). Each suit of 
 has 14 cards, Ace through Ten, and 4 face cards: Page, Knight, Queen, and King.
 """
 
-__all__ = ['archana', 'suit', 'cardvalue', 'tarotcard', 'deck']
+__all__ = ['Archana', 'Suit', 'CardValue', 'TarotCard', 'TarotDeck']
 
 from enum import Enum
 

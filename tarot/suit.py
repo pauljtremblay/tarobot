@@ -2,6 +2,7 @@
 
 from enum import Enum
 
+
 class Suit(Enum):
     """An enumeration representing the different suits of the minor archana."""
 

@@ -7,6 +7,7 @@ from .archana import Archana
 from .cardvalue import CardValue
 from .suit import Suit
 
+
 class TarotTrait(Enum):
     """A trait for all tarot cards, including both major and minor archana."""
 
