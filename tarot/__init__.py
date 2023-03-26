@@ -10,8 +10,6 @@ has 14 cards, Ace through Ten, and 4 face cards: Page, Knight, Queen, and King.
 
 __all__ = ['Archana', 'Suit', 'CardValue', 'TarotCard', 'TarotDeck']
 
-from enum import Enum
-
 from tarot.archana import Archana
 from tarot.suit import Suit
 from tarot.cardvalue import CardValue
