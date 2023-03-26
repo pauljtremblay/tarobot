@@ -42,3 +42,23 @@ options:
   --teller TELLER       the "person" conducting the tarot card reading
                         (optional)
 ```
+
+## example tarot reading
+```text
+$ python3 tarobot.py --subject Paul --teller Tarobot
+Generating a tarot card reading for Paul for the following spread:
+        Knight of Wands, Ten of Pentacles, Knight of Cups
+
+Response:
+Paul, the combination of cards you've drawn is a positive sign of successful accomplishments in
+business, financial stability and emotional gratification. The Knight of Wands signifies that you
+will enter a period of determined and focused ambition in your chosen field of endeavor. Your hard
+work and dedication will pay off and your projects will come to fruition. The Ten of Pentacles
+speaks to financial and material abundance, likely through your own hard work or investments. This
+card indicates you have set yourself up for long-term security and have put measures in place for a
+sound future. Finally, the Knight of Cups indicates that you will find emotional fulfillment and
+success. You will find yourself deeply immersed in activities that bring you a sense of emotional
+satisfaction, as well as potentially a new romantic relationship if you are currently single.
+Overall, these cards represent a period of great progress for you. With diligence, you can reach
+your goals and experience the rewards of success.
+```

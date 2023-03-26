@@ -45,7 +45,7 @@ class App:
 
     def interpret_tarot_spread(self):
         """Generates a tarot card reading for the given spread and prints to standard output."""
-        print("Generating a tarot card reading for {} for the following spread: {}\n".format(
+        print("Generating a tarot card reading for {} for the following spread:\n\t{}\n".format(
             self.__subject, str(self.spread).strip("[]")))
         tarot_reading_prompt = self.__generate_tarot_reading_prompt()
         _, response = self.__ask_openai_to_generate_response(tarot_reading_prompt)
