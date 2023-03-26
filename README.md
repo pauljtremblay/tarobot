@@ -13,7 +13,7 @@ Once the dependencies have been installed, ensure that you have created an opena
 api key available in the environment variable `OPENAI_KEY`, you can use a dot-env file (`.env`) to
 do so:
 ```env
-OPENAI_KEY=< your api key goes here >
+OPENAI_API_KEY=< put your openaai api key here >
 ```
 
 If you do not yet have an openai API key, you can create and manage your API keys here:

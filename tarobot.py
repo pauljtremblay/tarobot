@@ -9,7 +9,7 @@ from tarot import TarotDeck
 interpretation of the generated tarot card spread."""
 
 APP_NAME = "Tarobot"
-API_KEY_ENV_VAR = "OPENAI_KEY"
+API_KEY_ENV_VAR = "OPENAI_API_KEY"
 
 
 class MissingEnvVar(Exception):
