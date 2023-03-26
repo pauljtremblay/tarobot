@@ -56,21 +56,17 @@ class App:
         parser = ArgumentParser(prog='tarobot',
                                 description='Tarot deck cartomancy application')
         parser.add_argument('--card_count',
-                            help='number of tarot cards to draw in the spread [1-5]',
+                            help='number of tarot cards to draw in the spread [1-5]\n\tdefault: 3 card spread',
                             type=int,
                             choices=range(1, 5 + 1),
                             default=3)
         parser.add_argument('--subject',
-                            help='the name of the person receiving the tarot card reading',
+                            help='the name of the person receiving the tarot card reading\n\tdefault: "the seeker"',
                             type=str,
                             default='the seeker')
         parser.add_argument('--teller',
-                            help='the "person" conducting the tarot card reading',
-                            type=str,
-                            choices=[
-                                'an optimist',
-                                'a cynical old man'
-                            ])
+                            help='the "person" conducting the tarot card reading\n\t(optional)',
+                            type=str)
         args = parser.parse_args()
         self.card_count = args.card_count
         self.__subject = args.subject

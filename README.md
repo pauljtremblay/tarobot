@@ -24,5 +24,21 @@ https://platform.openai.com/account/api-keys
 Then you can simply call the tarobot script and have it draw 3 tarot cards at random, after which
 it will generate a tarot card reading for your spread.
 ```sh
-python tarobot.py
+python3 tarobot.py --help
+```
+```text
+usage: tarobot [-h] [--card_count {1,2,3,4,5}] [--subject SUBJECT]
+               [--teller TELLER]
+
+Tarot deck cartomancy application
+
+options:
+  -h, --help            show this help message and exit
+  --card_count {1,2,3,4,5}
+                        number of tarot cards to draw in the spread [1-5]
+                        default: 3 card spread
+  --subject SUBJECT     the name of the person receiving the tarot card
+                        reading default: "the seeker"
+  --teller TELLER       the "person" conducting the tarot card reading
+                        (optional)
 ```
