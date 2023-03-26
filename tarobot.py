@@ -52,7 +52,7 @@ def generate_tarot_reading_prompt(spread, teller="an optimist"):
 def ask_openai_to_generate_response(prompt):
     """Displays the prompt to and associated response from openai."""
     print("\nPrompt:\n{}".format(prompt))
-    completion = openai.Completion.create(engine='text-davinci-003', prompt=prompt, max_tokens=2000)
+    completion = openai.Completion.create(model='text-davinci-003', prompt=prompt, max_tokens=2000)
     response = "\n".join(list(choice.text for choice in completion.choices)).strip()
     print("\nResponse:\n{}".format(response))
     return completion
