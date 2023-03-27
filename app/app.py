@@ -59,21 +59,25 @@ class App:
 
     def parse_command_line_args(self, command_line_args):
         """Parses command line arguments into instructions for the application."""
-        self.parser = ArgumentParser(prog='tarobot',
-                                     description='Tarot deck cartomancy application',
-                                     exit_on_error=False)
-        self.parser.add_argument('--card_count',
-                                 help='number of tarot cards to draw in the spread [1-5]\n\tdefault: 3 card spread',
-                                 type=int,
-                                 choices=range(1, 5 + 1),
-                                 default=3)
-        self.parser.add_argument('--subject',
-                                 help='the name of the person receiving the tarot card reading\n\tdefault: "the seeker"',
-                                 type=str,
-                                 default='the seeker')
-        self.parser.add_argument('--teller',
-                                 help='the "person" conducting the tarot card reading\n\t(optional)',
-                                 type=str)
+        self.parser = ArgumentParser(
+            prog='tarobot',
+            description='Tarot deck cartomancy application',
+            exit_on_error=False)
+        self.parser.add_argument(
+            '--card_count',
+            help='number of tarot cards to draw in the spread [1-5]\n\tdefault: 3 card spread',
+            type=int,
+            choices=range(1, 5 + 1),
+            default=3)
+        self.parser.add_argument(
+            '--subject',
+            help='the name of the person receiving the tarot card reading\n\tdefault: "the seeker"',
+            type=str,
+            default='the seeker')
+        self.parser.add_argument(
+            '--teller',
+            help='the "person" conducting the tarot card reading\n\t(optional)',
+            type=str)
         args = self.parser.parse_args(command_line_args)
         self.card_count = args.card_count
         self.subject = args.subject
