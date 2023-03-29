@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-
 from argparse import ArgumentParser, ArgumentError
 from dotenv import load_dotenv
 import openai
@@ -30,6 +29,7 @@ class App:
         self.parser = None
         self.subject = None
         self.teller = None
+        self.show_prompt = False
         self.deck = None
         self.card_count = None
         self.spread = None
@@ -54,6 +54,8 @@ class App:
         print("Generating a tarot card reading for {} for the following spread:\n\t{}\n".format(
             self.subject, str(self.spread).strip("[]")))
         tarot_reading_prompt = self.generate_tarot_reading_prompt()
+        if self.show_prompt:
+            print("Prompt:\n{}\n".format(tarot_reading_prompt))
         _, response = self.__ask_openai_to_generate_response(tarot_reading_prompt)
         print("Response:\n{}".format(response))
 
@@ -78,11 +80,16 @@ class App:
             '--teller',
             help='the "person" conducting the tarot card reading\n\t(optional)',
             type=str)
+        self.parser.add_argument(
+            '--show-prompt',
+            help='displays the generated prompt ahead of the response',
+            action='store_true')
         args = self.parser.parse_args(command_line_args)
         self.card_count = args.card_count
         self.subject = args.subject
         if args.teller is not None:
             self.teller = args.teller
+        self.show_prompt = args.show_prompt
 
     def generate_tarot_reading_prompt(self):
         """Generates the prompt to openai for how to generate a tarot card reading for the given spread."""

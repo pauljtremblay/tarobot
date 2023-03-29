@@ -1,13 +1,11 @@
-# tarobot
+# Tarobot
 An openai-enhanced tarot card bot for fun.
 
 ![dall-e oil painting of a fortune-telling robot reading a tarot card spread while sitting at a round table with a glowing crystal ball in a dark room](docs/tarobot%20portrait.png)
 
-## setup
+## Setup
 First make sure the required dependencies have been installed:
-```sh
-pip3 install -r requirements.txt
-```
+`pip3 install -r requirements.txt`
 
 Once the dependencies have been installed, ensure that you have created an openai API key. Make the
 api key available in the environment variable `OPENAI_KEY`, you can use a dot-env file (`.env`) to
@@ -20,15 +18,13 @@ If you do not yet have an openai API key, you can create and manage your API key
 https://platform.openai.com/account/api-keys
 
 
-## usage
+## Usage
 Then you can simply call the tarobot script and have it draw 3 tarot cards at random, after which
 it will generate a tarot card reading for your spread.
-```sh
-python3 tarobot.py --help
-```
+`python3 tarobot.py --help`
 ```text
 usage: tarobot [-h] [--card_count {1,2,3,4,5}] [--subject SUBJECT]
-               [--teller TELLER]
+               [--teller TELLER] [--show-prompt]
 
 Tarot deck cartomancy application
 
@@ -41,11 +37,18 @@ options:
                         reading default: "the seeker"
   --teller TELLER       the "person" conducting the tarot card reading
                         (optional)
+  --show-prompt         displays the generated prompt ahead of the response
+
 ```
 
-## example tarot reading
+<br />
+<hr />
+
+## Sample tarot card readings
+
+### Basic tarot card readings
+`python3 tarobot.py --subject Paul --teller Tarobot`
 ```text
-$ python3 tarobot.py --subject Paul --teller Tarobot
 Generating a tarot card reading for Paul for the following spread:
         Knight of Wands, Ten of Pentacles, Knight of Cups
 
@@ -61,4 +64,72 @@ success. You will find yourself deeply immersed in activities that bring you a s
 satisfaction, as well as potentially a new romantic relationship if you are currently single.
 Overall, these cards represent a period of great progress for you. With diligence, you can reach
 your goals and experience the rewards of success.
+```
+
+### Try tarobot's hand at songwriting
+`python3 tarobot.py --teller "Iron Maiden lyrics" --show-prompt`
+```text
+Generating a tarot card reading for the seeker for the following spread:
+	Seven of Cups, Queen of Pentacles, The Sun
+
+Prompt:
+Tarot card reading for the seeker with the cards Seven of Cups,
+Queen of Pentacles, and The Sun in the style of Iron Maiden lyrics
+
+Response:
+Verse 1:
+The Seven of Cups brings confusion,
+A crossroads up ahead.
+But the Queen of Pentacles knows the answer can be found,
+From The Sun enlightening her instead
+
+Chorus:
+A new path, a new day,
+A wiser choice will lead the way.
+An inner journey, a brighter light,
+Answers come in second sight.
+
+Verse 2:
+The Queen of Pentacles stands still,
+Confident in her decision.
+Ignoring the distraction of the Seven of Cups,
+In the Sun lies her true vision.
+
+Chorus:
+A new path, a new day,
+A wiser choice will lead the way.
+An inner journey, a brighter light,
+Answers come in second sight.
+```
+
+### Inspire tarobot to write some poetry:
+`python3 tarobot.py --teller "a Robert Frost poem" --show-prompt`
+```text
+Generating a tarot card reading for the seeker for the following spread:
+Ace of Wands, The Tower, Seven of Cups
+
+Prompt:
+Tarot card reading for the seeker with the cards Ace of Wands,
+The Tower, and Seven of Cups in the style of a Robert Frost poem
+
+Response:
+A glimpse of the future through these cards three,
+A Tower filled with sudden calamity,
+An Ace of Wands in potential to see,
+A dream of good luck throughout, the Seven of Cups all we.
+
+So now what, the seeker asks,
+Amidst the chaos of Great Task?
+Look past the present’s stormy mask
+As what you seek lies in the path that wand did cast.
+
+An answer to the dilemna you seek,
+In a universe so frequently bleak,
+Will come from the surprises that this moment meek
+Despite other cards of ill-fame cast in its shadow deep.
+
+Your destiny to craft is in your hand,
+An Ace of Wands, set to expand
+To explore and understand,
+Defeating fate and triumphant stand.
 ```

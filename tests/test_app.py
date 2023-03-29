@@ -36,7 +36,12 @@ class TestApp(unittest.TestCase):
     def test_parse_command_line_args_happy_path(self):
         # Given: some mocked up command line arguments
         app = App()
-        args = ['--card_count', '4', '--subject', 'nobody', '--teller', 'a mystic']
+        args = [
+            '--card_count', '4',
+            '--subject', 'nobody',
+            '--teller', 'a mystic',
+            '--show-prompt'
+        ]
 
         # When:  the command line arguments are parsed
         app.parse_command_line_args(args)
@@ -45,6 +50,7 @@ class TestApp(unittest.TestCase):
         self.assertEqual(4, app.card_count)
         self.assertEqual('nobody', app.subject)
         self.assertEqual('a mystic', app.teller)
+        self.assertTrue(app.show_prompt)
 
     def test_parse_command_line_args_invalid_card_count(self):
         # Given: some mocked up command line arguments
