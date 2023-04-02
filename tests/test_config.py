@@ -8,7 +8,7 @@ class TestConfig(unittest.TestCase):
 
     def test_config_loader(self):
         # Given: a config file to load
-        config_path = 'test_tarobot.conf'
+        config_path = 'config/test_tarobot.conf'
 
         # When:  the config is loaded
         loader = ConfigLoader(config_path)

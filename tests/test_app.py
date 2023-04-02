@@ -8,7 +8,7 @@ import unittest
 class TestApp(unittest.TestCase):
 
     def setUp(self):
-        loader = ConfigLoader("test_tarobot.conf")
+        loader = ConfigLoader("config/test_tarobot.conf")
         self.config = loader.config
 
     def test_create_tarot_spread_by_deck(self):

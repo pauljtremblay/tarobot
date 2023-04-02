@@ -9,7 +9,7 @@ import unittest
 class TestCommandParser(unittest.TestCase):
 
     def setUp(self):
-        loader = ConfigLoader("test_tarobot.conf")
+        loader = ConfigLoader("config/test_tarobot.conf")
         self.config = loader.config
 
     def test_parse_command_line_args(self):
