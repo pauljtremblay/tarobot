@@ -1,15 +1,19 @@
 #!/usr/bin/env python3
 
-from app import App, CommandDto
+from app import App, CommandDto, ConfigLoader
 from tarot import TarotCard
 import unittest
 
 
 class TestApp(unittest.TestCase):
 
+    def setUp(self):
+        loader = ConfigLoader("test_tarobot.conf")
+        self.config = loader.config
+
     def test_create_tarot_spread_by_deck(self):
         # Given: a mocked up number of cards to draw
-        app = App()
+        app = App(self.config)
         command = CommandDto()
         command.card_count = 4
         app.command = command
@@ -22,7 +26,7 @@ class TestApp(unittest.TestCase):
 
     def test_create_tarot_spread_by_given_cards(self):
         # Given: a mocked up request with specified cards
-        app = App()
+        app = App(self.config)
         command = CommandDto()
         command.given_cards = [
             TarotCard.TheMagician,
@@ -44,7 +48,7 @@ class TestApp(unittest.TestCase):
 
     def test_generate_tarot_reading_prompt(self):
         # Given: a subject
-        app = App()
+        app = App(self.config)
         command = CommandDto()
         app.command = command
         command.subject = 'The Seeker'

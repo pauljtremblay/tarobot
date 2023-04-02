@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
+
 from argparse import ArgumentParser
 from dataclasses import dataclass
-from tarot import TarotCard, TarotDeck
 from typing import List
+from .config import Config
+from tarot import TarotCard, TarotDeck
 
 
 @dataclass
@@ -18,24 +20,27 @@ class CommandDto:
 class CommandParser:
     """This class processes input from command line arguments for later execution."""
 
-    def __init__(self):
+    def __init__(self, config: Config):
         self.parser: ArgumentParser
         self.command: CommandDto
         self.parsed_args = None
+        self.__config = config
         self.__build_parser()
 
     def __build_parser(self):
         """The command line argument parser config for the tarobot application."""
+        tarot = self.__config.tarot
         self.parser = ArgumentParser(
             prog='tarobot',
             description='Tarot deck cartomancy application',
             exit_on_error=False)
         self.parser.add_argument(
             '--card-count',
-            help='number of tarot cards to draw in the spread [1-5]\n\tdefault: 3 card spread',
+            help="number of tarot cards to draw in the spread [{}-{}]\n\tdefault: {} card spread".format(
+                tarot.min_cards, tarot.max_cards, tarot.default_cards),
             type=int,
-            choices=range(1, 5 + 1),
-            default=3)
+            choices=range(tarot.min_cards, tarot.max_cards + 1),
+            default=tarot.default_cards)
         self.parser.add_argument(
             '--subject',
             help='the name of the person receiving the tarot card reading\n\tdefault: "the seeker"',
@@ -55,7 +60,7 @@ class CommandParser:
             help='displays the generated prompt ahead of the response',
             action='store_true')
 
-    def parse_command_line_args(self, command_line_args):
+    def parse_command_line_args(self, command_line_args: List[str]):
         """Parses the given command line args into a command dto."""
         parsed_command = CommandDto()
         self.parsed_args = self.parser.parse_args(command_line_args)
@@ -66,8 +71,10 @@ class CommandParser:
             parsed_command.teller = self.parsed_args.teller
         if self.parsed_args.use_card_list is not None:
             parsed_command.given_cards = self.parse_given_tarot_cards()
-            if len(parsed_command.given_cards) not in range(1, 5 + 1):
-                raise ValueError("Only [1-5] cards allowed in the tarot card spread")
+            tarot = self.__config.tarot
+            if len(parsed_command.given_cards) not in range(tarot.min_cards, tarot.max_cards + 1):
+                raise ValueError("Only [{}-{}] cards allowed in the tarot card spread".format(
+                    tarot.min_cards, tarot.max_cards))
         return parsed_command
 
     def parse_given_tarot_cards(self):

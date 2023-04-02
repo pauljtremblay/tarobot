@@ -1,33 +1,25 @@
 #!/usr/bin/env python3
+
 from argparse import ArgumentError
-from dotenv import load_dotenv
 import openai
-import os
 import sys
 from tarot import TarotDeck
 from .command_parser import CommandParser
-
-APP_NAME = "Tarobot"
-API_KEY_ENV_VAR = "OPENAI_API_KEY"
-
-
-class MissingEnvVar(Exception):
-    """This exception is raised when a required environment variable has not been defined."""
-    pass
+from .config import Config, ConfigLoader
 
 
 class App:
     """This class processes input from command line arguments and executes the request."""
 
-    def __init__(self):
+    def __init__(self, config: Config = None):
+        if config is not None:
+            self.__config = config
+        else:
+            config_loader = ConfigLoader("config/tarobot.conf")
+            self.__config = config_loader.config
         # initialize openai module, or error out if api key is not defined
-        load_dotenv()
-        try:
-            openai.api_key = os.environ[API_KEY_ENV_VAR]
-        except KeyError:
-            raise MissingEnvVar("%s requires an api key set in env var %s" % (APP_NAME, API_KEY_ENV_VAR))
-        self.__model = "text-davinci-003"
-        self.parser = CommandParser()
+        openai.api_key = self.__config.openai.api_key
+        self.parser = CommandParser(self.__config)
         self.command = None
         self.spread = None
 
@@ -39,7 +31,7 @@ class App:
             # exits the app with an error code and a formatted message
             self.parser.print_parse_error_and_exit(arg_error)
         except ValueError as val_error:
-            # prints input error to standard error and exits with a non-zero exit code
+            # exits the app with an error code and context printed to standard error
             print("Fatal error processing command line args: {}".format(val_error), file=sys.stderr)
             sys.exit(1)
         self.create_tarot_spread()
@@ -77,6 +69,6 @@ class App:
 
     def __ask_openai_to_generate_response(self, prompt):
         """Displays the prompt to and associated response from openai."""
-        completion = openai.Completion.create(model=self.__model, prompt=prompt, max_tokens=2000)
+        completion = openai.Completion.create(model=self.__config.openai.generate_model, prompt=prompt, max_tokens=2000)
         response = "\n".join(list(choice.text for choice in completion.choices)).strip()
         return completion, response
