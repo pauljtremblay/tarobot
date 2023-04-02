@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from app import CommandParser
+from argparse import ArgumentError
 from tarot import TarotCard
 import unittest
 
@@ -20,7 +21,7 @@ class TestCommandParser(unittest.TestCase):
         # When:  the command line arguments are parsed
         command = parser.parse_command_line_args(args)
 
-        # Then:  the parsed arguments can be found in the app object
+        # Then:  the parsed arguments can be found in the command object
         self.assertEqual(4, command.card_count)
         self.assertEqual('nobody', command.subject)
         self.assertEqual('a mystic', command.teller)
@@ -32,10 +33,10 @@ class TestCommandParser(unittest.TestCase):
         args = ['--card-count', '42']
 
         # When:  the command line arguments are parsed
-        command = parser.parse_command_line_args(args)
-
-        # Then:  nothing is returned as the command is invalid
-        self.assertIsNone(command)
+        # Then:  an exception is raised due to an illegal argument
+        with self.assertRaises(ArgumentError) as arg_error:
+            parser.parse_command_line_args(args)
+        self.assertEqual("argument --card-count: invalid choice: 42 (choose from 1, 2, 3, 4, 5)", str(arg_error.exception))
 
     def test_parse_command_line_args_with_cards(self):
         # Given: some mocked up command line arguments with cards specified
@@ -50,7 +51,7 @@ class TestCommandParser(unittest.TestCase):
         # When:  the command line arguments are parsed
         command = parser.parse_command_line_args(args)
 
-        # Then:  the parsed arguments can be found in the app object
+        # Then:  the parsed arguments can be found in the command object
         self.assertEqual('the seeker', command.subject)
         self.assertIsNone(command.teller)
         self.assertFalse(command.show_prompt)
@@ -71,10 +72,10 @@ class TestCommandParser(unittest.TestCase):
         ]
 
         # When:  the command line arguments are parsed
-        command = parser.parse_command_line_args(args)
-
-        # Then:  the command is recognized as invalid
-        self.assertIsNone(command)
+        # Then:  an exception is raised due to an unknown tarot card
+        with self.assertRaises(ValueError) as val_error:
+            parser.parse_command_line_args(args)
+        self.assertEqual("Unknown card: 'FooOfBar'", str(val_error.exception))
 
     def test_parse_command_line_args_with_dupe_card(self):
         # Given: some mocked up command line arguments with cards specified (including dupe)
@@ -88,10 +89,11 @@ class TestCommandParser(unittest.TestCase):
         ]
 
         # When:  the command line arguments are parsed
-        command = parser.parse_command_line_args(args)
-
-        # Then:  the command is recognized as invalid
-        self.assertIsNone(command)
+        # Then:  an exception is raised due to at least one duplicate tarot card
+        with self.assertRaises(ValueError) as val_error:
+            parser.parse_command_line_args(args)
+        self.assertEqual("Duplicate card: King of Pentacles", str(val_error.exception))
+        print(val_error)
 
 
 if __name__ == '__main__':

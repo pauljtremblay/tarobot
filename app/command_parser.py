@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from argparse import ArgumentParser, ArgumentError
+from argparse import ArgumentParser
 from dataclasses import dataclass
 from tarot import TarotCard, TarotDeck
 from typing import List
@@ -57,26 +57,18 @@ class CommandParser:
 
     def parse_command_line_args(self, command_line_args):
         """Parses the given command line args into a command dto."""
-        try:
-            parsed_command = CommandDto()
-            self.parsed_args = self.parser.parse_args(command_line_args)
-            parsed_command.card_count = self.parsed_args.card_count
-            parsed_command.subject = self.parsed_args.subject
-            parsed_command.show_prompt = self.parsed_args.show_prompt
-            if self.parsed_args.teller is not None:
-                parsed_command.teller = self.parsed_args.teller
-            if self.parsed_args.use_card_list is not None:
-                parsed_command.given_cards = self.parse_given_tarot_cards()
-            # TODO raise error if too many cards given
-            return parsed_command
-        except ArgumentError as arg_error:
-            # TODO log error
-            print(arg_error)
-            return None
-        except ValueError as val_error:
-            # TODO log error
-            print(val_error)
-            return None
+        parsed_command = CommandDto()
+        self.parsed_args = self.parser.parse_args(command_line_args)
+        parsed_command.card_count = self.parsed_args.card_count
+        parsed_command.subject = self.parsed_args.subject
+        parsed_command.show_prompt = self.parsed_args.show_prompt
+        if self.parsed_args.teller is not None:
+            parsed_command.teller = self.parsed_args.teller
+        if self.parsed_args.use_card_list is not None:
+            parsed_command.given_cards = self.parse_given_tarot_cards()
+            if len(parsed_command.given_cards) not in range(1, 5 + 1):
+                raise ValueError("Only [1-5] cards allowed in the tarot card spread")
+        return parsed_command
 
     def parse_given_tarot_cards(self):
         """Helper method for validating and parsing the given tarot cards."""
@@ -94,3 +86,6 @@ class CommandParser:
             except ValueError:
                 raise ValueError("Duplicate card: {}".format(card))
         return parsed_cards
+
+    def print_parse_error_and_exit(self, arg_error):
+        self.parser.error(arg_error)

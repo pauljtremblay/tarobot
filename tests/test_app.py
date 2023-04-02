@@ -1,66 +1,68 @@
 #!/usr/bin/env python3
 
-from app import App
-import argparse
+from app import App, CommandDto
 from tarot import TarotCard
 import unittest
 
 
 class TestApp(unittest.TestCase):
 
-    def test_generate_tarot_reading_prompt(self):
-        # Given: a mocked up subject, fortune-teller, and tarot spread
-        app = App()
-        app.subject = 'SomeGuy'
-        app.teller = 'an optimist'
-        app.spread = [TarotCard.TheFool, TarotCard.KingOfPentacles, TarotCard.TheTower]
-
-        # When:  the fortune-telling prompt is generated
-        actual = app.generate_tarot_reading_prompt()
-
-        # Then:  the expected formatted prompt is returned
-        self.assertEqual(actual, "Tarot card reading for SomeGuy with the cards The Fool, King of Pentacles, and The "
-                                 "Tower in the style of an optimist")
-
-    def test_draw_tarot_spread(self):
+    def test_create_tarot_spread_by_deck(self):
         # Given: a mocked up number of cards to draw
         app = App()
-        app.card_count = 4
+        command = CommandDto()
+        command.card_count = 4
+        app.command = command
 
-        # When:  the tarot card spread is drawn
-        app.draw_tarot_spread()
+        # When:  the tarot card spread is created
+        app.create_tarot_spread()
 
         # Then:  the expected number of cards is drawn
         self.assertEqual(4, len(app.spread))
 
-    def test_parse_command_line_args_happy_path(self):
-        # Given: some mocked up command line arguments
+    def test_create_tarot_spread_by_given_cards(self):
+        # Given: a mocked up request with specified cards
         app = App()
-        args = [
-            '--card_count', '4',
-            '--subject', 'nobody',
-            '--teller', 'a mystic',
-            '--show-prompt'
+        command = CommandDto()
+        command.given_cards = [
+            TarotCard.TheMagician,
+            TarotCard.SixOfWands,
+            TarotCard.TheTower
+        ]
+        app.command = command
+
+        # When:  the tarot card spread is created
+        app.create_tarot_spread()
+
+        # Then:  the expected spread is found
+        self.assertEqual(3, len(app.spread))
+        self.assertEqual([
+            TarotCard.TheMagician,
+            TarotCard.SixOfWands,
+            TarotCard.TheTower
+        ], app.spread)
+
+    def test_generate_tarot_reading_prompt(self):
+        # Given: a subject
+        app = App()
+        command = CommandDto()
+        app.command = command
+        command.subject = 'The Seeker'
+        # And:   a fortune teller
+        command.teller = 'Hulk Hogan'
+        # And:   a tarot card spread
+        app.spread = [
+            TarotCard.TheTower,
+            TarotCard.Death,
+            TarotCard.SevenOfSwords
         ]
 
-        # When:  the command line arguments are parsed
-        app.parse_command_line_args(args)
+        # When:  the prompt is generated
+        prompt = app.generate_tarot_reading_prompt()
 
-        # Then:  the parsed arguments can be found in the app object
-        self.assertEqual(4, app.card_count)
-        self.assertEqual('nobody', app.subject)
-        self.assertEqual('a mystic', app.teller)
-        self.assertTrue(app.show_prompt)
-
-    def test_parse_command_line_args_invalid_card_count(self):
-        # Given: some mocked up command line arguments
-        app = App()
-        args = ['--card_count', '42']
-
-        # When:  the command line arguments are parsed
-        # Then:  an exception is raised
-        with self.assertRaises(argparse.ArgumentError):
-            app.parse_command_line_args(args)
+        # Then:  the exact expected prompt is generated
+        self.assertEqual(prompt, "Tarot card reading for The Seeker with the cards The Tower, Death, and Seven of "
+                                 "Swords in the style of Hulk Hogan")
 
 
 if __name__ == '__main__':
