@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 import openai
 import os
 import sys
-from tarot import TarotDeck
+from tarot import TarotCard, TarotDeck
 
 APP_NAME = "Tarobot"
 API_KEY_ENV_VAR = "OPENAI_API_KEY"
@@ -26,6 +26,7 @@ class App:
         except KeyError:
             raise MissingEnvVar("%s requires an api key set in env var %s" % (APP_NAME, API_KEY_ENV_VAR))
         self.__model = "text-davinci-003"
+        # TODO deprecate app parser logic, use CommandParser logic
         self.parser = None
         self.subject = None
         self.teller = None
@@ -41,7 +42,8 @@ class App:
         except ArgumentError as arg_error:
             # exit the app with an error code and a formatted message
             self.parser.error(arg_error)
-        self.draw_tarot_spread()
+        if self.spread is None:
+            self.draw_tarot_spread()
         self.interpret_tarot_spread()
 
     def draw_tarot_spread(self):
@@ -84,9 +86,16 @@ class App:
             '--show-prompt',
             help='displays the generated prompt ahead of the response',
             action='store_true')
+        self.parser.add_argument(
+            '--use-card-list',
+            help='takes specific cards from the user instead of a random draw from the deck',
+            type=str,
+            nargs='+')
         args = self.parser.parse_args(command_line_args)
         self.card_count = args.card_count
         self.subject = args.subject
+        if args.use_card_list is not None:
+            self.spread = [TarotCard[card_name] for card_name in args.use_card_list]
         if args.teller is not None:
             self.teller = args.teller
         self.show_prompt = args.show_prompt

@@ -5,6 +5,7 @@
 This module processes command line arguments and executes the desired command.
 """
 
-__all__ = ['App']
+__all__ = ['App', 'CommandParser', 'CommandDto']
 
 from app.app import App
+from app.command_parser import CommandParser, CommandDto
