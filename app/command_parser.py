@@ -46,14 +46,14 @@ class CommandParser:
             help='the "person" conducting the tarot card reading\n\t(optional)',
             type=str)
         self.parser.add_argument(
-            '--show-prompt',
-            help='displays the generated prompt ahead of the response',
-            action='store_true')
-        self.parser.add_argument(
             '--use-card-list',
             help='takes specific cards from the user instead of a random draw from the deck',
             type=str,
             nargs='+')
+        self.parser.add_argument(
+            '--show-prompt',
+            help='displays the generated prompt ahead of the response',
+            action='store_true')
 
     def parse_command_line_args(self, command_line_args):
         """Parses the given command line args into a command dto."""

@@ -23,22 +23,26 @@ Then you can simply call the tarobot script and have it draw 3 tarot cards at ra
 it will generate a tarot card reading for your spread.
 `python3 tarobot.py --help`
 ```text
-usage: tarobot [-h] [--card_count {1,2,3,4,5}] [--subject SUBJECT]
-               [--teller TELLER] [--show-prompt]
+usage: tarobot [-h] [--card-count {1,2,3,4,5}] [--subject SUBJECT]
+               [--teller TELLER]
+               [--use-card-list USE_CARD_LIST [USE_CARD_LIST ...]]
+               [--show-prompt]
 
 Tarot deck cartomancy application
 
 options:
   -h, --help            show this help message and exit
-  --card_count {1,2,3,4,5}
+  --card-count {1,2,3,4,5}
                         number of tarot cards to draw in the spread [1-5]
                         default: 3 card spread
   --subject SUBJECT     the name of the person receiving the tarot card
                         reading default: "the seeker"
   --teller TELLER       the "person" conducting the tarot card reading
                         (optional)
+  --use-card-list USE_CARD_LIST [USE_CARD_LIST ...]
+                        takes specific cards from the user instead of a random
+                        draw from the deck
   --show-prompt         displays the generated prompt ahead of the response
-
 ```
 
 <br />
@@ -64,6 +68,26 @@ success. You will find yourself deeply immersed in activities that bring you a s
 satisfaction, as well as potentially a new romantic relationship if you are currently single.
 Overall, these cards represent a period of great progress for you. With diligence, you can reach
 your goals and experience the rewards of success.
+```
+
+### You can provide the tarot cards to use for the reading
+`python3 tarobot.py --teller "Hulk Hogan" --use-card-list TheTower ThreeOfCups TheWorld --show-prompt`
+```text
+Generating a tarot card reading for the seeker for the following spread:
+	The Tower, Three of Cups, The World
+
+Prompt:
+Tarot card reading for the seeker with the cards The Tower, Three of Cups, and The World in the
+style of Hulk Hogan
+
+Response:
+Well, Hulkamaniacs - it looks like the Tarot cards have been dealt, and they reveal that you have a
+lot of changes headed your way! The Tower card is a sign of a huge shake-up and breakthrough
+happening in your life, so be ready for it! The Three of Cups is a call for celebration and even
+marks a new beginning. Get ready to let go of the past and move into a whole new world! Finally, The
+World card speaks of the benefits of manifesting your dreams. It signifies completion and
+accomplishment, as well as the reward for all your hard work. So grab your thunder belt, brother -
+it looks like you've got some major breakthroughs headed your way!
 ```
 
 ### Try tarobot's hand at songwriting
