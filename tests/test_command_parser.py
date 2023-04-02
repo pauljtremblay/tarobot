@@ -1,16 +1,13 @@
 #!/usr/bin/env python3
 
+from test_with_config import TestWithConfig
 from argparse import ArgumentError
-from app import CommandParser, ConfigLoader
+from app import CommandParser
 from tarot import TarotCard
 import unittest
 
 
-class TestCommandParser(unittest.TestCase):
-
-    def setUp(self):
-        loader = ConfigLoader("config/test_tarobot.conf")
-        self.config = loader.config
+class TestCommandParser(TestWithConfig):
 
     def test_parse_command_line_args(self):
         # Given: some mocked up command line arguments

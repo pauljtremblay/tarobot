@@ -1,15 +1,12 @@
 #!/usr/bin/env python3
 
-from app import App, CommandDto, ConfigLoader
+from test_with_config import TestWithConfig
+from app import App, CommandDto
 from tarot import TarotCard
 import unittest
 
 
-class TestApp(unittest.TestCase):
-
-    def setUp(self):
-        loader = ConfigLoader("config/test_tarobot.conf")
-        self.config = loader.config
+class TestApp(TestWithConfig):
 
     def test_create_tarot_spread_by_deck(self):
         # Given: a mocked up number of cards to draw
