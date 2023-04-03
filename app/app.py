@@ -3,7 +3,7 @@
 from argparse import ArgumentError
 import openai
 import sys
-from tarot import TarotDeck
+from tarot import CardResolver, TarotDeck
 from .command_parser import CommandParser
 from .config import Config, ConfigLoader
 
@@ -11,15 +11,18 @@ from .config import Config, ConfigLoader
 class App:
     """This class processes input from command line arguments and executes the request."""
 
-    def __init__(self, config: Config = None):
-        if config is not None:
-            self.__config = config
+    def __init__(self, config_opt: Config = None, resolver_opt: CardResolver = None):
+        if config_opt is not None:
+            self.__config = config_opt
         else:
             config_loader = ConfigLoader("config/tarobot.conf")
             self.__config = config_loader.config
+        resolver = resolver_opt
+        if resolver is None:
+            resolver = CardResolver("config/aliases.conf")
         # initialize openai module, or error out if api key is not defined
         openai.api_key = self.__config.openai.api_key
-        self.parser = CommandParser(self.__config)
+        self.parser = CommandParser(self.__config, resolver)
         self.command = None
         self.spread = None
 

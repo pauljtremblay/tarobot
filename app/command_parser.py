@@ -4,7 +4,7 @@ from argparse import ArgumentParser
 from dataclasses import dataclass
 from typing import List
 from .config import Config
-from tarot import TarotCard, TarotDeck
+from tarot import CardResolver, TarotCard, TarotDeck
 
 
 @dataclass
@@ -20,10 +20,14 @@ class CommandDto:
 class CommandParser:
     """This class processes input from command line arguments for later execution."""
 
-    def __init__(self, config: Config):
+    def __init__(self, config: Config, resolver: CardResolver = None):
         self.parser: ArgumentParser
         self.command: CommandDto
         self.parsed_args = None
+        if resolver is not None:
+            self.resolver = resolver
+        else:
+            self.resolver = CardResolver("config/aliases.conf")
         self.__config = config
         self.__build_parser()
 
@@ -79,12 +83,14 @@ class CommandParser:
 
     def parse_given_tarot_cards(self):
         """Helper method for validating and parsing the given tarot cards."""
-        # TODO normalize names (coins, disks -> pentacles, pope -> hierophant, etc.)
         # ensure the cards are valid tarot cards
-        try:
-            parsed_cards = [TarotCard[card_name] for card_name in self.parsed_args.use_card_list]
-        except KeyError as bad_card:
-            raise ValueError("Unknown card: {}".format(bad_card))
+        parsed_cards = []
+        for given_card_name in self.parsed_args.use_card_list:
+            tarot_card = self.resolver.get_optional_card_by_alias(given_card_name)
+            if tarot_card is None:
+                raise ValueError("Unknown card: {}".format(given_card_name))
+            else:
+                parsed_cards.append(tarot_card)
         # ensure a given card isn't used more than once
         tarot_deck = TarotDeck()
         for card in parsed_cards:

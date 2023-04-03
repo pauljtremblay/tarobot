@@ -10,7 +10,7 @@ class TestApp(TestWithConfig):
 
     def test_create_tarot_spread_by_deck(self):
         # Given: a mocked up number of cards to draw
-        app = App(self.config)
+        app = App(self.config, self.resolver)
         command = CommandDto()
         command.card_count = 4
         app.command = command
@@ -23,7 +23,7 @@ class TestApp(TestWithConfig):
 
     def test_create_tarot_spread_by_given_cards(self):
         # Given: a mocked up request with specified cards
-        app = App(self.config)
+        app = App(self.config, self.resolver)
         command = CommandDto()
         command.given_cards = [
             TarotCard.TheMagician,
@@ -45,7 +45,7 @@ class TestApp(TestWithConfig):
 
     def test_generate_tarot_reading_prompt(self):
         # Given: a subject
-        app = App(self.config)
+        app = App(self.config, self.resolver)
         command = CommandDto()
         app.command = command
         command.subject = 'The Seeker'

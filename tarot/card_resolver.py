@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 import dataconf
-from typing import Dict, List
+from typing import Dict, List, Optional
 from .card_value import CardValue
 from .suit import Suit
 from .tarot_card import TarotCard
@@ -59,13 +59,29 @@ class CardResolver:
                 if key in self.rank_aliases:
                     raise ValueError("duplicate card rank for {}".format(key))
                 self.rank_aliases[key] = suit_rank
-        print(self.rank_aliases)
 
-    def get_card_by_alias(self, card_name):
-        return self.card_aliases[card_name.lower()]
+    def get_card_by_known_alias(self, given_card_name):
+        return self.card_aliases[given_card_name.lower()]
 
-    def get_suit_by_alias(self, suit_name):
-        return self.suit_aliases[suit_name.lower()]
+    def get_suit_by_known_alias(self, given_suit_name):
+        return self.suit_aliases[given_suit_name.lower()]
 
-    def get_rank_by_alias(self, rank_name):
-        return self.rank_aliases[rank_name.lower()]
+    def get_rank_by_known_alias(self, given_rank_name):
+        return self.rank_aliases[given_rank_name.lower()]
+
+    def get_optional_card_by_alias(self, given_card_name) -> Optional[TarotCard]:
+        try:
+            # see if the given name is already known
+            return self.get_card_by_known_alias(given_card_name)
+        except KeyError:
+            # card not recognized, if card matches pattern "< rank token >of< suit token >" try to infer card
+            alias = given_card_name.lower()
+            if "of" not in alias:
+                return None
+            try:
+                (rank_alias, suit_alias) = alias.split('of')
+                card_value = self.get_rank_by_known_alias(rank_alias)
+                suit = self.get_suit_by_known_alias(suit_alias)
+                return self.get_card_by_known_alias("{}Of{}".format(card_value, suit))
+            except KeyError:
+                return None
