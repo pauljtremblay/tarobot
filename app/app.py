@@ -47,8 +47,9 @@ class App:
 
     def interpret_tarot_spread(self):
         """Generates a tarot card reading for the given spread and prints to standard output."""
+        spread_str = ", ".join(str(card) for card in self.spread)
         print("Generating a tarot card reading for {} for the following spread:\n\t{}\n".format(
-            self.command.subject, str(self.spread).strip("[]")))
+            self.command.subject, spread_str))
         tarot_reading_prompt = self.generate_tarot_reading_prompt()
         if self.command.show_prompt:
             print("Prompt:\n{}\n".format(tarot_reading_prompt))

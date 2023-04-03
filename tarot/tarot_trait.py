@@ -2,9 +2,8 @@
 
 from enum import Enum
 import re
-
 from .archana import Archana
-from .cardvalue import CardValue
+from .card_value import CardValue
 from .suit import Suit
 
 
@@ -27,8 +26,8 @@ class TarotTrait(Enum):
             return None
         return CardValue((self.value - 22) % 14 + 1)
 
-    def __repr__(self):
+    def __str__(self):
         return " ".join(list(map(lambda t: "of" if t == "Of" else t, re.findall('[A-Z][^A-Z]*', self.name))))
 
-    def __str__(self):
-        return self.__repr__()
+    def __repr__(self):
+        return "".join(list(map(lambda t: "of" if t == "Of" else t, re.findall('[A-Z][^A-Z]*', self.name))))

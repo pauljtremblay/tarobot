@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import random
-from .tarotcard import TarotCard
+from .tarot_card import TarotCard
 
 
 class TarotDeck:
