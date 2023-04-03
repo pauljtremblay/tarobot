@@ -39,7 +39,7 @@ class CardResolver:
         for (card_str, aliases) in self.config.card_aliases.items():
             tarot_card = TarotCard[card_str]
             for alias in aliases:
-                key = alias.lower()
+                key = alias.lower().replace(" ", "")
                 if key in self.card_aliases:
                     raise ValueError("duplicate card alias for {}".format(key))
                 self.card_aliases[key] = tarot_card
@@ -47,7 +47,7 @@ class CardResolver:
         for (suit_str, aliases) in self.config.suit_aliases.items():
             tarot_suit = Suit[suit_str]
             for alias in aliases:
-                key = alias.lower()
+                key = alias.lower().replace(" ", "")
                 if key in self.suit_aliases:
                     raise ValueError("duplicate card suit for {}".format(key))
                 self.suit_aliases[key] = tarot_suit
@@ -55,19 +55,19 @@ class CardResolver:
         for (rank_str, aliases) in self.config.rank_aliases.items():
             suit_rank = CardValue[rank_str]
             for alias in aliases:
-                key = alias.lower()
+                key = alias.lower().replace(" ", "")
                 if key in self.rank_aliases:
                     raise ValueError("duplicate card rank for {}".format(key))
                 self.rank_aliases[key] = suit_rank
 
     def get_card_by_known_alias(self, given_card_name):
-        return self.card_aliases[given_card_name.lower()]
+        return self.card_aliases[given_card_name.lower().replace(" ", "")]
 
     def get_suit_by_known_alias(self, given_suit_name):
-        return self.suit_aliases[given_suit_name.lower()]
+        return self.suit_aliases[given_suit_name.lower().replace(" ", "")]
 
     def get_rank_by_known_alias(self, given_rank_name):
-        return self.rank_aliases[given_rank_name.lower()]
+        return self.rank_aliases[given_rank_name.lower().replace(" ", "")]
 
     def get_optional_card_by_alias(self, given_card_name) -> Optional[TarotCard]:
         try:
@@ -75,7 +75,7 @@ class CardResolver:
             return self.get_card_by_known_alias(given_card_name)
         except KeyError:
             # card not recognized, if card matches pattern "< rank token >of< suit token >" try to infer card
-            alias = given_card_name.lower()
+            alias = given_card_name.lower().replace(" ", "")
             if "of" not in alias:
                 return None
             try:

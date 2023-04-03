@@ -44,9 +44,9 @@ class TestCommandParser(TestWithConfig):
         parser = CommandParser(self.config, self.resolver)
         args = [
             '--use-card-list',
-            'TheMagician',
-            'TheWorld',
-            'SevenOfWands'
+            'The Magician',
+            'The World',
+            'seven of Wands'
         ]
 
         # When:  the command line arguments are parsed
@@ -67,8 +67,8 @@ class TestCommandParser(TestWithConfig):
         parser = CommandParser(self.config, self.resolver)
         args = [
             '--use-card-list',
-            'TheMagician',
-            'TheWorld',
+            'MAGICIAN',
+            'World',
             'FooOfBar'
         ]
 
@@ -86,7 +86,7 @@ class TestCommandParser(TestWithConfig):
             'TheMagician',
             'TheWorld',
             'KingOfPentacles',
-            'KingOfPentacles'
+            'KingOfDiscs'
         ]
 
         # When:  the command line arguments are parsed

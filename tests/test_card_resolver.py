@@ -31,7 +31,7 @@ class TestCardResolver(unittest.TestCase):
 
     def test_get_card_by_known_alias_another_alias(self):
         # Given: a card's alias
-        card_name = "THEPOPE"
+        card_name = "The POPE"
 
         # When:  the card is resolved by alias
         tarot_card = self.resolver.get_card_by_known_alias(card_name)
