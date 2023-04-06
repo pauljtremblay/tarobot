@@ -14,6 +14,7 @@ class AbstractBaseClass:
 
 @dataclass
 class Metadata(AbstractBaseClass):
+    """Stores an openai generate completion request's input and output parameters."""
     open_id: str
     model: str
     created_ts: int
@@ -36,6 +37,7 @@ class Metadata(AbstractBaseClass):
 @dataclass_json
 @dataclass
 class CardReading(AbstractBaseClass):
+    """Stores the query, response, and associated metadata for an openai tarot card reading."""
     metadata: Metadata
     spread: List[TarotCard]
     prompt: str
