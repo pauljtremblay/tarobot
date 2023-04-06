@@ -18,7 +18,7 @@ class TestConfig(unittest.TestCase):
         self.assertIsNotNone(conf.app_name)
         # And:   the openai configuration is set
         self.assertIsNotNone(conf.openai.api_key)
-        self.assertIsNotNone(conf.openai.generate_model)
+        self.assertIsNotNone(conf.openai.completion)
         # And:   the tarot card spread rules are logically consistent
         self.assertGreaterEqual(conf.tarot.min_cards, 1)
         self.assertGreaterEqual(conf.tarot.max_cards, conf.tarot.min_cards)

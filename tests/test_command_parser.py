@@ -16,7 +16,8 @@ class TestCommandParser(TestWithConfig):
             '--card-count', '4',
             '--subject', 'nobody',
             '--teller', 'a mystic',
-            '--show-prompt'
+            '--show-prompt',
+            '--show-diagnostics'
         ]
 
         # When:  the command line arguments are parsed
@@ -27,6 +28,7 @@ class TestCommandParser(TestWithConfig):
         self.assertEqual('nobody', command.subject)
         self.assertEqual('a mystic', command.teller)
         self.assertTrue(command.show_prompt)
+        self.assertTrue(command.show_diagnostics)
 
     def test_parse_command_line_args_invalid_card_count(self):
         # Given: some mocked up command line arguments

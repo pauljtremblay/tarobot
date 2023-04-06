@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from dataclasses import dataclass
+from typing import Optional
 from dotenv import load_dotenv
 import dataconf
 
@@ -10,10 +11,20 @@ class AbstractBaseClass:
 
 
 @dataclass
+class Completion(AbstractBaseClass):
+    """OpenAI completion api request configuration."""
+    model: str
+    max_tokens: int = 2048
+    n: Optional[int] = None
+    temperature: Optional[float] = None
+    top_p: Optional[float] = None
+
+
+@dataclass
 class OpenAI(AbstractBaseClass):
     """Data class used for storing all openai-related configuration."""
     api_key: str
-    generate_model: str
+    completion: Completion
 
 
 @dataclass

@@ -26,7 +26,7 @@ it will generate a tarot card reading for your spread.
 usage: tarobot [-h] [--card-count {1,2,3,4,5}] [--subject SUBJECT]
                [--teller TELLER]
                [--use-card-list USE_CARD_LIST [USE_CARD_LIST ...]]
-               [--show-prompt]
+               [--show-prompt] [--show-diagnostics]
 
 Tarot deck cartomancy application
 
@@ -43,6 +43,8 @@ options:
                         takes specific cards from the user instead of a random
                         draw from the deck
   --show-prompt         displays the generated prompt ahead of the response
+  --show-diagnostics    displays diagnostic output from the completion
+                        response returned from openai
 ```
 
 <br />

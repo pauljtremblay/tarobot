@@ -3,7 +3,7 @@
 from argparse import ArgumentError
 import openai
 import sys
-from tarot import CardResolver, TarotDeck
+from tarot import CardResolver, TarotDeck, CardReading
 from .command_parser import CommandParser
 from .config import Config, ConfigLoader
 
@@ -56,8 +56,11 @@ class App:
         tarot_reading_prompt = self.generate_tarot_reading_prompt()
         if self.command.show_prompt:
             print("Prompt:\n{}\n".format(tarot_reading_prompt))
-        _, response = self.__ask_openai_to_generate_response(tarot_reading_prompt)
-        print("Response:\n{}".format(response))
+        card_reading = self.__ask_openai_to_generate_card_reading(tarot_reading_prompt)
+        card_reading.metadata.max_tokens = self.__config.openai.completion.max_tokens
+        print("Response:\n{}".format(card_reading.response))
+        if self.command.show_diagnostics:
+            print("\n[ diagnostics ]\n{}\n".format(card_reading))
 
     def generate_tarot_reading_prompt(self):
         """Generates the prompt to openai for how to generate a tarot card reading for the given spread."""
@@ -71,8 +74,21 @@ class App:
             prompt += " in the style of " + self.command.teller
         return prompt
 
-    def __ask_openai_to_generate_response(self, prompt):
+    def __ask_openai_to_generate_card_reading(self, prompt):
         """Displays the prompt to and associated response from openai."""
-        completion = openai.Completion.create(model=self.__config.openai.generate_model, prompt=prompt, max_tokens=2000)
+        completion_config = self.__config.openai.completion
+        completion_kwargs = {
+            'model': completion_config.model,
+            'max_tokens': completion_config.max_tokens,
+            'prompt': prompt
+        }
+        if completion_config.n is not None:
+            completion_kwargs['n'] = completion_config.n
+        if completion_config.temperature is not None:
+            completion_kwargs['temperature'] = completion_config.temperature
+        if completion_config.top_p is not None:
+            completion_kwargs['top_p'] = completion_config.top_p
+        completion = openai.Completion.create(**completion_kwargs)
         response = "\n".join(list(choice.text for choice in completion.choices)).strip()
-        return completion, response
+        command = self.command
+        return CardReading(completion, self.spread, prompt, response, command.subject, command.teller)

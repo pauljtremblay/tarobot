@@ -13,6 +13,7 @@ class CommandDto:
     subject: str = None
     teller: str = None
     show_prompt: bool = False
+    show_diagnostics: bool = False
     given_cards: List[TarotCard] = None
     card_count: int = 3
 
@@ -63,6 +64,10 @@ class CommandParser:
             '--show-prompt',
             help='displays the generated prompt ahead of the response',
             action='store_true')
+        self.parser.add_argument(
+            '--show-diagnostics',
+            help='displays diagnostic output from the completion response returned from openai',
+            action='store_true')
 
     def parse_command_line_args(self, command_line_args: List[str]):
         """Parses the given command line args into a command dto."""
@@ -71,6 +76,7 @@ class CommandParser:
         parsed_command.card_count = self.parsed_args.card_count
         parsed_command.subject = self.parsed_args.subject
         parsed_command.show_prompt = self.parsed_args.show_prompt
+        parsed_command.show_diagnostics = self.parsed_args.show_diagnostics
         if self.parsed_args.teller is not None:
             parsed_command.teller = self.parsed_args.teller
         if self.parsed_args.use_card_list is not None:

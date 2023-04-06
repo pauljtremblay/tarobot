@@ -9,6 +9,5 @@ class TestWithConfig(unittest.TestCase):
     """Base class for any unit test classes that use the app's configuration."""
 
     def setUp(self):
-        loader = ConfigLoader("config/test_tarobot.conf")
-        self.config = loader.config
+        self.config = ConfigLoader("config/test_tarobot.conf").config
         self.resolver = CardResolver("config/test_aliases.conf")
