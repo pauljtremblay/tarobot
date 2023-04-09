@@ -15,7 +15,7 @@ class AbstractBaseClass:
 @dataclass
 class Metadata(AbstractBaseClass):
     """Stores an openai generate completion request's input and output parameters."""
-    open_id: str
+    openai_id: str
     model: str
     created_ts: int
     response_ms: int
@@ -23,9 +23,11 @@ class Metadata(AbstractBaseClass):
     prompt_tokens: int
     completion_tokens: int
     total_tokens: int
+    temperature: Optional[float] = None
+    top_p: Optional[float] = None
 
     def __init__(self, completion: Completion):
-        self.open_id = completion.openai_id
+        self.openai_id = completion.openai_id
         self.model = completion.model
         self.created_ts = completion.created
         self.response_ms = completion.response_ms

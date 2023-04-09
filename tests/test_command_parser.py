@@ -11,7 +11,7 @@ class TestCommandParser(TestWithConfig):
 
     def test_parse_command_line_args(self):
         # Given: some mocked up command line arguments
-        parser = CommandParser(self.config, self.resolver)
+        parser = CommandParser(self.test_config)
         args = [
             '--card-count', '4',
             '--subject', 'nobody',
@@ -32,7 +32,7 @@ class TestCommandParser(TestWithConfig):
 
     def test_parse_command_line_args_invalid_card_count(self):
         # Given: some mocked up command line arguments
-        parser = CommandParser(self.config, self.resolver)
+        parser = CommandParser(self.test_config)
         args = ['--card-count', '42']
 
         # When:  the command line arguments are parsed
@@ -43,7 +43,7 @@ class TestCommandParser(TestWithConfig):
 
     def test_parse_command_line_args_with_cards(self):
         # Given: some mocked up command line arguments with cards specified
-        parser = CommandParser(self.config, self.resolver)
+        parser = CommandParser(self.test_config)
         args = [
             '--use-card-list',
             'The Magician',
@@ -66,7 +66,7 @@ class TestCommandParser(TestWithConfig):
 
     def test_parse_command_line_args_with_bad_card(self):
         # Given: some mocked up command line arguments with cards specified (including bogus)
-        parser = CommandParser(self.config, self.resolver)
+        parser = CommandParser(self.test_config)
         args = [
             '--use-card-list',
             'MAGICIAN',
@@ -82,7 +82,7 @@ class TestCommandParser(TestWithConfig):
 
     def test_parse_command_line_args_with_dupe_card(self):
         # Given: some mocked up command line arguments with cards specified (including dupe)
-        parser = CommandParser(self.config, self.resolver)
+        parser = CommandParser(self.test_config)
         args = [
             '--use-card-list',
             'TheMagician',
@@ -99,9 +99,9 @@ class TestCommandParser(TestWithConfig):
 
     def test_parse_command_line_args_with_too_many_cards(self):
         # Given: some mocked up app config and command line arguments with cards specified
-        conf = self.config
+        conf = self.test_config
         conf.tarot.max_cards = 3
-        parser = CommandParser(self.config, self.resolver)
+        parser = CommandParser(self.test_config)
         args = [
             '--use-card-list',
             'TheMagician',

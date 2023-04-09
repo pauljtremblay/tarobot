@@ -2,7 +2,9 @@
 
 from dataclasses import dataclass
 import dataconf
+from os.path import realpath, dirname
 from typing import Dict, List, Optional
+
 from .card_value import CardValue
 from .suit import Suit
 from .tarot_card import TarotCard
@@ -85,3 +87,8 @@ class CardResolver:
                 return self.get_card_by_known_alias("{}Of{}".format(card_value, suit))
             except KeyError:
                 return None
+
+
+# instantiate app config once and use various places
+aliases_path = realpath(dirname(dirname(__file__)) + "/config/aliases.conf")
+resolver: CardResolver = CardResolver(aliases_path)

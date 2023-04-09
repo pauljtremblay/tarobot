@@ -3,26 +3,25 @@
 from argparse import ArgumentError
 import openai
 import sys
-from tarot import CardResolver, TarotDeck, CardReading
+
+from db import CardReadingEntity
+from db.base import session_factory
+from tarot import TarotDeck, CardReading
 from .command_parser import CommandParser
-from .config import Config, ConfigLoader
+from .config import config, Config
 
 
 class App:
     """This class processes input from command line arguments and executes the request."""
 
-    def __init__(self, config_opt: Config = None, resolver_opt: CardResolver = None):
+    def __init__(self, config_opt: Config = None):
         if config_opt is not None:
             self.__config = config_opt
         else:
-            config_loader = ConfigLoader("config/tarobot.conf")
-            self.__config = config_loader.config
-        resolver = resolver_opt
-        if resolver is None:
-            resolver = CardResolver("config/aliases.conf")
+            self.__config = config
         # initialize openai module, or error out if api key is not defined
         openai.api_key = self.__config.openai.api_key
-        self.parser = CommandParser(self.__config, resolver)
+        self.parser = CommandParser(self.__config)
         self.command = None
         self.spread = None
 
@@ -56,11 +55,12 @@ class App:
         tarot_reading_prompt = self.generate_tarot_reading_prompt()
         if self.command.show_prompt:
             print("Prompt:\n{}\n".format(tarot_reading_prompt))
-        card_reading = self.__ask_openai_to_generate_card_reading(tarot_reading_prompt)
+        card_reading = self.ask_openai_to_generate_card_reading(tarot_reading_prompt)
         card_reading.metadata.max_tokens = self.__config.openai.completion.max_tokens
         print("Response:\n{}".format(card_reading.response))
         if self.command.show_diagnostics:
             print("\n[ diagnostics ]\n{}\n".format(card_reading))
+        persist_card_reading(card_reading)
 
     def generate_tarot_reading_prompt(self):
         """Generates the prompt to openai for how to generate a tarot card reading for the given spread."""
@@ -74,7 +74,7 @@ class App:
             prompt += " in the style of " + self.command.teller
         return prompt
 
-    def __ask_openai_to_generate_card_reading(self, prompt):
+    def ask_openai_to_generate_card_reading(self, prompt):
         """Displays the prompt to and associated response from openai."""
         completion_config = self.__config.openai.completion
         completion_kwargs = {
@@ -91,4 +91,16 @@ class App:
         completion = openai.Completion.create(**completion_kwargs)
         response = "\n".join(list(choice.text for choice in completion.choices)).strip()
         command = self.command
-        return CardReading(completion, self.spread, prompt, response, command.subject, command.teller)
+        card_reading = CardReading(completion, self.spread, prompt, response, command.subject, command.teller)
+        if 'temperature' in completion_kwargs:
+            card_reading.metadata.temperature = completion_kwargs['temperature']
+        if 'top_p' in completion_kwargs:
+            card_reading.metadata.top_p = completion_kwargs['top_p']
+        return card_reading
+
+
+def persist_card_reading(card_reading_dto: CardReading):
+    session = session_factory()
+    session.add(CardReadingEntity(card_reading_dto))
+    session.commit()
+    session.close()

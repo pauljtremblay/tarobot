@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 
 from dataclasses import dataclass
+from os.path import realpath, dirname
 from typing import Optional
+
 from dotenv import load_dotenv
 import dataconf
 
@@ -36,11 +38,25 @@ class Tarot(AbstractBaseClass):
 
 
 @dataclass
+class Database(AbstractBaseClass):
+    """Data class used for storing persistence layer config (db hostname, schema, credentials)."""
+    host: str
+    port: int
+    database: str
+    user: str
+    password: str
+    # pool_name: str
+    # pool_size: int
+    # pool_reset_session: bool
+
+
+@dataclass
 class Config(AbstractBaseClass):
     """Data class used for storing the tarobot app's configuration."""
     app_name: str
     openai: OpenAI
     tarot: Tarot
+    db: Database
 
 
 class ConfigLoader:
@@ -50,3 +66,8 @@ class ConfigLoader:
         # ensure any environment variables found in .env are loaded to make env vars available for variable substitution
         load_dotenv()
         self.config = dataconf.file(location, Config)
+
+
+# instantiate app config once and use various places
+config_path = realpath(dirname(dirname(__file__)) + "/config/tarobot.conf")
+config: Config = ConfigLoader(config_path).config

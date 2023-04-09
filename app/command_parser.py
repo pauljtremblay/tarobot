@@ -4,7 +4,7 @@ from argparse import ArgumentParser
 from dataclasses import dataclass
 from typing import List
 from .config import Config
-from tarot import CardResolver, TarotCard, TarotDeck
+from tarot import resolver, TarotCard, TarotDeck
 
 
 @dataclass
@@ -21,14 +21,10 @@ class CommandDto:
 class CommandParser:
     """This class processes input from command line arguments for later execution."""
 
-    def __init__(self, config: Config, resolver: CardResolver = None):
+    def __init__(self, config: Config):
         self.parser: ArgumentParser
         self.command: CommandDto
         self.parsed_args = None
-        if resolver is not None:
-            self.resolver = resolver
-        else:
-            self.resolver = CardResolver("config/aliases.conf")
         self.__config = config
         self.__build_parser()
 
@@ -92,7 +88,7 @@ class CommandParser:
         # ensure the cards are valid tarot cards
         parsed_cards = []
         for given_card_name in self.parsed_args.use_card_list:
-            tarot_card = self.resolver.get_optional_card_by_alias(given_card_name)
+            tarot_card = resolver.get_optional_card_by_alias(given_card_name)
             if tarot_card is None:
                 raise ValueError("Unknown card: {}".format(given_card_name))
             else:
