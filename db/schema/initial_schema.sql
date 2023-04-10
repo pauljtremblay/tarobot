@@ -38,13 +38,13 @@ CREATE TABLE `reading`(
     `top_p` FLOAT,
     PRIMARY KEY (`id`),
     FOREIGN KEY `idx_card_one` (`card_one`) REFERENCES `card`(`ordinal`),
-    FOREIGN KEY `idx_card_two` (`card_one`) REFERENCES `card`(`ordinal`),
-    FOREIGN KEY `idx_card_three` (`card_one`) REFERENCES `card`(`ordinal`),
-    FOREIGN KEY `idx_card_four` (`card_one`) REFERENCES `card`(`ordinal`),
-    FOREIGN KEY `idx_card_five` (`card_one`) REFERENCES `card`(`ordinal`)
+    FOREIGN KEY `idx_card_two` (`card_two`) REFERENCES `card`(`ordinal`),
+    FOREIGN KEY `idx_card_three` (`card_three`) REFERENCES `card`(`ordinal`),
+    FOREIGN KEY `idx_card_four` (`card_four`) REFERENCES `card`(`ordinal`),
+    FOREIGN KEY `idx_card_five` (`card_five`) REFERENCES `card`(`ordinal`)
 );
 
--- populate static tables
+-- populate tarot card table
 INSERT INTO `card`(`ordinal`, `name`) VALUES(0, 'The Fool');
 INSERT INTO `card`(`ordinal`, `name`) VALUES(1, 'The Magician');
 INSERT INTO `card`(`ordinal`, `name`) VALUES(2, 'The High Priestess');
@@ -124,13 +124,15 @@ INSERT INTO `card`(`ordinal`, `name`) VALUES(75, 'Knight of Pentacles');
 INSERT INTO `card`(`ordinal`, `name`) VALUES(76, 'Queen of Pentacles');
 INSERT INTO `card`(`ordinal`, `name`) VALUES(77, 'King of Pentacles');
 
+-- sets flag for minor/major archana for each card
 UPDATE `card` SET `is_major` = 0 WHERE `ordinal` >= 22;
 UPDATE `card` SET `is_major` = 1 WHERE `ordinal` < 22;
 
+-- set the suit name for all minor archana cards
 UPDATE `card` SET `suit` = 'Wands' WHERE `ordinal` BETWEEN 22 AND 35;
 UPDATE `card` SET `suit` = 'Cups' WHERE `ordinal` BETWEEN 36 AND 49;
 UPDATE `card` SET `suit` = 'Swords' WHERE `ordinal` BETWEEN 50 AND 63;
 UPDATE `card` SET `suit` = 'Pentacles' WHERE `ordinal` BETWEEN 64 AND 77;
 
-UPDATE `card` SET `rank` = ((`ordinal` - 22) % 14 + 1)
-WHERE `ordinal` > 21;
+-- sets the card value for each minor archana card: 1 (ace), 2, 3 .. 10, 11 (page), 12 (knight), 13 (queen), 14 (king)
+UPDATE `card` SET `rank` = ((`ordinal` - 22) % 14 + 1) WHERE `ordinal` > 21;

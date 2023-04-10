@@ -3,6 +3,7 @@
 from argparse import ArgumentError
 import openai
 import sys
+from typing import Optional
 
 from db import session_factory, CardReadingEntity
 from tarot import TarotDeck, CardReading
@@ -13,7 +14,7 @@ from .config import config, Config
 class App:
     """This class processes input from command line arguments and executes the request."""
 
-    def __init__(self, config_opt: Config = None):
+    def __init__(self, config_opt: Optional[Config] = None):
         if config_opt is not None:
             self.__config = config_opt
         else:
@@ -99,6 +100,10 @@ class App:
 
 
 def persist_card_reading(card_reading_dto: CardReading):
+    """Records the details of the tarot card reading.
+
+    This includes the inputs: the subject, the teller, the tarot card spread, resulting response, and response metadata.
+    """
     session = session_factory()
     with session.begin():
         session.add(CardReadingEntity(card_reading_dto))

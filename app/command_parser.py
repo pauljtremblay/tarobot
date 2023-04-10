@@ -26,13 +26,13 @@ class CommandParser:
         self.command: CommandDto
         self.parsed_args = None
         self.__config = config
-        self.__build_parser()
+        self.__build_parser(config)
 
-    def __build_parser(self):
+    def __build_parser(self, config: Config):
         """The command line argument parser config for the tarobot application."""
         tarot = self.__config.tarot
         self.parser = ArgumentParser(
-            prog='tarobot',
+            prog=config.app_name,
             description='Tarot deck cartomancy application',
             exit_on_error=False)
         self.parser.add_argument(
