@@ -38,16 +38,23 @@ class Tarot(AbstractBaseClass):
 
 
 @dataclass
+class ConnectionPool(AbstractBaseClass):
+    size: int
+    recycle_secs: int
+    timeout_secs: int
+
+
+@dataclass
 class Database(AbstractBaseClass):
     """Data class used for storing persistence layer config (db hostname, schema, credentials)."""
     host: str
     port: int
-    database: str
+    dialect: str
+    driver: str
+    schema: str
     user: str
     password: str
-    # pool_name: str
-    # pool_size: int
-    # pool_reset_session: bool
+    pool: ConnectionPool
 
 
 @dataclass

@@ -10,4 +10,3 @@ __all__ = ['App', 'CommandParser', 'CommandDto', 'config', 'Config', 'ConfigLoad
 from app.config import config, Config, ConfigLoader
 from app.app import App
 from app.command_parser import CommandParser, CommandDto
-

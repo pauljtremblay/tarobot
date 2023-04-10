@@ -4,8 +4,7 @@ from argparse import ArgumentError
 import openai
 import sys
 
-from db import CardReadingEntity
-from db.base import session_factory
+from db import session_factory, CardReadingEntity
 from tarot import TarotDeck, CardReading
 from .command_parser import CommandParser
 from .config import config, Config
@@ -101,6 +100,5 @@ class App:
 
 def persist_card_reading(card_reading_dto: CardReading):
     session = session_factory()
-    session.add(CardReadingEntity(card_reading_dto))
-    session.commit()
-    session.close()
+    with session.begin():
+        session.add(CardReadingEntity(card_reading_dto))
