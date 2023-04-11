@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
-from app import ConfigLoader
 import unittest
+
+from tarobot.app import ConfigLoader
 
 
 class TestConfig(unittest.TestCase):

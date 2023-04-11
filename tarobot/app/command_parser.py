@@ -3,8 +3,9 @@
 from argparse import ArgumentParser
 from dataclasses import dataclass
 from typing import List
-from .config import Config
-from tarot import resolver, TarotCard, TarotDeck
+
+from . config import Config
+from tarobot.tarot import resolver, TarotCard, TarotDeck
 
 
 @dataclass

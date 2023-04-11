@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
-from .tarot_trait import TarotTrait
-from .suit import Suit
-from .card_value import CardValue
+from . tarot_trait import TarotTrait
+from . suit import Suit
+from . card_value import CardValue
 
 
 def generate_tarot_cards():

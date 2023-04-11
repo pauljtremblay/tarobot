@@ -3,7 +3,7 @@
 from logging import getLogger, Formatter, StreamHandler, DEBUG, INFO
 import sys
 
-from app import App
+from tarobot.app.app import App
 
 
 log_appender_configs = {

@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 
 from urllib.parse import quote_plus
+
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from app import config
+
+from tarobot.app import config
 
 db, pool = config.db, config.db.pool
 encoded_pass = quote_plus(db.password)

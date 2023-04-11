@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 
-from test_with_config import TestWithConfig
-from app import App, CommandDto
-from tarot import TarotCard
 import unittest
+
+from test_with_config import TestWithConfig
+from tarobot.app import App, CommandDto
+from tarobot.tarot import TarotCard
 
 
 class TestApp(TestWithConfig):

@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
-from tarot import *
 import unittest
+
+from tarobot.tarot import *
 
 CARDS_IN_DECK = 78
 

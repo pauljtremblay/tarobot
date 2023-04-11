@@ -2,9 +2,9 @@
 
 from enum import Enum
 import re
-from .archana import Archana
-from .card_value import CardValue
-from .suit import Suit
+from . archana import Archana
+from . card_value import CardValue
+from . suit import Suit
 
 
 class TarotTrait(Enum):

@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 
-from test_with_config import TestWithConfig
 from argparse import ArgumentError
-from app import CommandParser
-from tarot import TarotCard
 import unittest
+
+from test_with_config import TestWithConfig
+from tarobot.app import CommandParser
+from tarobot.tarot import TarotCard
 
 
 class TestCommandParser(TestWithConfig):

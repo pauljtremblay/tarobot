@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
-from tarot import CardResolver, CardValue, Suit, TarotCard
 import unittest
+
+from tarobot.tarot import CardResolver, CardValue, Suit, TarotCard
 
 
 class TestCardResolver(unittest.TestCase):

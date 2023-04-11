@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 
 from datetime import datetime
+
 from sqlalchemy import Column, Float, Integer, String, Text, TIMESTAMP
-from tarot import CardReading
-from .base import Base
+
+from tarobot.tarot import CardReading
+from . base import Base
 
 
 class CardReadingEntity(Base):

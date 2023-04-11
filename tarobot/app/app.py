@@ -7,10 +7,10 @@ from typing import Optional
 
 import openai
 
-from db import session_factory, CardReadingEntity
-from tarot import TarotDeck, CardReading
-from .command_parser import CommandParser
-from .config import config, Config
+from tarobot.db import session_factory, CardReadingEntity
+from tarobot.tarot import TarotDeck, CardReading
+from . command_parser import CommandParser
+from . config import config, Config
 
 
 logger = logging.getLogger(__name__)

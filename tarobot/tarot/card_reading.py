@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 
 from dataclasses import dataclass
-from dataclasses_json import dataclass_json
 import json
 from typing import List, Optional
+
+from dataclasses_json import dataclass_json
 from openai import Completion
-from tarot import TarotCard
+
+from tarobot.tarot import TarotCard
 
 
 class AbstractBaseClass:

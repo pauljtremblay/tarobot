@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 
 from dataclasses import dataclass
-import dataconf
 from os.path import realpath, dirname
 from typing import Dict, List, Optional
 
-from .card_value import CardValue
-from .suit import Suit
-from .tarot_card import TarotCard
+import dataconf
+
+from . card_value import CardValue
+from . suit import Suit
+from . tarot_card import TarotCard
 
 
 class AbstractBaseClass:
