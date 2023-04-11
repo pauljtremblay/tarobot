@@ -39,6 +39,7 @@ class Tarot(AbstractBaseClass):
 
 @dataclass
 class ConnectionPool(AbstractBaseClass):
+    """Data class used for database connection pool config."""
     size: int
     recycle_secs: int
     timeout_secs: int

@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 
 from argparse import ArgumentError
-import openai
+import logging
 import sys
 from typing import Optional
+
+import openai
 
 from db import session_factory, CardReadingEntity
 from tarot import TarotDeck, CardReading
@@ -11,10 +13,14 @@ from .command_parser import CommandParser
 from .config import config, Config
 
 
+logger = logging.getLogger(__name__)
+
+
 class App:
     """This class processes input from command line arguments and executes the request."""
 
     def __init__(self, config_opt: Optional[Config] = None):
+        # load app config
         if config_opt is not None:
             self.__config = config_opt
         else:
@@ -33,8 +39,8 @@ class App:
             # exits the app with an error code and a formatted message
             self.parser.print_parse_error_and_exit(arg_error)
         except ValueError as val_error:
-            # exits the app with an error code and context printed to standard error
-            print("Fatal error processing command line args: {}".format(val_error), file=sys.stderr)
+            # log an error and exits the app
+            logger.fatal("Fatal error processing command line args: %s", val_error)
             sys.exit(1)
         self.create_tarot_spread()
         self.interpret_tarot_spread()
@@ -50,16 +56,16 @@ class App:
     def interpret_tarot_spread(self):
         """Generates a tarot card reading for the given spread and prints to standard output."""
         spread_str = ", ".join(str(card) for card in self.spread)
-        print("Generating a tarot card reading for {} for the following spread:\n\t{}\n".format(
-            self.command.subject, spread_str))
+        logger.info("Generating a tarot card reading for %s for the following spread:\n\t%s\n",
+                    self.command.subject, spread_str)
         tarot_reading_prompt = self.generate_tarot_reading_prompt()
         if self.command.show_prompt:
-            print("Prompt:\n{}\n".format(tarot_reading_prompt))
+            logger.info("Prompt:\n%s\n", tarot_reading_prompt)
         card_reading = self.ask_openai_to_generate_card_reading(tarot_reading_prompt)
         card_reading.metadata.max_tokens = self.__config.openai.completion.max_tokens
-        print("Response:\n{}".format(card_reading.response))
+        logger.info("Response:\n%s", card_reading.response)
         if self.command.show_diagnostics:
-            print("\n[ diagnostics ]\n{}\n".format(card_reading))
+            logger.debug("\n[ diagnostics ]\n%s\n", card_reading)
         persist_card_reading(card_reading)
 
     def generate_tarot_reading_prompt(self):
@@ -103,7 +109,12 @@ def persist_card_reading(card_reading_dto: CardReading):
     """Records the details of the tarot card reading.
 
     This includes the inputs: the subject, the teller, the tarot card spread, resulting response, and response metadata.
+    If the app fails to connect to the database, then an error is printed to stderr.
     """
-    session = session_factory()
-    with session.begin():
-        session.add(CardReadingEntity(card_reading_dto))
+    try:
+        session = session_factory()
+        with session.begin():
+            session.add(CardReadingEntity(card_reading_dto))
+    except Exception as ex:
+        logger.error("Failed to record card reading in the database: %s", str(ex))
+
