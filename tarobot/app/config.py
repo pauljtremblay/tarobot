@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from dataclasses import dataclass
-from os.path import realpath, dirname
+from os.path import dirname, realpath
 from typing import Optional
 
 from dotenv import load_dotenv

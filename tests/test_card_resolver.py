@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from os.path import dirname, realpath
 import unittest
 
 from tarobot.tarot import CardResolver, CardValue, Suit, TarotCard
@@ -8,7 +9,8 @@ from tarobot.tarot import CardResolver, CardValue, Suit, TarotCard
 class TestCardResolver(unittest.TestCase):
 
     def setUp(self):
-        self.resolver = CardResolver('config/test_aliases.conf')
+        config_path = realpath(dirname(__file__)) + '/config/test_aliases.conf'
+        self.resolver = CardResolver(config_path)
 
     def test_get_card_by_known_alias_happy_path(self):
         # Given: a card's name
