@@ -34,7 +34,7 @@ class CommandParser:
         """The command line argument parser config for the tarobot application."""
         tarot = self.__config.tarot
         self.parser = ArgumentParser(
-            prog=config.app_name,
+            prog=config.app_name.lower(),
             description='Tarot deck cartomancy application',
             exit_on_error=False)
         self.parser.add_argument(

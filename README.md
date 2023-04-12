@@ -23,7 +23,7 @@ Then you can simply call the tarobot script and have it draw 3 tarot cards at ra
 it will generate a tarot card reading for your spread.
 `python3 tarobot.py --help`
 ```text
-usage: Tarobot [-h] [--card-count {1,2,3,4,5}] [--subject SUBJECT]
+usage: tarobot [-h] [--card-count {1,2,3,4,5}] [--subject SUBJECT]
                [--teller TELLER]
                [--use-card-list USE_CARD_LIST [USE_CARD_LIST ...]]
                [--show-prompt] [--show-diagnostics] [--persist-reading]
