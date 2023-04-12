@@ -76,6 +76,15 @@ class ConfigLoader:
         self.config = dataconf.file(location, Config)
 
 
-# instantiate app config once and use various places
-config_path = realpath(dirname(dirname(__file__)) + "/config/tarobot.conf")
-config: Config = ConfigLoader(config_path).config
+# instantiate app config once and use various places: attempt base config if main config fails
+config_paths = ["/config/tarobot.conf", "/config/base-tarobot.conf"]
+config: Optional[Config] = None
+
+for path in config_paths:
+    if config is not None:
+        break
+    try:
+        config_path = realpath(dirname(dirname(__file__)) + path)
+        config = ConfigLoader(config_path).config
+    except:
+        config = None
