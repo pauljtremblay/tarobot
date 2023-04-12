@@ -3,12 +3,12 @@
 from argparse import ArgumentError
 import unittest
 
-from test_with_config import TestWithConfig
+from base_test_with_config import BaseTestWithConfig
 from tarobot.app import CommandParser
 from tarobot.tarot import TarotCard
 
 
-class TestCommandParser(TestWithConfig):
+class TestCommandParser(BaseTestWithConfig):
 
     def test_parse_command_line_args(self):
         # Given: some mocked up command line arguments

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from os.path import dirname, realpath
 import unittest
 
 from tarobot.app import ConfigLoader
@@ -9,7 +10,7 @@ class TestConfig(unittest.TestCase):
 
     def test_config_loader(self):
         # Given: a config file to load
-        config_path = 'config/test_tarobot.conf'
+        config_path = realpath(dirname(__file__)) + '/config/test_tarobot.conf'
 
         # When:  the config is loaded
         loader = ConfigLoader(config_path)

@@ -2,12 +2,12 @@
 
 import unittest
 
-from test_with_config import TestWithConfig
+from base_test_with_config import BaseTestWithConfig
 from tarobot.app import App, CommandDto
 from tarobot.tarot import TarotCard
 
 
-class TestApp(TestWithConfig):
+class TestApp(BaseTestWithConfig):
 
     def test_create_tarot_spread_by_deck(self):
         # Given: a mocked up number of cards to draw
