@@ -38,9 +38,9 @@ class App:
         except ArgumentError as arg_error:
             # exits the app with an error code and a formatted message
             self.parser.print_parse_error_and_exit(arg_error)
-        except ValueError as val_error:
+        except ValueError:
             # log an error and exits the app
-            logger.fatal("Fatal error processing command line args: %s", val_error)
+            logger.fatal("Fatal error processing command line args", exc_info=True)
             sys.exit(1)
         self.create_tarot_spread()
         self.interpret_tarot_spread()
@@ -66,7 +66,8 @@ class App:
         logger.info("Response:\n%s", card_reading.response)
         if self.command.show_diagnostics:
             logger.debug("\n[ diagnostics ]\n%s\n", card_reading)
-        persist_card_reading(card_reading)
+        if self.command.persist_reading:
+            persist_card_reading(card_reading)
 
     def generate_tarot_reading_prompt(self):
         """Generates the prompt to openai for how to generate a tarot card reading for the given spread."""
@@ -115,6 +116,5 @@ def persist_card_reading(card_reading_dto: CardReading):
         session = session_factory()
         with session.begin():
             session.add(CardReadingEntity(card_reading_dto))
-    except Exception as ex:
-        logger.error("Failed to record card reading in the database: %s", str(ex))
-
+    except:
+        logger.error("Failed to record card reading in the database", exc_info=True)

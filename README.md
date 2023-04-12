@@ -23,10 +23,10 @@ Then you can simply call the tarobot script and have it draw 3 tarot cards at ra
 it will generate a tarot card reading for your spread.
 `python3 tarobot.py --help`
 ```text
-usage: tarobot [-h] [--card-count {1,2,3,4,5}] [--subject SUBJECT]
+usage: Tarobot [-h] [--card-count {1,2,3,4,5}] [--subject SUBJECT]
                [--teller TELLER]
                [--use-card-list USE_CARD_LIST [USE_CARD_LIST ...]]
-               [--show-prompt] [--show-diagnostics]
+               [--show-prompt] [--show-diagnostics] [--persist-reading]
 
 Tarot deck cartomancy application
 
@@ -45,6 +45,8 @@ options:
   --show-prompt         displays the generated prompt ahead of the response
   --show-diagnostics    displays diagnostic output from the completion
                         response returned from openai
+  --persist-reading     inserts a record of the tarot card reading (inputs,
+                        prompt, result, metadata) in the database
 ```
 
 <br />

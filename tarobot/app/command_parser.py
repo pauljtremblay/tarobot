@@ -15,6 +15,7 @@ class CommandDto:
     teller: str = None
     show_prompt: bool = False
     show_diagnostics: bool = False
+    persist_reading: bool = False
     given_cards: List[TarotCard] = None
     card_count: int = 3
 
@@ -65,6 +66,10 @@ class CommandParser:
             '--show-diagnostics',
             help='displays diagnostic output from the completion response returned from openai',
             action='store_true')
+        self.parser.add_argument(
+            '--persist-reading',
+            help='inserts a record of the tarot card reading (inputs, prompt, result, metadata) in the database',
+            action='store_true')
 
     def parse_command_line_args(self, command_line_args: List[str]):
         """Parses the given command line args into a command dto."""
@@ -74,6 +79,7 @@ class CommandParser:
         parsed_command.subject = self.parsed_args.subject
         parsed_command.show_prompt = self.parsed_args.show_prompt
         parsed_command.show_diagnostics = self.parsed_args.show_diagnostics
+        parsed_command.persist_reading = self.parsed_args.persist_reading
         if self.parsed_args.teller is not None:
             parsed_command.teller = self.parsed_args.teller
         if self.parsed_args.use_card_list is not None:
