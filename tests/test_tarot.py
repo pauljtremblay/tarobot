@@ -4,12 +4,13 @@
 
 import unittest
 
-from tarobot.tarot import Archana, CardValue, Suit, TarotCard, TarotDeck
+from tests import Archana, CardValue, Suit, TarotCard, TarotDeck
 
 
 CARDS_IN_DECK = 78
 
 
+# pylint: disable=C0115,C0116
 class TestTarot(unittest.TestCase):
 
     def test_deck_is_complete(self):
@@ -88,6 +89,7 @@ class TestTarot(unittest.TestCase):
         self.assertEqual(card.card_value(), None)
         # And:    the string representation is human-readable
         self.assertEqual(str(card), "The Magician")
+# pylint: enable=C0115,C0116
 
 
 if __name__ == '__main__':

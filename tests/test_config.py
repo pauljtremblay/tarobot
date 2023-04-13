@@ -5,9 +5,10 @@
 from os.path import dirname, realpath
 import unittest
 
-from tarobot.app import ConfigLoader
+from tests import ConfigLoader
 
 
+# pylint: disable=C0115,C0116
 class TestConfig(unittest.TestCase):
 
     def test_config_loader(self):
@@ -30,6 +31,7 @@ class TestConfig(unittest.TestCase):
         self.assertGreaterEqual(config.tarot.max_cards, config.tarot.min_cards)
         self.assertGreaterEqual(config.tarot.default_cards, config.tarot.min_cards)
         self.assertGreaterEqual(config.tarot.max_cards, config.tarot.default_cards)
+# pylint: enable=C0115,C0116
 
 
 if __name__ == '__main__':

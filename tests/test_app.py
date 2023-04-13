@@ -4,11 +4,10 @@
 
 import unittest
 
-from base_test_with_config import BaseTestWithConfig
-from tarobot.app import App, CommandDto
-from tarobot.tarot import TarotCard
+from tests import BaseTestWithConfig, App, CommandDto, TarotCard
 
 
+# pylint: disable=C0115,C0116
 class TestApp(BaseTestWithConfig):
 
     def test_create_tarot_spread_by_deck(self):
@@ -67,6 +66,7 @@ class TestApp(BaseTestWithConfig):
         # Then:  the exact expected prompt is generated
         self.assertEqual(prompt, "Tarot card reading for The Seeker with the cards The Tower, Death, and Seven of "
                                  "Swords in the style of Hulk Hogan")
+# pylint: enable=C0115,C0116
 
 
 if __name__ == '__main__':

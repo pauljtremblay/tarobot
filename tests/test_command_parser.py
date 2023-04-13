@@ -5,11 +5,10 @@
 from argparse import ArgumentError
 import unittest
 
-from base_test_with_config import BaseTestWithConfig
-from tarobot.app import CommandParser
-from tarobot.tarot import TarotCard
+from tests import BaseTestWithConfig, CommandParser, TarotCard
 
 
+# pylint: disable=C0115,C0116
 class TestCommandParser(BaseTestWithConfig):
 
     def test_parse_command_line_args(self):
@@ -121,6 +120,7 @@ class TestCommandParser(BaseTestWithConfig):
         with self.assertRaises(ValueError) as val_error:
             parser.parse_command_line_args(args)
         self.assertEqual("Only [1-3] cards allowed in the tarot card spread", str(val_error.exception))
+# pylint: enable=C0115,C0116
 
 
 if __name__ == '__main__':

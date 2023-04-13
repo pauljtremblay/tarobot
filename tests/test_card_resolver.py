@@ -5,9 +5,10 @@
 from os.path import dirname, realpath
 import unittest
 
-from tarobot.tarot import CardResolver, CardValue, Suit, TarotCard
+from tests import CardResolver, CardValue, Suit, TarotCard
 
 
+# pylint: disable=C0115,C0116
 class TestCardResolver(unittest.TestCase):
 
     def setUp(self):
@@ -133,6 +134,7 @@ class TestCardResolver(unittest.TestCase):
 
         # Then:  no matching TarotCard is found
         self.assertIsNone(tarot_card)
+# pylint: enable=C0115,C0116
 
 
 if __name__ == '__main__':
