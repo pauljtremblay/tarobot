@@ -7,7 +7,7 @@ from typing import List, Optional
 from dataclasses_json import dataclass_json
 from openai import Completion
 
-from tarobot.tarot import TarotCard
+from . import TarotCard
 
 
 class AbstractBaseClass:

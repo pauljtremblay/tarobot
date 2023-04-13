@@ -4,7 +4,7 @@ from datetime import datetime
 
 from sqlalchemy import Column, Float, Integer, String, Text, TIMESTAMP
 
-from tarobot.tarot import CardReading
+from .. tarot import CardReading
 from . base import Base
 
 

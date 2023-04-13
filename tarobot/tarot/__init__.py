@@ -10,10 +10,10 @@ has 14 cards, Ace through Ten, and 4 face cards: Page, Knight, Queen, and King.
 
 __all__ = ['Archana', 'Suit', 'CardValue', 'TarotCard', 'TarotDeck', 'resolver', 'CardResolver', 'CardReading']
 
-from tarobot.tarot.archana import Archana
-from tarobot.tarot.suit import Suit
-from tarobot.tarot.card_value import CardValue
-from tarobot.tarot.tarot_card import TarotCard
-from tarobot.tarot.deck import TarotDeck
-from tarobot.tarot.card_resolver import resolver, CardResolver
-from tarobot.tarot.card_reading import CardReading
+from . archana import Archana
+from . suit import Suit
+from . card_value import CardValue
+from . tarot_card import TarotCard
+from . deck import TarotDeck
+from . card_resolver import resolver, CardResolver
+from . card_reading import CardReading

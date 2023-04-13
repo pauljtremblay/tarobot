@@ -7,10 +7,10 @@ from typing import Optional
 
 import openai
 
-from tarobot.db import session_factory, CardReadingEntity
-from tarobot.tarot import TarotDeck, CardReading
+from .. db import session_factory, CardReadingEntity
+from .. tarot import TarotDeck, CardReading
 from . command_parser import CommandParser
-from . config import config, Config
+from . config import CONFIG, Config
 
 
 logger = logging.getLogger(__name__)
@@ -24,7 +24,7 @@ class App:
         if config_opt is not None:
             self.__config = config_opt
         else:
-            self.__config = config
+            self.__config = CONFIG
         # initialize openai module, or error out if api key is not defined
         openai.api_key = self.__config.openai.api_key
         self.parser = CommandParser(self.__config)
@@ -71,7 +71,7 @@ class App:
 
     def generate_tarot_reading_prompt(self):
         """Generates the prompt to openai for how to generate a tarot card reading for the given spread."""
-        prompt = "Tarot card reading for {} with the cards ".format(self.command.subject)
+        prompt = f"Tarot card reading for {self.command.subject} with the cards "
         if len(self.spread) < 2:
             prompt += self.spread[0]
         else:

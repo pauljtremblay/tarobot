@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from typing import List
 
 from . config import Config
-from tarobot.tarot import resolver, TarotCard, TarotDeck
+from .. tarot import resolver, TarotCard, TarotDeck
 
 
 @dataclass
@@ -39,8 +39,8 @@ class CommandParser:
             exit_on_error=False)
         self.parser.add_argument(
             '--card-count',
-            help="number of tarot cards to draw in the spread [{}-{}]\n\tdefault: {} card spread".format(
-                tarot.min_cards, tarot.max_cards, tarot.default_cards),
+            help=f"number of tarot cards to draw in the spread [{tarot.min_cards}-{tarot.max_cards}]"
+                 f"\n\tdefault: {tarot.default_cards} card spread",
             type=int,
             choices=range(tarot.min_cards, tarot.max_cards + 1),
             default=tarot.default_cards)
@@ -86,8 +86,7 @@ class CommandParser:
             parsed_command.given_cards = self.parse_given_tarot_cards()
             tarot = self.__config.tarot
             if len(parsed_command.given_cards) not in range(tarot.min_cards, tarot.max_cards + 1):
-                raise ValueError("Only [{}-{}] cards allowed in the tarot card spread".format(
-                    tarot.min_cards, tarot.max_cards))
+                raise ValueError(f"Only [{tarot.min_cards}-{tarot.max_cards}] cards allowed in the tarot card spread")
         return parsed_command
 
     def parse_given_tarot_cards(self):
@@ -97,17 +96,19 @@ class CommandParser:
         for given_card_name in self.parsed_args.use_card_list:
             tarot_card = resolver.get_optional_card_by_alias(given_card_name)
             if tarot_card is None:
-                raise ValueError("Unknown card: {}".format(given_card_name))
-            else:
-                parsed_cards.append(tarot_card)
+                raise ValueError(f"Unknown card: {given_card_name}")
+            parsed_cards.append(tarot_card)
         # ensure a given card isn't used more than once
         tarot_deck = TarotDeck()
         for card in parsed_cards:
             try:
                 tarot_deck.cards.remove(card)
-            except ValueError:
-                raise ValueError("Duplicate card: {}".format(card))
+            except ValueError as cause:
+                raise ValueError(f"Duplicate card: {card}") from cause
         return parsed_cards
 
     def print_parse_error_and_exit(self, arg_error):
+        """Used to format the error raised while parsing user input, and then exits with a non-zero exit code.
+
+        Used so fatal argparse errors can be unit tested."""
         self.parser.error(arg_error)

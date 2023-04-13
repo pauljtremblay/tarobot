@@ -9,6 +9,7 @@ import dataconf
 
 
 class AbstractBaseClass:
+    """Common ancestor used by app's config dataclasses."""
     pass
 
 
@@ -77,14 +78,14 @@ class ConfigLoader:
 
 
 # instantiate app config once and use various places: attempt base config if main config fails
-config_paths = ["/config/tarobot.conf", "/config/base-tarobot.conf"]
-config: Optional[Config] = None
+CONFIG_PATHS = ["/config/tarobot.conf", "/config/base-tarobot.conf"]
+CONFIG: Optional[Config] = None
 
-for path in config_paths:
-    if config is not None:
+for path in CONFIG_PATHS:
+    if CONFIG is not None:
         break
     try:
         config_path = realpath(dirname(dirname(__file__)) + path)
-        config = ConfigLoader(config_path).config
+        CONFIG = ConfigLoader(config_path).config
     except:
-        config = None
+        CONFIG = None
