@@ -12,7 +12,7 @@ from openai import Completion
 from . tarot_card import TarotCard
 
 
-# pylint: disable=C0103,R0902,R0903,R0913
+# pylint: disable=C0103,R0902,R0903,R0913,E1101
 class AbstractBaseClass:
     """Common ancestor for this module's dataclasses."""
 
@@ -62,4 +62,4 @@ class CardReading(AbstractBaseClass):
 
     def __str__(self):
         return json.dumps(json.loads(self.to_json()), indent=4)
-# pylint: enable=C0103,R0902,R0903,R0913
+# pylint: enable=C0103,R0902,R0903,R0913,E1101
