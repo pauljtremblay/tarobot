@@ -5,7 +5,7 @@
 from os.path import dirname, realpath
 import unittest
 
-from tests import ConfigLoader
+from tarobot.app import ConfigLoader
 
 
 class BaseTestWithConfig(unittest.TestCase):

@@ -4,7 +4,11 @@
 
 import unittest
 
-from tests import BaseTestWithConfig, App, CommandDto, TarotCard
+# pylint: disable=E0401
+from base_test_with_config import BaseTestWithConfig
+# pylint: enable=E0401
+from tarobot.tarot import TarotCard
+from tarobot.app import App, CommandDto
 
 
 # pylint: disable=C0115,C0116

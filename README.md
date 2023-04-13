@@ -21,7 +21,7 @@ https://platform.openai.com/account/api-keys
 ## Usage
 Then you can simply call the tarobot script and have it draw 3 tarot cards at random, after which
 it will generate a tarot card reading for your spread.
-`python3 tarobot.py --help`
+`python3 -m tarobot --help`
 ```text
 usage: tarobot [-h] [--card-count {1,2,3,4,5}] [--subject SUBJECT]
                [--teller TELLER]
@@ -55,7 +55,7 @@ options:
 ## Sample tarot card readings
 
 ### Basic tarot card readings
-`python3 tarobot.py --subject Paul --teller Tarobot`
+`python3 -m tarobot --subject Paul --teller Tarobot`
 ```text
 Generating a tarot card reading for Paul for the following spread:
         Knight of Wands, Ten of Pentacles, Knight of Cups
@@ -75,7 +75,7 @@ your goals and experience the rewards of success.
 ```
 
 ### You can provide the tarot cards to use for the reading
-`python3 tarobot.py --teller "Hulk Hogan" --use-card-list TheTower ThreeOfCups TheWorld --show-prompt`
+`python3 -m tarobot --teller "Hulk Hogan" --use-card-list TheTower ThreeOfCups TheWorld --show-prompt`
 ```text
 Generating a tarot card reading for the seeker for the following spread:
 	The Tower, Three of Cups, The World
@@ -95,7 +95,7 @@ it looks like you've got some major breakthroughs headed your way!
 ```
 
 ### Try tarobot's hand at songwriting
-`python3 tarobot.py --teller "Iron Maiden lyrics" --show-prompt`
+`python3 -m tarobot --teller "Iron Maiden lyrics" --show-prompt`
 ```text
 Generating a tarot card reading for the seeker for the following spread:
 	Seven of Cups, Queen of Pentacles, The Sun
@@ -131,7 +131,7 @@ Answers come in second sight.
 ```
 
 ### Inspire tarobot to write some poetry:
-`python3 tarobot.py --teller "a Robert Frost poem" --show-prompt`
+`python3 -m tarobot --teller "a Robert Frost poem" --show-prompt`
 ```text
 Generating a tarot card reading for the seeker for the following spread:
 Ace of Wands, The Tower, Seven of Cups

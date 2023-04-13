@@ -5,5 +5,6 @@
 from . import tarot
 from . import app
 from . import db
+from . app import App
 
-__all__ = ['app', 'db', 'tarot']
+__all__ = ['app', 'db', 'tarot', 'App']

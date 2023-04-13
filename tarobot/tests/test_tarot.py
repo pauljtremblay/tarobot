@@ -4,7 +4,7 @@
 
 import unittest
 
-from tests import Archana, CardValue, Suit, TarotCard, TarotDeck
+from tarobot.tarot import Archana, CardValue, Suit, TarotCard, TarotDeck
 
 
 CARDS_IN_DECK = 78

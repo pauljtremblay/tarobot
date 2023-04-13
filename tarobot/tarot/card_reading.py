@@ -9,7 +9,7 @@ from typing import List, Optional
 from dataclasses_json import dataclass_json
 from openai import Completion
 
-from . import TarotCard
+from . tarot_card import TarotCard
 
 
 # pylint: disable=C0103,R0902,R0903,R0913

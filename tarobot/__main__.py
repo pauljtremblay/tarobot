@@ -5,8 +5,7 @@
 from logging import getLogger, Formatter, StreamHandler, DEBUG, INFO
 import sys
 
-from tarobot.app import App
-
+from tarobot import App
 
 # log levels for different third-party libraries
 log_appender_configs = {
