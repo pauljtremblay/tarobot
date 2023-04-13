@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+"""Module containing all the core application's unit tests."""
+
 import unittest
 
 from base_test_with_config import BaseTestWithConfig

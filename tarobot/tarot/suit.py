@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+"""Module that represents for the four different suits of the minor archana."""
+
 from enum import Enum
 
 

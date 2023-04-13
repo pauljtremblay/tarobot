@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+"""Module containing all the tarot card resolver logic unit tests."""
+
 from os.path import dirname, realpath
 import unittest
 
@@ -101,9 +103,6 @@ class TestCardResolver(unittest.TestCase):
 
         # Then:  the expected CardValue is returned
         self.assertEqual(CardValue.Two, card_value)
-
-    # TODO find a "generator" way to verify many input -> output combinations
-    # check out unittest_data_provider
 
     def test_get_optional_card_by_alias_happy_path(self):
         # Given: a known card's alias

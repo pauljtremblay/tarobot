@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+"""This module represents the different card values for all the minor archana cards."""
+
 from enum import Enum
 
 

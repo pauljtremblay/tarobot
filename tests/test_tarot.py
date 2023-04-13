@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 
+"""Module containing all the unit tests around tarot card and tarot deck logic."""
+
 import unittest
 
-from tarobot.tarot import *
+from tarobot.tarot import Archana, CardValue, Suit, TarotCard, TarotDeck
+
 
 CARDS_IN_DECK = 78
 
@@ -21,7 +24,7 @@ class TestTarot(unittest.TestCase):
                 if card.value == ordinal:
                     found = True
                     break
-            self.assertTrue(found, msg="card with ordinal value %i is missing from deck" % ordinal)
+            self.assertTrue(found, msg=f"card with ordinal value ${ordinal} is missing from deck")
 
     def test_deck_is_shuffled(self):
         # When:  a tarot deck is instantiated

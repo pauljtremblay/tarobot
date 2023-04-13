@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+"""Module containing unit tests around parsing user input from the command line."""
+
 from argparse import ArgumentError
 import unittest
 
@@ -42,7 +44,8 @@ class TestCommandParser(BaseTestWithConfig):
         # Then:  an exception is raised due to an illegal argument
         with self.assertRaises(ArgumentError) as arg_error:
             parser.parse_command_line_args(args)
-        self.assertEqual("argument --card-count: invalid choice: 42 (choose from 1, 2, 3, 4, 5)", str(arg_error.exception))
+        self.assertEqual("argument --card-count: invalid choice: 42 (choose from 1, 2, 3, 4, 5)",
+                         str(arg_error.exception))
 
     def test_parse_command_line_args_with_cards(self):
         # Given: some mocked up command line arguments with cards specified

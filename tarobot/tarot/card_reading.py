@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+"""This module contains all the dataclasses used to represent a tarot card reading DTO."""
+
 from dataclasses import dataclass
 import json
 from typing import List, Optional
@@ -10,8 +12,9 @@ from openai import Completion
 from . import TarotCard
 
 
+# pylint: disable=C0103,R0902,R0903,R0913
 class AbstractBaseClass:
-    pass
+    """Common ancestor for this module's dataclasses."""
 
 
 @dataclass
@@ -59,3 +62,4 @@ class CardReading(AbstractBaseClass):
 
     def __str__(self):
         return json.dumps(json.loads(self.to_json()), indent=4)
+# pylint: enable=C0103,R0902,R0903,R0913

@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+"""This module contains the loader utility that loads tarobot's hocon-based configuration into dataclass objects."""
+
 from dataclasses import dataclass
 from os.path import dirname, realpath
 from typing import Optional
@@ -8,9 +10,9 @@ from dotenv import load_dotenv
 import dataconf
 
 
+# pylint: disable=C0103,R0902,R0903
 class AbstractBaseClass:
     """Common ancestor used by app's config dataclasses."""
-    pass
 
 
 @dataclass
@@ -66,9 +68,10 @@ class Config(AbstractBaseClass):
     openai: OpenAI
     tarot: Tarot
     db: Database
+# pylint: enable=C0103,R0902,R0903
 
 
-class ConfigLoader:
+class ConfigLoader:  # pylint: disable=R0903
     """Loads the hocon-based config file into a config object."""
 
     def __init__(self, location):
@@ -87,5 +90,5 @@ for path in CONFIG_PATHS:
     try:
         config_path = realpath(dirname(dirname(__file__)) + path)
         CONFIG = ConfigLoader(config_path).config
-    except:
+    except Exception:  # pylint: disable=W0718
         CONFIG = None

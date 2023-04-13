@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+"""This module serves as a base class for all sqlalchemy entity classes. Used to establish database transactions."""
+
 from urllib.parse import quote_plus
 
 from sqlalchemy import create_engine

@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+"""Module containing unit tests around the application's config loading logic."""
+
 from os.path import dirname, realpath
 import unittest
 

@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+"""Utility that parses the user input into commands and options for tarobot."""
+
 from argparse import ArgumentParser
 from dataclasses import dataclass
 from typing import List

@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+"""Utility module that contains the tarot trait logic that is later mixed into the TarotCard enumeration."""
+
 from enum import Enum
 import re
 

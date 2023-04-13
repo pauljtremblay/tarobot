@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+"""Module used to generate the TarotCard enumeration."""
+
 from . tarot_trait import TarotTrait
 from . suit import Suit
 from . card_value import CardValue
@@ -33,11 +35,13 @@ def generate_tarot_cards():
         'TheWorld': 21
     }
     # minor archana
-    for s in Suit:
-        for cv in CardValue:
-            cards["%sOf%s" % (cv, s)] = 21 + 14 * (s.value - 1) + cv.value
+    for suit in Suit:
+        for card_value in CardValue:
+            cards[f"{card_value}Of{suit}"] = 21 + 14 * (suit.value - 1) + card_value.value
     return cards
 
 
+# pylint: disable=E1121
 TarotCard = TarotTrait('TarotCard', generate_tarot_cards())
 """An enumeration representing the 78 cards of a standard tarot deck."""
+# pylint: enable=E1121

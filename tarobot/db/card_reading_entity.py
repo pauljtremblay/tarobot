@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+"""Module for the card reading database entity. Used to insert tarot card readings in a relational database."""
+
 from datetime import datetime
 
 from sqlalchemy import Column, Float, Integer, String, Text, TIMESTAMP
@@ -8,6 +10,7 @@ from .. tarot import CardReading
 from . base import Base
 
 
+# pylint: disable=C0103,R0902,R0903
 class CardReadingEntity(Base):
     """Entity object for the CardReading class."""
     __tablename__ = "reading"
@@ -56,3 +59,4 @@ class CardReadingEntity(Base):
         self.total_tokens = dto.metadata.total_tokens
         self.temperature = dto.metadata.temperature
         self.top_p = dto.metadata.top_p
+# pylint: enable=C0103,R0902,R0903

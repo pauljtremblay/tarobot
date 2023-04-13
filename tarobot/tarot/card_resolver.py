@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+"""This module contains all the logic needed to normalize and resolve a given tarot card name into a TarotCard."""
+
 from dataclasses import dataclass
 from os.path import realpath, dirname
 from typing import Dict, List, Optional
@@ -11,8 +13,9 @@ from . suit import Suit
 from . tarot_card import TarotCard
 
 
+# pylint: disable=R0903
 class AbstractBaseClass:
-    pass
+    """Base class for this module's dataclasses."""
 
 
 @dataclass
@@ -21,6 +24,7 @@ class AliasConfig(AbstractBaseClass):
     card_aliases: Dict[str, List[str]]
     suit_aliases: Dict[str, List[str]]
     rank_aliases: Dict[str, List[str]]
+# pylint: enable=R0903
 
 
 class CardResolver:

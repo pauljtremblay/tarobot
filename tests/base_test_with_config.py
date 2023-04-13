@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+"""Base test class that sets up an app config fixture for any test classes requiring app config."""
+
 from os.path import dirname, realpath
 import unittest
 

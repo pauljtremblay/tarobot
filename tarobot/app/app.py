@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+"""This module contains tarobot's core application logic."""
+
 from argparse import ArgumentError
 import logging
 import sys
@@ -116,5 +118,5 @@ def persist_card_reading(card_reading_dto: CardReading):
         session = session_factory()
         with session.begin():
             session.add(CardReadingEntity(card_reading_dto))
-    except:
+    except Exception:  # pylint: disable=W0718
         logger.error("Failed to record card reading in the database", exc_info=True)

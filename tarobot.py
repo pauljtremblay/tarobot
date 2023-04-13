@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 
+"""Main entry point for the utility from the root directory. Configures the app's logging before running."""
+
 from logging import getLogger, Formatter, StreamHandler, DEBUG, INFO
 import sys
 
-from tarobot.app.app import App
+from tarobot.app import App
 
 
+# log levels for different third-party libraries
 log_appender_configs = {
     'openai': INFO,
     'urllib3': INFO
