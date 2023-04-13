@@ -8,23 +8,23 @@ from enum import Enum
 class CardValue(Enum):
     """An enumeration representing the different card values of a minor archana suit."""
 
-    Ace = 1
-    Two = 2
-    Three = 3
-    Four = 4
-    Five = 5
-    Six = 6
-    Seven = 7
-    Eight = 8
-    Nine = 9
-    Ten = 10
-    Page = 11
-    Knight = 12
-    Queen = 13
-    King = 14
+    ACE = 1
+    TWO = 2
+    THREE = 3
+    FOUR = 4
+    FIVE = 5
+    SIX = 6
+    SEVEN = 7
+    EIGHT = 8
+    NINE = 9
+    TEN = 10
+    PAGE = 11
+    KNIGHT = 12
+    QUEEN = 13
+    KING = 14
 
     def __repr__(self):
         return self.name
 
     def __str__(self):
-        return self.__repr__()
+        return self.name.capitalize()

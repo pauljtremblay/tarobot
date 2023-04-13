@@ -52,7 +52,7 @@ class TestCardResolver(unittest.TestCase):
         tarot_suit = self.resolver.get_suit_by_known_alias(suit_name)
 
         # Then:  the expected Suit is returned
-        self.assertEqual(Suit.Wands, tarot_suit)
+        self.assertEqual(Suit.WANDS, tarot_suit)
 
     def test_get_suit_by_known_alias_upper(self):
         # Given: a suit's alias
@@ -62,7 +62,7 @@ class TestCardResolver(unittest.TestCase):
         tarot_suit = self.resolver.get_suit_by_known_alias(suit_name)
 
         # Then:  the expected Suit is returned
-        self.assertEqual(Suit.Pentacles, tarot_suit)
+        self.assertEqual(Suit.PENTACLES, tarot_suit)
 
     def test_get_suit_by_known_alias_another_alias(self):
         # Given: a suit's alias
@@ -72,7 +72,7 @@ class TestCardResolver(unittest.TestCase):
         tarot_suit = self.resolver.get_suit_by_known_alias(suit_name)
 
         # Then:  the expected Suit is returned
-        self.assertEqual(Suit.Pentacles, tarot_suit)
+        self.assertEqual(Suit.PENTACLES, tarot_suit)
 
     def test_get_rank_by_known_alias_happy_path(self):
         # Given: a card's rank
@@ -82,7 +82,7 @@ class TestCardResolver(unittest.TestCase):
         card_value = self.resolver.get_rank_by_known_alias(rank_name)
 
         # Then:  the expected CardValue is returned
-        self.assertEqual(CardValue.Knight, card_value)
+        self.assertEqual(CardValue.KNIGHT, card_value)
 
     def test_get_rank_by_known_alias_upper(self):
         # Given: a card's rank (in uppercase)
@@ -92,7 +92,7 @@ class TestCardResolver(unittest.TestCase):
         card_value = self.resolver.get_rank_by_known_alias(rank_name)
 
         # Then:  the expected CardValue is returned
-        self.assertEqual(CardValue.Ace, card_value)
+        self.assertEqual(CardValue.ACE, card_value)
 
     def test_get_rank_by_known_alias_another_alias(self):
         # Given: a card rank's alias
@@ -102,7 +102,7 @@ class TestCardResolver(unittest.TestCase):
         card_value = self.resolver.get_rank_by_known_alias(rank_name)
 
         # Then:  the expected CardValue is returned
-        self.assertEqual(CardValue.Two, card_value)
+        self.assertEqual(CardValue.TWO, card_value)
 
     def test_get_optional_card_by_alias_happy_path(self):
         # Given: a known card's alias

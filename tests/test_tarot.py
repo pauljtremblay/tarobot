@@ -57,7 +57,7 @@ class TestTarot(unittest.TestCase):
         self.assertEqual(major_card, TarotCard.TheMagician)
         # And:   the expected card properties exist
         self.assertEqual(major_card.value, 1)
-        self.assertEqual(major_card.archana(), Archana.Major)
+        self.assertEqual(major_card.archana(), Archana.MAJOR)
         self.assertEqual(major_card.suit(), None)
         self.assertEqual(major_card.card_value(), None)
         # And:    the string representation is human-readable
@@ -71,9 +71,9 @@ class TestTarot(unittest.TestCase):
         self.assertEqual(minor_card, TarotCard.SixOfSwords)
         # And:   the expected card properties exist
         self.assertEqual(minor_card.value, 55)
-        self.assertEqual(minor_card.archana(), Archana.Minor)
-        self.assertEqual(minor_card.suit(), Suit.Swords)
-        self.assertEqual(minor_card.card_value(), CardValue.Six)
+        self.assertEqual(minor_card.archana(), Archana.MINOR)
+        self.assertEqual(minor_card.suit(), Suit.SWORDS)
+        self.assertEqual(minor_card.card_value(), CardValue.SIX)
         # And:    the string representation is human-readable
         self.assertEqual(str(minor_card), "Six of Swords")
 
@@ -83,7 +83,7 @@ class TestTarot(unittest.TestCase):
 
         # Then:  the expected card properties exist
         self.assertEqual(card.value, 1)
-        self.assertEqual(card.archana(), Archana.Major)
+        self.assertEqual(card.archana(), Archana.MAJOR)
         self.assertEqual(card.suit(), None)
         self.assertEqual(card.card_value(), None)
         # And:    the string representation is human-readable

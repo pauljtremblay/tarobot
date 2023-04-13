@@ -15,17 +15,17 @@ class TarotTrait(Enum):
 
     def archana(self):
         """Returns the archana to which this tarot card belongs."""
-        return Archana.Major if self.value < 22 else Archana.Minor
+        return Archana.MAJOR if self.value < 22 else Archana.MINOR
 
     def suit(self):
         """Returns the suit to which this card belongs, or None in the case of the major archana."""
-        if self.archana() == Archana.Major:
+        if self.archana() == Archana.MAJOR:
             return None
         return Suit((self.value - 22) // 14 + 1)
 
     def card_value(self):
         """Returns the value of this tarot card, or None in the case of the major archana."""
-        if self.archana() == Archana.Major:
+        if self.archana() == Archana.MAJOR:
             return None
         return CardValue((self.value - 22) % 14 + 1)
 

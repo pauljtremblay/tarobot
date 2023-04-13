@@ -8,11 +8,11 @@ from enum import Enum
 class Archana(Enum):
     """An enumeration representing the different archana."""
 
-    Major = 1
-    Minor = 2
+    MAJOR = 1
+    MINOR = 2
 
     def __repr__(self):
         return self.name
 
     def __str__(self):
-        return self.__repr__()
+        return self.name.capitalize()
