@@ -85,7 +85,7 @@ class ConfigLoader:  # pylint: disable=R0903
 
 
 # instantiate app config once and use various places: attempt base config if main config fails
-CONFIG_PATHS = ["/config/tarobot.conf", "/config/base-tarobot.conf"]
+CONFIG_PATHS = ["/config/tarobot.conf"]
 CONFIG: Optional[Config] = None
 
 for path in CONFIG_PATHS:
