@@ -20,4 +20,4 @@ jobs:
         pip install -r requirements.txt
     - name: Testing the code with unittest
       run: |
-        unittest discover --verbose tarobot/tests
+        python -m unittest discover --verbose tarobot/tests
