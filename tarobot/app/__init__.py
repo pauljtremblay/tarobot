@@ -5,7 +5,7 @@
 This module processes command line arguments and executes the desired command.
 """
 
-__all__ = ['App', 'CommandParser', 'CommandDto', 'CONFIG', 'Config', 'ConfigLoader']
+__all__ = ['CONFIG', 'Config', 'ConfigLoader', 'CommandParser', 'CommandDto', 'App']
 
 from . config import CONFIG, Config, ConfigLoader
 from . command_parser import CommandParser, CommandDto
