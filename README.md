@@ -9,9 +9,11 @@ First make sure the required dependencies have been installed:
 
 Once the dependencies have been installed, ensure that you have created an openai API key. Make the
 api key available in the environment variable `OPENAI_KEY`, you can use a dot-env file (`.env`) to
-do so:
+do so. You will also need to define a database password env var, even if not using database
+integration (a dummy value is sufficient).
 ```env
 OPENAI_API_KEY=< put your openai api key here >
+TAROBOT_SCHEMA_PASS=some-placeholder-value
 ```
 
 If you do not yet have an openai API key, you can create and manage your API keys here:
