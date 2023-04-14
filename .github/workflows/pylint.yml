@@ -21,5 +21,8 @@ jobs:
         pip install pylint
         pip install -r requirements.txt
     - name: Analysing the code with pylint
+      env:
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        TAROBOT_SCHEMA_PASS: BOGUS_DB_PASSWORD
       run: |
         pylint $(git ls-files '*.py')
