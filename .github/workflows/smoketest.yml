@@ -22,5 +22,6 @@ jobs:
     - name: Running a smoke test with the latest code
       env:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        TAROBOT_SCHEMA_PASS: BOGUS_DB_PASSWORD
       run: |
         python -m tarobot --teller "Dr Seuss" --show-prompt
