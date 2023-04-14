@@ -3,11 +3,15 @@
 """This module contains the loader utility that loads tarobot's hocon-based configuration into dataclass objects."""
 
 from dataclasses import dataclass
+import logging
 from os.path import dirname, realpath
 from typing import Optional
 
 from dotenv import load_dotenv
 import dataconf
+
+
+logger = logging.getLogger(__name__)
 
 
 # pylint: disable=C0103,R0902,R0903
@@ -89,6 +93,8 @@ for path in CONFIG_PATHS:
         break
     try:
         config_path = realpath(dirname(dirname(__file__)) + path)
+        logger.debug("Attempting to resolve config file {}", config_path)
         CONFIG = ConfigLoader(config_path).config
     except Exception:  # pylint: disable=W0718
+        logger.warning("Failed to resolve config file", exc_info=True)
         CONFIG = None
