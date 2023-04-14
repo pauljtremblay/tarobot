@@ -93,9 +93,9 @@ for path in CONFIG_PATHS:
         break
     try:
         config_path = realpath(dirname(dirname(__file__)) + path)
-        logger.debug("Attempting to resolve config file {}", path)
+        logger.debug("Attempting to resolve config file %s", path)
         CONFIG = ConfigLoader(config_path).config
-        logger.debug("Successfully resolved config file {}", path)
+        logger.debug("Successfully resolved config file %s", path)
     except Exception:  # pylint: disable=W0718
-        logger.warning("Failed to resolve config file {}", path)
+        logger.warning("Failed to resolve config file %s", path)
         CONFIG = None
