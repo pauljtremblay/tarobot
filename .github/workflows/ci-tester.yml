@@ -28,7 +28,7 @@ jobs:
         python -m coverage run --branch -a -m unittest discover tarobot/tests --verbose
     - name: Code coverage report
       run: |
-        python -m coverage report | grep -v tests
+        python -m coverage report | grep -v tests | grep -v TOTAL
     - name: Run a smoke test with the latest code
       env:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
