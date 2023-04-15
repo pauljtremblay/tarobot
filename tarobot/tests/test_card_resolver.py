@@ -135,7 +135,3 @@ class TestCardResolver(unittest.TestCase):
         # Then:  no matching TarotCard is found
         self.assertIsNone(tarot_card)
 # pylint: enable=C0115,C0116
-
-
-if __name__ == '__main__':
-    unittest.main()

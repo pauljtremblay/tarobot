@@ -32,7 +32,3 @@ class TestConfig(unittest.TestCase):
         self.assertGreaterEqual(config.tarot.default_cards, config.tarot.min_cards)
         self.assertGreaterEqual(config.tarot.max_cards, config.tarot.default_cards)
 # pylint: enable=C0115,C0116
-
-
-if __name__ == '__main__':
-    unittest.main()

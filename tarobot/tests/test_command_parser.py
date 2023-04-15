@@ -3,7 +3,6 @@
 """Module containing unit tests around parsing user input from the command line."""
 
 from argparse import ArgumentError
-import unittest
 
 # pylint: disable=E0401
 from base_test_with_config import BaseTestWithConfig
@@ -125,7 +124,3 @@ class TestCommandParser(BaseTestWithConfig):
             parser.parse_command_line_args(args)
         self.assertEqual("Only [1-3] cards allowed in the tarot card spread", str(val_error.exception))
 # pylint: enable=C0115,C0116
-
-
-if __name__ == '__main__':
-    unittest.main()

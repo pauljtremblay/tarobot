@@ -90,7 +90,3 @@ class TestTarot(unittest.TestCase):
         # And:    the string representation is human-readable
         self.assertEqual(str(card), "The Magician")
 # pylint: enable=C0115,C0116
-
-
-if __name__ == '__main__':
-    unittest.main()

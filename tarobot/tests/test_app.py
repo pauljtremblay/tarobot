@@ -2,8 +2,6 @@
 
 """Module containing all the core application's unit tests."""
 
-import unittest
-
 # pylint: disable=E0401
 from base_test_with_config import BaseTestWithConfig
 # pylint: enable=E0401
@@ -71,7 +69,3 @@ class TestApp(BaseTestWithConfig):
         self.assertEqual(prompt, "Tarot card reading for The Seeker with the cards The Tower, Death, and Seven of "
                                  "Swords in the style of Hulk Hogan")
 # pylint: enable=C0115,C0116
-
-
-if __name__ == '__main__':
-    unittest.main()
