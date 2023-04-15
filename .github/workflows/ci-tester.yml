@@ -20,15 +20,15 @@ jobs:
         python -m pip install --upgrade pip
         pip install coverage
         pip install -r requirements.txt
+        python -m coverage erase
     - name: Test the code with unittest
       env:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       run: |
-        python -m coverage erase \
-        && echo -e "\nRunning unit tests:\n" \
-        && python -m coverage run -a -m unittest discover tarobot/tests --verbose \
-        && echo -e "\nCode Coverage Report:\n" \
-        && python -m coverage report | grep -v tests
+        python -m coverage run -a -m unittest discover tarobot/tests --verbose
+    - name: Code coverage report
+      run: |
+        python -m coverage report | grep -v tests
     - name: Run a smoke test with the latest code
       env:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
