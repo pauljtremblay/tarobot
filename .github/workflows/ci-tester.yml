@@ -18,16 +18,20 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
+        pip install coverage
         pip install -r requirements.txt
     - name: Test the code with unittest
       env:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        TAROBOT_SCHEMA_PASS: BOGUS_DB_PASSWORD
       run: |
-        python -m unittest discover --verbose tarobot/tests
+        python -m coverage erase \
+        && echo -e "\nRunning unit tests:\n" \
+        && python -m coverage run -a -m unittest discover tarobot/tests --verbose \
+        && echo -e "\nCode Coverage Report:\n" \
+        && python -m coverage report | grep -v tests
     - name: Run a smoke test with the latest code
       env:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        TAROBOT_SCHEMA_PASS: BOGUS_DB_PASSWORD
       run: |
-        python -m tarobot --teller "Dr Seuss" --show-prompt
+        echo -e "\nRunning smoke test:\n" \
+        && python -m tarobot --teller "Dr Seuss" --show-prompt

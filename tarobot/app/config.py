@@ -85,17 +85,5 @@ class ConfigLoader:  # pylint: disable=R0903
 
 
 # instantiate app config once and use various places: attempt base config if main config fails
-CONFIG_PATHS = ["/config/tarobot.conf"]
-CONFIG: Optional[Config] = None
-
-for path in CONFIG_PATHS:
-    if CONFIG is not None:
-        break
-    try:
-        config_path = realpath(dirname(dirname(__file__)) + path)
-        logger.debug("Attempting to resolve config file %s", path)
-        CONFIG = ConfigLoader(config_path).config
-        logger.debug("Successfully resolved config file %s", path)
-    except Exception:  # pylint: disable=W0718
-        logger.warning("Failed to resolve config file %s", path)
-        CONFIG = None
+CONFIG_PATH = realpath(dirname(dirname(__file__)) + "/config/tarobot.conf")
+CONFIG = ConfigLoader(CONFIG_PATH).config

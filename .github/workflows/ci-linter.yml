@@ -23,6 +23,5 @@ jobs:
     - name: Analyze the code with pylint
       env:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        TAROBOT_SCHEMA_PASS: BOGUS_DB_PASSWORD
       run: |
         pylint --fail-under 9 $(git ls-files '*.py')
