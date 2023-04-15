@@ -33,5 +33,4 @@ jobs:
       env:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       run: |
-        echo -e "\nRunning smoke test:\n" \
-        && python -m tarobot --teller "Dr Seuss" --show-prompt
+        python -m tarobot --teller "Dr Seuss" --show-prompt
