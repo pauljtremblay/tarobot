@@ -12,7 +12,7 @@ from tarobot.tarot import CardReading, TarotCard
 from tarobot.app import App, CommandDto
 
 
-# pylint: disable=C0115,C0116
+# pylint: disable=C0115,C0116,R0903
 class Choice:
     text: str
 
@@ -141,7 +141,6 @@ class TestApp(BaseTestWithConfig):
         # Then:  the parsed config is stored
         self.assertEqual(command, app.command)
         # And:   the expected helper methods are called
-        mock_create_spread
         self.assertTrue(mock_create_spread.called)
         self.assertTrue(mock_interpret_spread.called)
-# pylint: enable=C0115,C0116
+# pylint: enable=C0115,C0116,R0903
