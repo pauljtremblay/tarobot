@@ -86,7 +86,7 @@ class TestCommandParser(unittest.TestCase):
         self.assertEqual("Tarot card reading for the seeker blah blah blah", entity.prompt)
         self.assertEqual("Yo, good things are gonna come to you", entity.response)
         self.assertEqual("scatgpt-4", entity.model)
-        self.assertEqual(datetime.strptime("2023-04-15T11:10:51", "%Y-%m-%dT%H:%M:%S"), entity.created_ts)
+        self.assertEqual(datetime.fromtimestamp(1681571451), entity.created_ts)
         self.assertEqual(1234, entity.response_ms)
         self.assertEqual(2000, entity.max_tokens)
         self.assertEqual(30, entity.prompt_tokens)
