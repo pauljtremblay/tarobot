@@ -2,10 +2,14 @@
 
 """Module containing unit tests around parsing user input from the command line."""
 
+from datetime import datetime
 import unittest
+from unittest.mock import patch
 
 from openai import Completion
 
+from tarobot.app.app import persist_card_reading
+from tarobot.db.card_reading_entity import CardReadingEntity
 from tarobot.tarot import CardReading, TarotCard
 
 
@@ -44,4 +48,50 @@ class TestCommandParser(unittest.TestCase):
         self.assertEqual(30, metadata.prompt_tokens)
         self.assertEqual(200, metadata.completion_tokens)
         self.assertEqual(230, metadata.total_tokens)
+
+    @patch("tarobot.app.app.session_factory")
+    def test_persist_card_reading(self, mock_session_factory):
+        # Given: a populated CardReading DTO
+        card_1 = TarotCard.TheWheelOfFortune
+        card_2 = TarotCard.KingOfPentacles
+        card_3 = TarotCard.TheFool
+        card_4 = TarotCard.TheMagician
+        card_5 = TarotCard.TheEmpress
+        spread = [card_1, card_2, card_3, card_4, card_5]
+        prompt = "Tarot card reading for the seeker blah blah blah"
+        response = "Yo, good things are gonna come to you"
+        subject = "the seeker"
+        teller = "Bob"
+        completion = Completion(id='cmpl-444555', engine='generate', response_ms=1234)
+        completion['model'] = 'scatgpt-4'
+        completion['created'] = 1681571451
+        completion['usage'] = {'prompt_tokens': 30, 'completion_tokens': 200, 'total_tokens': 230}
+        card_reading = CardReading(completion, spread, prompt, response, subject, teller)
+        card_reading.metadata.max_tokens = 2000
+        card_reading.metadata.top_p = 0.1
+
+        # When:  the card reading is persisted to the database
+        persist_card_reading(card_reading)
+        entity: CardReadingEntity
+        (entity,) = mock_session_factory.mock_calls[3][1]
+
+        # Then:  the columns are filled in correctly in the intercepted entity
+        self.assertEqual(10, entity.card_one)
+        self.assertEqual(77, entity.card_two)
+        self.assertEqual(0, entity.card_three)
+        self.assertEqual(1, entity.card_four)
+        self.assertEqual(3, entity.card_five)
+        self.assertEqual("the seeker", entity.subject)
+        self.assertEqual("Bob", entity.teller)
+        self.assertEqual("Tarot card reading for the seeker blah blah blah", entity.prompt)
+        self.assertEqual("Yo, good things are gonna come to you", entity.response)
+        self.assertEqual("scatgpt-4", entity.model)
+        self.assertEqual(datetime.strptime("2023-04-15T11:10:51", "%Y-%m-%dT%H:%M:%S"), entity.created_ts)
+        self.assertEqual(1234, entity.response_ms)
+        self.assertEqual(2000, entity.max_tokens)
+        self.assertEqual(30, entity.prompt_tokens)
+        self.assertEqual(200, entity.completion_tokens)
+        self.assertEqual(230, entity.total_tokens)
+        self.assertIsNone(entity.temperature)
+        self.assertEqual(0.1, entity.top_p)
 # pylint: disable=C0115,C0116
