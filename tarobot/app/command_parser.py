@@ -40,13 +40,6 @@ class CommandParser:
             description='Tarot deck cartomancy application',
             exit_on_error=False)
         self.parser.add_argument(
-            '--card-count',
-            help=f"number of tarot cards to draw in the spread [{tarot.min_cards}-{tarot.max_cards}]"
-                 f"\n\tdefault: {tarot.default_cards} card spread",
-            type=int,
-            choices=range(tarot.min_cards, tarot.max_cards + 1),
-            default=tarot.default_cards)
-        self.parser.add_argument(
             '--subject',
             help='the name of the person receiving the tarot card reading\n\tdefault: "the seeker"',
             type=str,
@@ -55,7 +48,15 @@ class CommandParser:
             '--teller',
             help='the "person" conducting the tarot card reading\n\t(optional)',
             type=str)
-        self.parser.add_argument(
+        mutually_exclusive_args = self.parser.add_mutually_exclusive_group()
+        mutually_exclusive_args.add_argument(
+            '--card-count',
+            help=f"number of tarot cards to draw in the spread [{tarot.min_cards}-{tarot.max_cards}]"
+                 f"\n\tdefault: {tarot.default_cards} card spread",
+            type=int,
+            choices=range(tarot.min_cards, tarot.max_cards + 1),
+            default=tarot.default_cards)
+        mutually_exclusive_args.add_argument(
             '--card',
             help='takes specific card[s] from the user instead of a random draw from the deck',
             type=str,

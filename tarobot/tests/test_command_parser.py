@@ -49,6 +49,18 @@ class TestCommandParser(BaseTestWithConfig):
         self.assertEqual("argument --card-count: invalid choice: 42 (choose from 1, 2, 3, 4, 5)",
                          str(arg_error.exception))
 
+    def test_parse_command_line_args_invalid_mutual_exclusive_config(self):
+        # Given: an illegal combo of card count and specified cards
+        parser = CommandParser(self.test_config)
+        args = ['--card-count', '4', '--card', 'The Magician', 'Nine of Cups']
+
+        # When:  the command line arguments are parsed
+        # Then:  an exception is raised due to an illegal combination of arguments
+        with self.assertRaises(ArgumentError) as arg_error:
+            parser.parse_command_line_args(args)
+        self.assertEqual("argument --card: not allowed with argument --card-count",
+                         str(arg_error.exception))
+
     def test_parse_command_line_args_with_cards(self):
         # Given: some mocked up command line arguments with cards specified
         parser = CommandParser(self.test_config)
