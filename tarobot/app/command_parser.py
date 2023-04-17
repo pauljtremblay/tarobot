@@ -56,8 +56,8 @@ class CommandParser:
             help='the "person" conducting the tarot card reading\n\t(optional)',
             type=str)
         self.parser.add_argument(
-            '--use-card-list',
-            help='takes specific cards from the user instead of a random draw from the deck',
+            '--card',
+            help='takes specific card[s] from the user instead of a random draw from the deck',
             type=str,
             nargs='+')
         self.parser.add_argument(
@@ -84,7 +84,7 @@ class CommandParser:
         parsed_command.persist_reading = self.parsed_args.persist_reading
         if self.parsed_args.teller is not None:
             parsed_command.teller = self.parsed_args.teller
-        if self.parsed_args.use_card_list is not None:
+        if self.parsed_args.card is not None:
             parsed_command.given_cards = self.parse_given_tarot_cards()
             tarot = self.__config.tarot
             if len(parsed_command.given_cards) not in range(tarot.min_cards, tarot.max_cards + 1):
@@ -95,7 +95,7 @@ class CommandParser:
         """Helper method for validating and parsing the given tarot cards."""
         # ensure the cards are valid tarot cards
         parsed_cards = []
-        for given_card_name in self.parsed_args.use_card_list:
+        for given_card_name in self.parsed_args.card:
             tarot_card = resolver.get_optional_card_by_alias(given_card_name)
             if tarot_card is None:
                 raise ValueError(f"Unknown card: {given_card_name}")

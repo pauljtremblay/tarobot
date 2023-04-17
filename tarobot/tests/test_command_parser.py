@@ -53,7 +53,7 @@ class TestCommandParser(BaseTestWithConfig):
         # Given: some mocked up command line arguments with cards specified
         parser = CommandParser(self.test_config)
         args = [
-            '--use-card-list',
+            '--card',
             'The Magician',
             'The World',
             'seven of Wands'
@@ -76,7 +76,7 @@ class TestCommandParser(BaseTestWithConfig):
         # Given: some mocked up command line arguments with cards specified (including bogus)
         parser = CommandParser(self.test_config)
         args = [
-            '--use-card-list',
+            '--card',
             'MAGICIAN',
             'World',
             'FooOfBar'
@@ -92,7 +92,7 @@ class TestCommandParser(BaseTestWithConfig):
         # Given: some mocked up command line arguments with cards specified (including dupe)
         parser = CommandParser(self.test_config)
         args = [
-            '--use-card-list',
+            '--card',
             'TheMagician',
             'TheWorld',
             'KingOfPentacles',
@@ -111,7 +111,7 @@ class TestCommandParser(BaseTestWithConfig):
         conf.tarot.max_cards = 3
         parser = CommandParser(self.test_config)
         args = [
-            '--use-card-list',
+            '--card',
             'TheMagician',
             'TheWorld',
             'KingOfPentacles',

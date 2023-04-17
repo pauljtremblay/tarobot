@@ -26,9 +26,8 @@ it will generate a tarot card reading for your spread.
 `python3 -m tarobot --help`
 ```text
 usage: tarobot [-h] [--card-count {1,2,3,4,5}] [--subject SUBJECT]
-               [--teller TELLER]
-               [--use-card-list USE_CARD_LIST [USE_CARD_LIST ...]]
-               [--show-prompt] [--show-diagnostics] [--persist-reading]
+               [--teller TELLER] [--card CARD [CARD ...]] [--show-prompt]
+               [--show-diagnostics] [--persist-reading]
 
 Tarot deck cartomancy application
 
@@ -41,9 +40,9 @@ options:
                         reading default: "the seeker"
   --teller TELLER       the "person" conducting the tarot card reading
                         (optional)
-  --use-card-list USE_CARD_LIST [USE_CARD_LIST ...]
-                        takes specific cards from the user instead of a random
-                        draw from the deck
+  --card CARD [CARD ...]
+                        takes specific card[s] from the user instead of a
+                        random draw from the deck
   --show-prompt         displays the generated prompt ahead of the response
   --show-diagnostics    displays diagnostic output from the completion
                         response returned from openai
