@@ -115,19 +115,19 @@ class App:
         return summary_response
 
 
-def _make_openai_completion_request(config: Completion, prompt: str):
+def _make_openai_completion_request(completion_config: Completion, prompt: str):
     """Builds the keyword arguments for an openai completion request for the associated configuration and prompt."""
     completion_kwargs = {
-        'model': config.model,
-        'max_tokens': config.max_tokens,
+        'model': completion_config.model,
+        'max_tokens': completion_config.max_tokens,
         'prompt': prompt
     }
-    if config.n is not None:
-        completion_kwargs['n'] = config.n
-    if config.temperature is not None:
-        completion_kwargs['temperature'] = config.temperature
-    if config.top_p is not None:
-        completion_kwargs['top_p'] = config.top_p
+    if completion_config.n is not None:
+        completion_kwargs['n'] = completion_config.n
+    if completion_config.temperature is not None:
+        completion_kwargs['temperature'] = completion_config.temperature
+    if completion_config.top_p is not None:
+        completion_kwargs['top_p'] = completion_config.top_p
     return completion_kwargs
 
 
