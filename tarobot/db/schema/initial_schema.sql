@@ -27,6 +27,7 @@ CREATE TABLE `reading`(
     `teller` VARCHAR(64),
     `prompt` VARCHAR(256) NOT NULL,
     `response` TEXT NOT NULL,
+    `summary` VARCHAR(64),
     `model` VARCHAR(64),
     `created_ts` TIMESTAMP,
     `response_ms` INT,

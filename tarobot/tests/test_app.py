@@ -76,9 +76,8 @@ class TestApp(BaseTestWithConfig):
         self.assertEqual(prompt, "Tarot card reading for The Seeker with the cards The Tower, Death, and Seven of "
                                  "Swords in the style of Hulk Hogan")
 
-    @patch('tarobot.app.app.persist_card_reading')
     @patch('tarobot.app.app.openai.Completion.create')
-    def test_interpret_tarot_spread(self, mock_openai_generate, mock_persist_reading):
+    def test_interpret_tarot_spread(self, mock_openai_generate):
         # Given: a mocked up command
         app = App(self.test_config)
         command = CommandDto()
@@ -91,38 +90,46 @@ class TestApp(BaseTestWithConfig):
         # And:  a mocked up tarot spread
         spread = [TarotCard.TheMagician, TarotCard.TheTower]
         app.spread = spread
-        # And:  a stubbed out response from openai
-        completion = Completion(id='cmpl-444555', engine='generate', response_ms=1234)
-        completion['model'] = 'scatgpt-4'
-        completion['created'] = 1681571451
-        completion['max_tokens'] = 2000
-        completion['usage'] = {'prompt_tokens': 30, 'completion_tokens': 200, 'total_tokens': 230}
-        completion['top_p'] = 0.1
-        choice = Choice()
-        choice.text = 'one fish two fish red fish dead fish'
-        completion['choices'] = [choice]
-        mock_openai_generate.return_value = completion
+        # And:  stubbed out responses from openai
+        reading_completion = Completion(id='cmpl-444555', engine='generate', response_ms=1234)
+        reading_completion['model'] = 'scatgpt-4'
+        reading_completion['created'] = 1681571451
+        reading_completion['max_tokens'] = 2000
+        reading_completion['usage'] = {'prompt_tokens': 30, 'completion_tokens': 200, 'total_tokens': 230}
+        reading_completion['top_p'] = 0.1
+        reading_choice = Choice()
+        reading_choice.text = 'one fish two fish red fish dead fish'
+        reading_completion['choices'] = [reading_choice]
+        summary_completion = Completion(id='cmpl-555666', engine='generate', response_ms=123)
+        summary_completion['model'] = 'scatgpt-4'
+        summary_completion['created'] = 1681571455
+        summary_completion['max_tokens'] = 2000
+        summary_completion['usage'] = {'prompt_tokens': 50, 'completion_tokens': 5, 'total_tokens': 55}
+        summary_completion['top_p'] = 0.1
+        summary_choice = Choice()
+        summary_choice.text = 'Mixed'
+        summary_completion['choices'] = [summary_choice]
+        mock_openai_generate.side_effect = [reading_completion, summary_completion]
 
         # When:  the app interprets the tarot spread via openai
-        app.interpret_tarot_spread()
-        card_reading: CardReading
-        (card_reading,) = mock_persist_reading.mock_calls[0][1]
+        card_reading: CardReading = app.interpret_tarot_spread()
 
         # Then:  the card reading contains the openai tarot/request inputs plus the response values
         self.assertEqual("cmpl-444555", card_reading.metadata.openai_id)
         self.assertEqual("scatgpt-4", card_reading.metadata.model)
         self.assertEqual(1681571451, card_reading.metadata.created_ts)
-        self.assertEqual(1234, card_reading.metadata.response_ms)
+        self.assertEqual(1234 + 123, card_reading.metadata.response_ms)
         self.assertEqual(2000, card_reading.metadata.max_tokens)
-        self.assertEqual(30, card_reading.metadata.prompt_tokens)
-        self.assertEqual(200, card_reading.metadata.completion_tokens)
-        self.assertEqual(230, card_reading.metadata.total_tokens)
+        self.assertEqual(30 + 50, card_reading.metadata.prompt_tokens)
+        self.assertEqual(200 + 5, card_reading.metadata.completion_tokens)
+        self.assertEqual(230 + 55, card_reading.metadata.total_tokens)
         self.assertIsNone(card_reading.metadata.temperature)
         self.assertEqual(0.1, card_reading.metadata.top_p)
         self.assertEqual([TarotCard.TheMagician, TarotCard.TheTower], card_reading.spread)
         self.assertEqual("Tarot card reading for the seeker with the cards The Magician, and The Tower in the style of "
                          "Dr Seuss", card_reading.prompt)
         self.assertEqual("one fish two fish red fish dead fish", card_reading.response)
+        self.assertEqual("Mixed", card_reading.summary)
         self.assertEqual("the seeker", card_reading.subject)
         self.assertEqual("Dr Seuss", card_reading.teller)
 
