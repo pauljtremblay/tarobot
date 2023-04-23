@@ -8,7 +8,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-from .. app import CONFIG
+from .. app.config import CONFIG
 
 db, pool = CONFIG.db, CONFIG.db.pool
 encoded_pass = quote_plus(db.password)

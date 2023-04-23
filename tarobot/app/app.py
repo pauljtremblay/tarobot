@@ -9,11 +9,11 @@ from typing import Optional
 
 import openai
 
-from . config import Completion, CONFIG, Config
 from .. db import session_factory, CardReadingEntity
 from .. tarot import TarotDeck, CardReading
 from .. tarot.card_reading import Metadata
 from . command_parser import CommandParser
+from . config import Completion, CONFIG, Config
 
 
 logger = logging.getLogger(__name__)
