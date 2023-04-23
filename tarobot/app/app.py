@@ -13,7 +13,7 @@ from .. db import session_factory, CardReadingEntity
 from .. tarot import TarotDeck, CardReading
 from .. tarot.card_reading import Metadata
 from . command_parser import CommandParser
-from . config import CONFIG, Config
+from . config import Completion, CONFIG, Config
 
 
 logger = logging.getLogger(__name__)
@@ -61,7 +61,7 @@ class App:
             self.spread = deck.draw(self.command.card_count)
 
     def interpret_tarot_spread(self):
-        """Generates a tarot card reading for the given spread and prints to standard output."""
+        """Generates a tarot card reading for the given spread and logs the response."""
         spread_str = ", ".join(str(card) for card in self.spread)
         logger.info("Generating a tarot card reading for %s for the following spread:\n\t%s\n",
                     self.command.subject, spread_str)
@@ -69,7 +69,7 @@ class App:
         if self.command.show_prompt:
             logger.info("Prompt:\n%s\n", tarot_reading_prompt)
         card_reading = self.ask_openai_to_generate_card_reading(tarot_reading_prompt)
-        card_reading.metadata.max_tokens = self.__config.openai.completion.max_tokens
+        card_reading.metadata.max_tokens = self.__config.openai.generate_reading.max_tokens
         logger.info("Response:\n%s", card_reading.response)
         self.ask_openai_to_summarize_card_reading(card_reading)
         return card_reading
@@ -88,10 +88,11 @@ class App:
 
     def ask_openai_to_generate_card_reading(self, prompt):
         """Displays the prompt to and associated response from openai."""
-        completion_kwargs = self._make_openai_completion_request(prompt)
+        completion_kwargs = _make_openai_completion_request(self.__config.openai.generate_reading, prompt)
         completion, response = _execute_completion_request(completion_kwargs)
         command = self.command
         card_reading = CardReading(completion, self.spread, prompt, response, None, command.subject, command.teller)
+        card_reading.metadata.max_tokens = self.__config.openai.generate_reading.max_tokens
         if 'temperature' in completion_kwargs:
             card_reading.metadata.temperature = completion_kwargs['temperature']
         if 'top_p' in completion_kwargs:
@@ -101,32 +102,33 @@ class App:
     def ask_openai_to_summarize_card_reading(self, card_reading):
         """Asks openai to interpret the tone of the tarot card reading it just generated and adds to the DTO."""
         prompt = f'Classify the sentiment of this tarot card reading: "{card_reading.response}"'
-        completion_kwargs = self._make_openai_completion_request(prompt)
+        completion_kwargs = _make_openai_completion_request(self.__config.openai.summarize_reading, prompt)
         summary_completion, summary_response = _execute_completion_request(completion_kwargs)
         logger.info("The tarot card reading sentiment:\n%s", summary_response)
         summary_metadata = Metadata(summary_completion)
         card_reading.summary = summary_response
         card_reading.metadata.response_ms += summary_metadata.response_ms
+        card_reading.metadata.max_tokens += self.__config.openai.summarize_reading.max_tokens
         card_reading.metadata.total_tokens += summary_metadata.total_tokens
         card_reading.metadata.prompt_tokens += summary_metadata.prompt_tokens
         card_reading.metadata.completion_tokens += summary_metadata.completion_tokens
         return summary_response
 
-    def _make_openai_completion_request(self, prompt):
-        """Builds the keyword arguments for an openai completion request for the associated configuration and prompt."""
-        completion_config = self.__config.openai.completion
-        completion_kwargs = {
-            'model': completion_config.model,
-            'max_tokens': completion_config.max_tokens,
-            'prompt': prompt
-        }
-        if completion_config.n is not None:
-            completion_kwargs['n'] = completion_config.n
-        if completion_config.temperature is not None:
-            completion_kwargs['temperature'] = completion_config.temperature
-        if completion_config.top_p is not None:
-            completion_kwargs['top_p'] = completion_config.top_p
-        return completion_kwargs
+
+def _make_openai_completion_request(completion_config: Completion, prompt: str):
+    """Builds the keyword arguments for an openai completion request for the associated configuration and prompt."""
+    completion_kwargs = {
+        'model': completion_config.model,
+        'max_tokens': completion_config.max_tokens,
+        'prompt': prompt
+    }
+    if completion_config.n is not None:
+        completion_kwargs['n'] = completion_config.n
+    if completion_config.temperature is not None:
+        completion_kwargs['temperature'] = completion_config.temperature
+    if completion_config.top_p is not None:
+        completion_kwargs['top_p'] = completion_config.top_p
+    return completion_kwargs
 
 
 def _execute_completion_request(completion_kwargs):
