@@ -49,14 +49,17 @@ class CardReading(AbstractBaseClass):
     spread: List[TarotCard]
     prompt: str
     response: str
+    summary: str
     subject: str
     teller: Optional[str]
 
-    def __init__(self, completion: Completion, spread: List[TarotCard], prompt, response, subject, teller=None):
+    def __init__(self, completion: Completion, spread: List[TarotCard], prompt, response, summary, subject,
+                 teller=None):
         self.metadata = Metadata(completion)
         self.spread = spread
         self.prompt = prompt
         self.response = response
+        self.summary = summary
         self.subject = subject
         self.teller = teller
 

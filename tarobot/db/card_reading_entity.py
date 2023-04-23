@@ -25,6 +25,7 @@ class CardReadingEntity(Base):
     teller = Column(String(64), nullable=True)
     prompt = Column(String(256), nullable=False)
     response = Column(Text, nullable=False)
+    summary = Column(Text, nullable=True)
     model = Column(String(64), nullable=True)
     created_ts = Column(TIMESTAMP, nullable=True)
     response_ms = Column(Integer, nullable=True)
@@ -49,6 +50,7 @@ class CardReadingEntity(Base):
         self.teller = dto.teller
         self.prompt = dto.prompt
         self.response = dto.response
+        self.summary = dto.summary
         self.openai_id = dto.metadata.openai_id
         self.model = dto.metadata.model
         self.created_ts = datetime.fromtimestamp(dto.metadata.created_ts)
