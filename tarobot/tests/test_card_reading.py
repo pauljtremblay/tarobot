@@ -13,7 +13,7 @@ from tarobot.db.card_reading_entity import CardReadingEntity
 from tarobot.tarot import CardReading, TarotCard
 
 
-# pylint: disable=C0115,C0116
+# pylint: disable=C0115,C0116,R0914
 class TestCommandParser(unittest.TestCase):
 
     def test_constructor(self):
@@ -98,4 +98,4 @@ class TestCommandParser(unittest.TestCase):
         self.assertEqual(230, entity.total_tokens)
         self.assertIsNone(entity.temperature)
         self.assertEqual(0.1, entity.top_p)
-# pylint: disable=C0115,C0116
+# pylint: disable=C0115,C0116,R0914

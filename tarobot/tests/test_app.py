@@ -119,7 +119,7 @@ class TestApp(BaseTestWithConfig):
         self.assertEqual("scatgpt-4", card_reading.metadata.model)
         self.assertEqual(1681571451, card_reading.metadata.created_ts)
         self.assertEqual(1234 + 123, card_reading.metadata.response_ms)
-        self.assertEqual(2000, card_reading.metadata.max_tokens)
+        self.assertEqual(2000 + 60, card_reading.metadata.max_tokens)
         self.assertEqual(30 + 50, card_reading.metadata.prompt_tokens)
         self.assertEqual(200 + 5, card_reading.metadata.completion_tokens)
         self.assertEqual(230 + 55, card_reading.metadata.total_tokens)
