@@ -8,7 +8,7 @@ colorama==0.4.6
 dataclasses-json==0.5.8
 dataconf==2.2.1
 distlib==0.3.6
-filelock==3.12.0
+filelock==3.12.1
 frozenlist==1.3.3
 idna==3.4
 multidict==6.0.4
