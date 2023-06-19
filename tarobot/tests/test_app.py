@@ -47,7 +47,7 @@ class TestApp(BaseTestWithConfig):
         app.create_tarot_spread()
 
         # Then:  the expected spread is found
-        self.assertEqual(SpreadType.CARD_LIST_WITH_SEEKER_AND_TELLER, app.spread.spread_type)
+        self.assertEqual(SpreadType.CARD_LIST, app.spread.spread_type)
         self.assertEqual(3, len(app.spread.tarot_cards))
         self.assertEqual([
             TarotCard.TheMagician,
@@ -68,7 +68,7 @@ class TestApp(BaseTestWithConfig):
         command.teller = "Dr Seuss"
         # And:  a mocked up tarot spread
         tarot_cards = [TarotCard.TheMagician, TarotCard.TheTower]
-        app.spread = Spread(spread_type=SpreadType.CARD_LIST_WITH_SEEKER_AND_TELLER,
+        app.spread = Spread(spread_type=app.command.spread_type,
                             tarot_cards=tarot_cards,
                             parameters={'seeker': 'the seeker', 'teller': 'Dr Seuss'},
                             prompt=('Tarot card reading for the seeker '

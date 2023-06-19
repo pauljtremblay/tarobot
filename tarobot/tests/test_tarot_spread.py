@@ -28,7 +28,7 @@ class TestTarotSpread(unittest.TestCase):
         # Given: a list of cards in a tarot spread
         cards = [TarotCard.KingOfPentacles, TarotCard.KnightOfWands, TarotCard.TheMagician]
         # And:   the type of tarot spread
-        spread_type = SpreadType.CARD_LIST_WITH_SEEKER_AND_TELLER
+        spread_type = SpreadType.CARD_LIST
         # And:   some additional parameters for the spread
         parameters = {
             'seeker': 'the seeker',

@@ -16,7 +16,7 @@ from . tarot_card import TarotCard
 class SpreadType(Enum):
     """Enumeration representing some common types of Tarot card spreads."""
     ONE_CARD = "one-card"
-    CARD_LIST_WITH_SEEKER_AND_TELLER = "card-list-with-seeker-and-teller"
+    CARD_LIST = "card-list"
     PAST_PRESENT_FUTURE = "past-present-future"
     SITUATION_OBSTACLE_ADVICE = "situation-obstacle-advice"
     SEEKER_SUBJECT_RELATIONSHIP = "seeker-subject-relationship"
@@ -56,8 +56,8 @@ class SpreadBuilder:
         match spread_type:
             case SpreadType.ONE_CARD:
                 return self._for_one_card(tarot_cards)
-            case SpreadType.CARD_LIST_WITH_SEEKER_AND_TELLER:
-                return self._for_card_list_with_seeker_and_teller(tarot_cards, **parameters)
+            case SpreadType.CARD_LIST:
+                return self._for_card_list(tarot_cards, **parameters)
             case SpreadType.PAST_PRESENT_FUTURE:
                 return self._for_past_present_future(tarot_cards)
             case SpreadType.SEEKER_SUBJECT_RELATIONSHIP:
@@ -72,12 +72,10 @@ class SpreadBuilder:
         parameters = {'card_1': str(tarot_cards[0])}
         return self._to_spread(spread_type, tarot_cards, parameters)
 
-    def _for_card_list_with_seeker_and_teller(self, tarot_cards: List[TarotCard],
-                                              seeker: str = "the seeker",
-                                              teller: str = "a mystic") -> Spread:
+    def _for_card_list(self, tarot_cards: List[TarotCard], seeker: str, teller: str) -> Spread:
         """Builds a spread around a variable number of cards, a seeker (querent), and fortune teller."""
         parameters = {'seeker': seeker, 'teller': teller, 'card_list': ', '.join(str(card) for card in tarot_cards)}
-        return self._to_spread(SpreadType.CARD_LIST_WITH_SEEKER_AND_TELLER, tarot_cards, parameters)
+        return self._to_spread(SpreadType.CARD_LIST, tarot_cards, parameters)
 
     def _for_past_present_future(self, tarot_cards: List[TarotCard]) -> Spread:
         """Builds a spread around 3 cards representing the past, present, and future for the querent."""

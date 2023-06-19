@@ -18,7 +18,7 @@ class CommandDto:
     show_prompt: bool = False
     show_diagnostics: bool = False
     persist_reading: bool = False
-    spread_type: SpreadType = SpreadType.CARD_LIST_WITH_SEEKER_AND_TELLER
+    spread_type: SpreadType = SpreadType.CARD_LIST
     given_cards: List[TarotCard] = None
     card_count: int = 3
 
