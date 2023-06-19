@@ -8,7 +8,7 @@ from openai import Completion
 # pylint: disable=E0401
 from base_test_with_config import BaseTestWithConfig
 # pylint: enable=E0401
-from tarobot.tarot import CardReading, TarotCard
+from tarobot.tarot import CardReading, Spread, SpreadType, TarotCard
 from tarobot.app import App, CommandDto
 
 
@@ -30,7 +30,7 @@ class TestApp(BaseTestWithConfig):
         app.create_tarot_spread()
 
         # Then:  the expected number of cards is drawn
-        self.assertEqual(4, len(app.spread))
+        self.assertEqual(4, len(app.spread.tarot_cards))
 
     def test_create_tarot_spread_by_given_cards(self):
         # Given: a mocked up request with specified cards
@@ -47,34 +47,13 @@ class TestApp(BaseTestWithConfig):
         app.create_tarot_spread()
 
         # Then:  the expected spread is found
-        self.assertEqual(3, len(app.spread))
+        self.assertEqual(SpreadType.CARD_LIST_WITH_SEEKER_AND_TELLER, app.spread.spread_type)
+        self.assertEqual(3, len(app.spread.tarot_cards))
         self.assertEqual([
             TarotCard.TheMagician,
             TarotCard.SixOfWands,
             TarotCard.TheTower
-        ], app.spread)
-
-    def test_generate_tarot_reading_prompt(self):
-        # Given: a subject
-        app = App(self.test_config)
-        command = CommandDto()
-        app.command = command
-        command.subject = 'The Seeker'
-        # And:   a fortune teller
-        command.teller = 'Hulk Hogan'
-        # And:   a tarot card spread
-        app.spread = [
-            TarotCard.TheTower,
-            TarotCard.Death,
-            TarotCard.SevenOfSwords
-        ]
-
-        # When:  the prompt is generated
-        prompt = app.generate_tarot_reading_prompt()
-
-        # Then:  the exact expected prompt is generated
-        self.assertEqual(prompt, "Tarot card reading for The Seeker with the cards The Tower, Death, and Seven of "
-                                 "Swords in the style of Hulk Hogan")
+        ], app.spread.tarot_cards)
 
     @patch('tarobot.app.app.openai.Completion.create')
     def test_interpret_tarot_spread(self, mock_openai_generate):
@@ -88,8 +67,13 @@ class TestApp(BaseTestWithConfig):
         command.subject = "the seeker"
         command.teller = "Dr Seuss"
         # And:  a mocked up tarot spread
-        spread = [TarotCard.TheMagician, TarotCard.TheTower]
-        app.spread = spread
+        tarot_cards = [TarotCard.TheMagician, TarotCard.TheTower]
+        app.spread = Spread(spread_type=SpreadType.CARD_LIST_WITH_SEEKER_AND_TELLER,
+                            tarot_cards=tarot_cards,
+                            parameters={'seeker': 'the seeker', 'teller': 'Dr Seuss'},
+                            prompt=('Tarot card reading for the seeker '
+                                    'with the cards The Magician, The Tower '
+                                    'in the style of Dr Seuss.'))
         # And:  stubbed out responses from openai
         reading_completion = Completion(id='cmpl-444555', engine='generate', response_ms=1234)
         reading_completion['model'] = 'scatgpt-4'
@@ -126,8 +110,7 @@ class TestApp(BaseTestWithConfig):
         self.assertIsNone(card_reading.metadata.temperature)
         self.assertEqual(0.1, card_reading.metadata.top_p)
         self.assertEqual([TarotCard.TheMagician, TarotCard.TheTower], card_reading.spread)
-        self.assertEqual("Tarot card reading for the seeker with the cards The Magician, and The Tower in the style of "
-                         "Dr Seuss", card_reading.prompt)
+        self.assertEqual(app.spread.prompt, card_reading.prompt)
         self.assertEqual("one fish two fish red fish dead fish", card_reading.response)
         self.assertEqual("Mixed", card_reading.summary)
         self.assertEqual("the seeker", card_reading.subject)

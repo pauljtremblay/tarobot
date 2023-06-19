@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from typing import List
 
 from . config import Config
-from .. tarot import resolver, TarotCard, TarotDeck
+from .. tarot import resolver, SpreadType, TarotCard, TarotDeck
 
 
 @dataclass
@@ -18,6 +18,7 @@ class CommandDto:
     show_prompt: bool = False
     show_diagnostics: bool = False
     persist_reading: bool = False
+    spread_type: SpreadType = SpreadType.CARD_LIST_WITH_SEEKER_AND_TELLER
     given_cards: List[TarotCard] = None
     card_count: int = 3
 
