@@ -13,14 +13,14 @@ from .. tarot import resolver, SpreadType, TarotCard, TarotDeck
 @dataclass
 class CommandDto:
     """Data class used for storing the commands given to the application from the user."""
-    subject: str = None
-    teller: str = None
     show_prompt: bool = False
     show_diagnostics: bool = False
     persist_reading: bool = False
     spread_type: SpreadType = SpreadType.CARD_LIST
     given_cards: List[TarotCard] = None
     card_count: int = 3
+    seeker: str = None
+    teller: str = None
 
 
 class CommandParser:
@@ -40,15 +40,6 @@ class CommandParser:
             prog=config.app_name.lower(),
             description='Tarot deck cartomancy application',
             exit_on_error=False)
-        self.parser.add_argument(
-            '--subject',
-            help='the name of the person receiving the tarot card reading\n\tdefault: "the seeker"',
-            type=str,
-            default='the seeker')
-        self.parser.add_argument(
-            '--teller',
-            help='the "person" conducting the tarot card reading\n\t(optional)',
-            type=str)
         mutually_exclusive_args = self.parser.add_mutually_exclusive_group()
         mutually_exclusive_args.add_argument(
             '--card-count',
@@ -74,16 +65,28 @@ class CommandParser:
             '--persist-reading',
             help='inserts a record of the tarot card reading (inputs, prompt, result, metadata) in the database',
             action='store_true')
+        self.parser.add_argument(
+            '--seeker',
+            help='the name of the person receiving the tarot card reading\n\tdefault: "the seeker"',
+            type=str,
+            default='the seeker')
+        self.parser.add_argument(
+            '--teller',
+            help='the "person" conducting the tarot card reading\n\tdefault: "a mystic"',
+            type=str,
+            default='a mystic')
+
 
     def parse_command_line_args(self, command_line_args: List[str]):
         """Parses the given command line args into a command dto."""
         parsed_command = CommandDto()
         self.parsed_args = self.parser.parse_args(command_line_args)
         parsed_command.card_count = self.parsed_args.card_count
-        parsed_command.subject = self.parsed_args.subject
         parsed_command.show_prompt = self.parsed_args.show_prompt
         parsed_command.show_diagnostics = self.parsed_args.show_diagnostics
         parsed_command.persist_reading = self.parsed_args.persist_reading
+        if self.parsed_args.seeker is not None:
+            parsed_command.seeker = self.parsed_args.seeker
         if self.parsed_args.teller is not None:
             parsed_command.teller = self.parsed_args.teller
         if self.parsed_args.card is not None:

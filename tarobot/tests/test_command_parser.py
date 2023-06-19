@@ -19,7 +19,7 @@ class TestCommandParser(BaseTestWithConfig):
         parser = CommandParser(self.test_config)
         args = [
             '--card-count', '4',
-            '--subject', 'nobody',
+            '--seeker', 'nobody',
             '--teller', 'a mystic',
             '--show-prompt',
             '--show-diagnostics',
@@ -31,7 +31,7 @@ class TestCommandParser(BaseTestWithConfig):
 
         # Then:  the parsed arguments can be found in the command object
         self.assertEqual(4, command.card_count)
-        self.assertEqual('nobody', command.subject)
+        self.assertEqual('nobody', command.seeker)
         self.assertEqual('a mystic', command.teller)
         self.assertTrue(command.show_prompt)
         self.assertTrue(command.show_diagnostics)
@@ -75,8 +75,8 @@ class TestCommandParser(BaseTestWithConfig):
         command = parser.parse_command_line_args(args)
 
         # Then:  the parsed arguments can be found in the command object
-        self.assertEqual('the seeker', command.subject)
-        self.assertIsNone(command.teller)
+        self.assertEqual('the seeker', command.seeker)
+        self.assertEqual('a mystic', command.teller)
         self.assertFalse(command.show_prompt)
         self.assertEqual([
             TarotCard.TheMagician,

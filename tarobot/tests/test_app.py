@@ -64,7 +64,7 @@ class TestApp(BaseTestWithConfig):
         command.show_prompt = True
         command.show_diagnostics = True
         command.persist_reading = True
-        command.subject = "the seeker"
+        command.seeker = "the seeker"
         command.teller = "Dr Seuss"
         # And:  a mocked up tarot spread
         tarot_cards = [TarotCard.TheMagician, TarotCard.TheTower]

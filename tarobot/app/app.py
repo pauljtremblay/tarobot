@@ -61,7 +61,7 @@ class App:
             tarot_cards = deck.draw(self.command.card_count)
         # TODO support additional spread types
         parameters = {
-            'seeker': 'the seeker' if self.command.subject is None else self.command.subject,
+            'seeker': 'the seeker' if self.command.seeker is None else self.command.seeker,
             'teller': 'a mystic' if self.command.teller is None else self.command.teller
         }
         self.spread = spread_builder.build(self.command.spread_type, tarot_cards, parameters)
@@ -85,7 +85,7 @@ class App:
         completion, response = _execute_completion_request(completion_kwargs)
         command = self.command
         card_reading = CardReading(completion, self.spread.tarot_cards, prompt, response, None,
-                                   command.subject, command.teller)
+                                   command.seeker, command.teller)
         card_reading.metadata.max_tokens = self.__config.openai.generate_reading.max_tokens
         if 'temperature' in completion_kwargs:
             card_reading.metadata.temperature = completion_kwargs['temperature']
