@@ -10,7 +10,7 @@ from typing import Optional
 import openai
 
 from .. db import session_factory, CardReadingEntity
-from .. tarot import TarotDeck, CardReading, Spread, spread_builder
+from .. tarot import TarotDeck, CardReading, Spread, SpreadType, spread_builder
 from .. tarot.card_reading import Metadata
 from . command_parser import CommandParser
 from . config import Completion, CONFIG, Config
@@ -59,11 +59,14 @@ class App:
         else:
             deck = TarotDeck()
             tarot_cards = deck.draw(self.command.card_count)
-        # TODO support additional spread types
-        parameters = {
-            'seeker': 'the seeker' if self.command.seeker is None else self.command.seeker,
-            'teller': 'a mystic' if self.command.teller is None else self.command.teller
-        }
+        parameters = {}
+        match self.command.spread_type:
+            case SpreadType.CARD_LIST:
+                parameters['seeker'] = self.command.seeker
+                parameters['teller'] = self.command.teller
+            case SpreadType.SITUATION_OBSTACLE_ADVICE:
+                parameters['situation'] = self.command.situation
+                parameters['obstacle'] = self.command.obstacle
         self.spread = spread_builder.build(self.command.spread_type, tarot_cards, parameters)
 
     def interpret_tarot_spread(self):

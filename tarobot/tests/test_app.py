@@ -22,7 +22,9 @@ class TestApp(BaseTestWithConfig):
     def test_create_tarot_spread_by_deck(self):
         # Given: a mocked up number of cards to draw
         app = App(self.test_config)
-        command = CommandDto()
+        command = CommandDto(spread_type=SpreadType.CARD_LIST,
+                             seeker='the seeker',
+                             teller='a mystic')
         command.card_count = 4
         app.command = command
 
@@ -35,13 +37,10 @@ class TestApp(BaseTestWithConfig):
     def test_create_tarot_spread_by_given_cards(self):
         # Given: a mocked up request with specified cards
         app = App(self.test_config)
-        command = CommandDto()
-        command.given_cards = [
-            TarotCard.TheMagician,
-            TarotCard.SixOfWands,
-            TarotCard.TheTower
-        ]
-        app.command = command
+        app.command = CommandDto(spread_type=SpreadType.CARD_LIST,
+                                 seeker='the seeker',
+                                 teller='a mystic',
+                                 given_cards=[TarotCard.TheMagician, TarotCard.SixOfWands, TarotCard.TheTower])
 
         # When:  the tarot card spread is created
         app.create_tarot_spread()
@@ -49,11 +48,7 @@ class TestApp(BaseTestWithConfig):
         # Then:  the expected spread is found
         self.assertEqual(SpreadType.CARD_LIST, app.spread.spread_type)
         self.assertEqual(3, len(app.spread.tarot_cards))
-        self.assertEqual([
-            TarotCard.TheMagician,
-            TarotCard.SixOfWands,
-            TarotCard.TheTower
-        ], app.spread.tarot_cards)
+        self.assertEqual([TarotCard.TheMagician, TarotCard.SixOfWands,TarotCard.TheTower], app.spread.tarot_cards)
 
     @patch('tarobot.app.app.openai.Completion.create')
     def test_interpret_tarot_spread(self, mock_openai_generate):
