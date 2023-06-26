@@ -10,7 +10,7 @@ from typing import Optional
 import openai
 
 from .. db import session_factory, CardReadingEntity
-from .. tarot import TarotDeck, CardReading
+from .. tarot import TarotDeck, CardReading, Spread, SpreadType, spread_builder
 from .. tarot.card_reading import Metadata
 from . command_parser import CommandParser
 from . config import Completion, CONFIG, Config
@@ -32,7 +32,7 @@ class App:
         openai.api_key = self.__config.openai.api_key
         self.parser = CommandParser(self.__config)
         self.command = None
-        self.spread = None
+        self.spread: Optional[Spread] = None
 
     def main(self):
         """The main method: draws 3 tarot cards at random and has openai generate a tarot card reading."""
@@ -55,43 +55,40 @@ class App:
     def create_tarot_spread(self):
         """Creates a tarot spread from either the given cards or a locally created tarot card deck."""
         if self.command.given_cards is not None:
-            self.spread = self.command.given_cards
+            tarot_cards = self.command.given_cards
         else:
             deck = TarotDeck()
-            self.spread = deck.draw(self.command.card_count)
+            tarot_cards = deck.draw(self.command.card_count)
+        parameters = {}
+        match self.command.spread_type:
+            case SpreadType.CARD_LIST:
+                parameters['seeker'] = self.command.seeker
+                parameters['teller'] = self.command.teller
+            case SpreadType.SITUATION_OBSTACLE_ADVICE:
+                parameters['situation'] = self.command.situation
+                parameters['obstacle'] = self.command.obstacle
+        self.spread = spread_builder.build(self.command.spread_type, tarot_cards, parameters)
 
     def interpret_tarot_spread(self):
         """Generates a tarot card reading for the given spread and logs the response."""
-        spread_str = ", ".join(str(card) for card in self.spread)
-        logger.info("Generating a tarot card reading for %s for the following spread:\n\t%s\n",
-                    self.command.subject, spread_str)
-        tarot_reading_prompt = self.generate_tarot_reading_prompt()
+        card_list_str = ", ".join(str(card) for card in self.spread.tarot_cards)
+        logger.info("Generating a %s tarot card reading for the following cards:\n\t%s\n",
+                    str(self.spread.spread_type), card_list_str)
         if self.command.show_prompt:
-            logger.info("Prompt:\n%s\n", tarot_reading_prompt)
-        card_reading = self.ask_openai_to_generate_card_reading(tarot_reading_prompt)
+            logger.info("Prompt:\n%s\n", self.spread.prompt)
+        card_reading = self.ask_openai_to_generate_card_reading(self.spread.prompt)
         card_reading.metadata.max_tokens = self.__config.openai.generate_reading.max_tokens
         logger.info("Response:\n%s", card_reading.response)
         self.ask_openai_to_summarize_card_reading(card_reading)
         return card_reading
 
-    def generate_tarot_reading_prompt(self):
-        """Generates the prompt to openai for how to generate a tarot card reading for the given spread."""
-        prompt = f"Tarot card reading for {self.command.subject} with the cards "
-        if len(self.spread) < 2:
-            prompt += self.spread[0]
-        else:
-            [*head, tail] = self.spread
-            prompt += ", ".join(str(card) for card in head) + ", and " + str(tail)
-        if self.command.teller is not None:
-            prompt += " in the style of " + self.command.teller
-        return prompt
-
-    def ask_openai_to_generate_card_reading(self, prompt):
+    def ask_openai_to_generate_card_reading(self, prompt: str):
         """Displays the prompt to and associated response from openai."""
         completion_kwargs = _make_openai_completion_request(self.__config.openai.generate_reading, prompt)
         completion, response = _execute_completion_request(completion_kwargs)
         command = self.command
-        card_reading = CardReading(completion, self.spread, prompt, response, None, command.subject, command.teller)
+        card_reading = CardReading(completion, self.spread.tarot_cards, prompt, response, None,
+                                   command.seeker, command.teller)
         card_reading.metadata.max_tokens = self.__config.openai.generate_reading.max_tokens
         if 'temperature' in completion_kwargs:
             card_reading.metadata.temperature = completion_kwargs['temperature']

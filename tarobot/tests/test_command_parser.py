@@ -18,12 +18,13 @@ class TestCommandParser(BaseTestWithConfig):
         # Given: some mocked up command line arguments
         parser = CommandParser(self.test_config)
         args = [
-            '--card-count', '4',
-            '--subject', 'nobody',
-            '--teller', 'a mystic',
             '--show-prompt',
             '--show-diagnostics',
-            '--persist-reading'
+            '--persist-reading',
+            'card-list',
+            '--card-count', '4',
+            '--seeker', 'nobody',
+            '--teller', 'a mystic'
         ]
 
         # When:  the command line arguments are parsed
@@ -31,7 +32,7 @@ class TestCommandParser(BaseTestWithConfig):
 
         # Then:  the parsed arguments can be found in the command object
         self.assertEqual(4, command.card_count)
-        self.assertEqual('nobody', command.subject)
+        self.assertEqual('nobody', command.seeker)
         self.assertEqual('a mystic', command.teller)
         self.assertTrue(command.show_prompt)
         self.assertTrue(command.show_diagnostics)
@@ -40,7 +41,10 @@ class TestCommandParser(BaseTestWithConfig):
     def test_parse_command_line_args_invalid_card_count(self):
         # Given: some mocked up command line arguments
         parser = CommandParser(self.test_config)
-        args = ['--card-count', '42']
+        args = [
+            'card-list',
+            '--card-count', '42'
+        ]
 
         # When:  the command line arguments are parsed
         # Then:  an exception is raised due to an illegal argument
@@ -52,7 +56,11 @@ class TestCommandParser(BaseTestWithConfig):
     def test_parse_command_line_args_invalid_mutual_exclusive_config(self):
         # Given: an illegal combo of card count and specified cards
         parser = CommandParser(self.test_config)
-        args = ['--card-count', '4', '--card', 'The Magician', 'Nine of Cups']
+        args = [
+            'card-list',
+            '--card-count', '4',
+            '--card', 'The Magician', 'Nine of Cups'
+        ]
 
         # When:  the command line arguments are parsed
         # Then:  an exception is raised due to an illegal combination of arguments
@@ -65,18 +73,16 @@ class TestCommandParser(BaseTestWithConfig):
         # Given: some mocked up command line arguments with cards specified
         parser = CommandParser(self.test_config)
         args = [
-            '--card',
-            'The Magician',
-            'The World',
-            'seven of Wands'
+            'card-list',
+            '--card', 'The Magician', 'The World', 'seven of Wands'
         ]
 
         # When:  the command line arguments are parsed
         command = parser.parse_command_line_args(args)
 
         # Then:  the parsed arguments can be found in the command object
-        self.assertEqual('the seeker', command.subject)
-        self.assertIsNone(command.teller)
+        self.assertEqual('the seeker', command.seeker)
+        self.assertEqual('a mystic', command.teller)
         self.assertFalse(command.show_prompt)
         self.assertEqual([
             TarotCard.TheMagician,
@@ -88,10 +94,8 @@ class TestCommandParser(BaseTestWithConfig):
         # Given: some mocked up command line arguments with cards specified (including bogus)
         parser = CommandParser(self.test_config)
         args = [
-            '--card',
-            'MAGICIAN',
-            'World',
-            'FooOfBar'
+            'card-list',
+            '--card', 'MAGICIAN', 'World', 'FooOfBar', 'card-list'
         ]
 
         # When:  the command line arguments are parsed
@@ -104,11 +108,8 @@ class TestCommandParser(BaseTestWithConfig):
         # Given: some mocked up command line arguments with cards specified (including dupe)
         parser = CommandParser(self.test_config)
         args = [
-            '--card',
-            'TheMagician',
-            'TheWorld',
-            'KingOfPentacles',
-            'KingOfDiscs'
+            'card-list',
+            '--card', 'TheMagician', 'TheWorld', 'KingOfPentacles', 'KingOfDiscs'
         ]
 
         # When:  the command line arguments are parsed
@@ -123,11 +124,8 @@ class TestCommandParser(BaseTestWithConfig):
         conf.tarot.max_cards = 3
         parser = CommandParser(self.test_config)
         args = [
-            '--card',
-            'TheMagician',
-            'TheWorld',
-            'KingOfPentacles',
-            'PageOfSwords'
+            'card-list',
+            '--card', 'TheMagician', 'TheWorld', 'KingOfPentacles', 'PageOfSwords'
         ]
 
         # When:  the command line arguments are parsed
