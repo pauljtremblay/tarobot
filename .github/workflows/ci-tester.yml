@@ -33,4 +33,4 @@ jobs:
       env:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       run: |
-        python -m tarobot --teller "Dr Seuss" --show-prompt
+        python -m tarobot --show-prompt card-list --teller "Dr Seuss"
