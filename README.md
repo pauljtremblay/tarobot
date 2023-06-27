@@ -5,7 +5,7 @@ An openai-enhanced tarot card bot for fun.
 
 ## Setup
 First make sure the required dependencies have been installed:
-`pip3 install -r requirements.txt`
+`pip install -r requirements.txt`
 
 Once the dependencies have been installed, ensure that you have created an openai API key. Make the
 api key available in the environment variable `OPENAI_KEY`, you can use a dot-env file (`.env`) to
@@ -23,7 +23,7 @@ https://platform.openai.com/account/api-keys
 ## Usage
 Then you can simply call the tarobot script and have it draw 3 tarot cards at random, after which
 it will generate a tarot card reading for your spread.
-`python3 -m tarobot --help`
+`python -m tarobot --help`
 ```text
 usage: tarobot [-h] [--show-prompt] [--show-diagnostics] [--persist-reading]
                {card-list,one-card,past-present-future,seeker-subject-relationship,situation-obstacle-advice}
@@ -56,7 +56,7 @@ spread-type:
                         situation, C2 = obstacle, C3 = advice
 ```
 
-`python3 -m tarobot card-list --help`
+`python -m tarobot card-list --help`
 ```text
 usage: tarobot card-list [-h]
                          [--card-count {1,2,3,4,5} | --card CARD [CARD ...]]
@@ -74,7 +74,7 @@ options:
   --teller TELLER       person performing tarot reading default: "a mystic"
 ```
 
-`python3 -m tarobot situation-obstacle-advice --help`
+`python -m tarobot situation-obstacle-advice --help`
 ```text
 usage: tarobot situation-obstacle-advice [-h] --situation SITUATION --obstacle
                                          OBSTACLE
@@ -93,7 +93,7 @@ options:
 ## Sample tarot card readings
 
 ### Basic tarot card readings
-`python3 -m tarobot card-list --subject Paul --teller Tarobot`
+`python -m tarobot card-list --subject Paul --teller Tarobot`
 ```text
 Generating a card-list tarot card reading for Paul for the following spread:
         Knight of Wands, Ten of Pentacles, Knight of Cups
@@ -113,7 +113,7 @@ your goals and experience the rewards of success.
 ```
 
 ### You can provide the tarot cards to use for the reading
-`python3 -m tarobot --show-prompt --card-list --teller "Hulk Hogan" --card TheTower ThreeOfCups TheWorld`
+`python -m tarobot --show-prompt --card-list --teller "Hulk Hogan" --card TheTower ThreeOfCups TheWorld`
 ```text
 Generating a tarot card reading for the seeker for the following spread:
 	The Tower, Three of Cups, The World
@@ -132,44 +132,35 @@ accomplishment, as well as the reward for all your hard work. So grab your thund
 it looks like you've got some major breakthroughs headed your way!
 ```
 
-### Try tarobot's hand at songwriting
-`python3 -m tarobot --show-prompt card-list --teller "Iron Maiden lyrics"`
+### Try tarobot's hand at relationship advice (actually, don't)
+` python -m tarobot --show-prompt seeker-subject-relationship`
 ```text
-Generating a tarot card reading for the seeker for the following spread:
-	Seven of Cups, Queen of Pentacles, The Sun
+Generating a seeker-subject-relationship tarot card reading for the following cards:
+        Three of Pentacles, Nine of Swords, Seven of Pentacles
 
 Prompt:
-Tarot card reading for the seeker with the cards Seven of Cups,
-Queen of Pentacles, and The Sun in the style of Iron Maiden lyrics
+Tarot card reading for love and relationships with Three of Pentacles representing the seeker, Nine of Swords
+representing the subject, Seven of Pentacles representing the relationship.
 
 Response:
-Verse 1:
-The Seven of Cups brings confusion,
-A crossroads up ahead.
-But the Queen of Pentacles knows the answer can be found,
-From The Sun enlightening her instead
+The Three of Pentacles suggests that the seeker is someone who is hardworking and ambitious, and is willing to put in
+the effort to make their dreams come true. They are also likely to be a good problem solver and have a strong sense of
+responsibility.
 
-Chorus:
-A new path, a new day,
-A wiser choice will lead the way.
-An inner journey, a brighter light,
-Answers come in second sight.
+The Nine of Swords suggests that the subject is someone who is struggling with inner turmoil and anxiety. They may be
+feeling overwhelmed by their current situation and may be struggling to find a way out.
 
-Verse 2:
-The Queen of Pentacles stands still,
-Confident in her decision.
-Ignoring the distraction of the Seven of Cups,
-In the Sun lies her true vision.
+The Seven of Pentacles suggests that the relationship between the seeker and the subject is one that is full of
+potential. Both parties are willing to put in the effort to make it work, and if they can find a way to work through
+their issues, the relationship could be very rewarding. However, it will require patience and dedication from both
+parties in order to make it work.
 
-Chorus:
-A new path, a new day,
-A wiser choice will lead the way.
-An inner journey, a brighter light,
-Answers come in second sight.
+The tarot card reading sentiment:
+Positive
 ```
 
 ### Inspire tarobot to write some poetry:
-`python3 -m tarobot --show-prompt card-list --teller "a Robert Frost poem"`
+`python -m tarobot --show-prompt card-list --teller "a Robert Frost poem"`
 ```text
 Generating a tarot card reading for the seeker for the following spread:
 Ace of Wands, The Tower, Seven of Cups
@@ -189,7 +180,7 @@ Amidst the chaos of Great Task?
 Look past the present’s stormy mask
 As what you seek lies in the path that wand did cast.
 
-An answer to the dilemna you seek,
+An answer to the dilemma you seek,
 In a universe so frequently bleak,
 Will come from the surprises that this moment meek
 Despite other cards of ill-fame cast in its shadow deep.
@@ -198,4 +189,29 @@ Your destiny to craft is in your hand,
 An Ace of Wands, set to expand
 To explore and understand,
 Defeating fate and triumphant stand.
+```
+
+### Ask tarobot for some potentially deep advice on challenges in life:
+`python -m tarobot --show-prompt situation-obstacle-advice
+ --situation "being overlooked at work"
+ --obstacle "not being seen or appreciated"`
+```text
+Generating a situation-obstacle-advice tarot card reading for the following cards:
+        Justice, Three of Pentacles, The Wheel of Fortune
+
+Prompt:
+Tarot card reading with Justice representing the situation, Three of Pentacles representing the obstacle, The Wheel of
+Fortune representing the advice. The seeker wants advice about being overlooked at work. The obstacle in their situation
+is not being seen or appreciated.
+
+Response:
+Justice is a card of balance and fairness, and it suggests that the seeker is in a situation where they are not being
+treated fairly. The Three of Pentacles is a card of hard work and dedication, and it suggests that the seeker is putting
+in a lot of effort but not being recognized for it. The Wheel of Fortune is a card of luck and chance, and it suggests
+that the seeker should take a chance and make their voice heard. They should speak up and make sure that their hard work
+is noticed and appreciated. They should also take the time to recognize and appreciate the hard work of their
+colleagues. By doing this, they will create a more balanced and fair work environment.
+
+The tarot card reading sentiment:
+Positive
 ```
