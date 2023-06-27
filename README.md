@@ -25,29 +25,66 @@ Then you can simply call the tarobot script and have it draw 3 tarot cards at ra
 it will generate a tarot card reading for your spread.
 `python3 -m tarobot --help`
 ```text
-usage: tarobot [-h] [--subject SUBJECT] [--teller TELLER]
-               [--card-count {1,2,3,4,5} | --card CARD [CARD ...]]
-               [--show-prompt] [--show-diagnostics] [--persist-reading]
+usage: tarobot [-h] [--show-prompt] [--show-diagnostics] [--persist-reading]
+               {card-list,one-card,past-present-future,seeker-subject-relationship,situation-obstacle-advice}
+               ...
 
 Tarot deck cartomancy application
 
 options:
   -h, --help            show this help message and exit
-  --subject SUBJECT     the name of the person receiving the tarot card
-                        reading default: "the seeker"
-  --teller TELLER       the "person" conducting the tarot card reading
-                        (optional)
+  --show-prompt         displays the generated prompt ahead of the response
+  --show-diagnostics    displays diagnostic output from the completion
+                        response returned from openai
+  --persist-reading     inserts a record of the tarot card reading (inputs,
+                        prompt, result, metadata) in the database
+
+spread-type:
+  {card-list,one-card,past-present-future,seeker-subject-relationship,situation-obstacle-advice}
+                        spread-type help
+    card-list           Perform a tarot card spread on a list of cards, with a
+                        fortune teller and seeker
+    one-card            Perform a simple one card tarot card spread
+    past-present-future
+                        Perform a three card tarot card spread: C1 = past, C2
+                        = present, C3 = future
+    seeker-subject-relationship
+                        Perform a three card tarot card spread: C1 = seeker,
+                        C2 = subject, C3 = relationship
+    situation-obstacle-advice
+                        Perform a three card tarot card spread: C1 =
+                        situation, C2 = obstacle, C3 = advice
+```
+
+`python3 -m tarobot card-list --help`
+```text
+usage: tarobot card-list [-h]
+                         [--card-count {1,2,3,4,5} | --card CARD [CARD ...]]
+                         [--seeker SEEKER] [--teller TELLER]
+
+options:
+  -h, --help            show this help message and exit
   --card-count {1,2,3,4,5}
                         number of tarot cards to draw in the spread [1-5]
                         default: 3 card spread
   --card CARD [CARD ...]
                         takes specific card[s] from the user instead of a
                         random draw from the deck
-  --show-prompt         displays the generated prompt ahead of the response
-  --show-diagnostics    displays diagnostic output from the completion
-                        response returned from openai
-  --persist-reading     inserts a record of the tarot card reading (inputs,
-                        prompt, result, metadata) in the database
+  --seeker SEEKER       tarot reading recipient default: "the seeker"
+  --teller TELLER       person performing tarot reading default: "a mystic"
+```
+
+`python3 -m tarobot situation-obstacle-advice --help`
+```text
+usage: tarobot situation-obstacle-advice [-h] --situation SITUATION --obstacle
+                                         OBSTACLE
+
+options:
+  -h, --help            show this help message and exit
+  --situation SITUATION
+                        situation being explored by tarot card reading
+  --obstacle OBSTACLE   obstacle in the situation being addressed by the tarot
+                        card reading
 ```
 
 <br />
@@ -56,9 +93,9 @@ options:
 ## Sample tarot card readings
 
 ### Basic tarot card readings
-`python3 -m tarobot --subject Paul --teller Tarobot`
+`python3 -m tarobot card-list --subject Paul --teller Tarobot`
 ```text
-Generating a tarot card reading for Paul for the following spread:
+Generating a card-list tarot card reading for Paul for the following spread:
         Knight of Wands, Ten of Pentacles, Knight of Cups
 
 Response:
@@ -76,7 +113,7 @@ your goals and experience the rewards of success.
 ```
 
 ### You can provide the tarot cards to use for the reading
-`python3 -m tarobot --teller "Hulk Hogan" --use-card-list TheTower ThreeOfCups TheWorld --show-prompt`
+`python3 -m tarobot --show-prompt --card-list --teller "Hulk Hogan" --card TheTower ThreeOfCups TheWorld`
 ```text
 Generating a tarot card reading for the seeker for the following spread:
 	The Tower, Three of Cups, The World
@@ -96,7 +133,7 @@ it looks like you've got some major breakthroughs headed your way!
 ```
 
 ### Try tarobot's hand at songwriting
-`python3 -m tarobot --teller "Iron Maiden lyrics" --show-prompt`
+`python3 -m tarobot --show-prompt card-list --teller "Iron Maiden lyrics"`
 ```text
 Generating a tarot card reading for the seeker for the following spread:
 	Seven of Cups, Queen of Pentacles, The Sun
@@ -132,7 +169,7 @@ Answers come in second sight.
 ```
 
 ### Inspire tarobot to write some poetry:
-`python3 -m tarobot --teller "a Robert Frost poem" --show-prompt`
+`python3 -m tarobot --show-prompt card-list --teller "a Robert Frost poem"`
 ```text
 Generating a tarot card reading for the seeker for the following spread:
 Ace of Wands, The Tower, Seven of Cups
