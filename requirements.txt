@@ -20,7 +20,7 @@ python-dateutil==2.8.2
 python-dotenv==1.0.0
 pyhocon==0.3.60
 pyparsing==3.1.0
-PyYAML==6.0
+PyYAML==6.0.1
 requests==2.31.0
 six==1.16.0
 SQLAlchemy==2.0.19
