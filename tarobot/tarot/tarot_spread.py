@@ -4,6 +4,7 @@
 
 from dataclasses import dataclass
 from enum import Enum
+from inspect import cleandoc
 from os.path import dirname, realpath
 import re
 from typing import Dict, List, Optional
@@ -13,7 +14,7 @@ import dataconf
 from . tarot_card import TarotCard
 
 
-class SpreadType(Enum):
+class SpreadType(str, Enum):
     """Enumeration representing some common types of Tarot card spreads."""
     ONE_CARD = "one-card"
     CARD_LIST = "card-list"
@@ -26,6 +27,13 @@ class SpreadType(Enum):
 
 
 @dataclass
+class SpreadLayout:
+    """DTO representing a tarot card reading's query in terms of the cards and parameters."""
+    description: str
+    template: str
+
+
+@dataclass
 class Spread:
     """DTO representing a Tarot card spread; the type, the cards, additional parameters, and the resulting prompt."""
     spread_type: SpreadType
@@ -34,18 +42,16 @@ class Spread:
     prompt: str
 
 
-@dataclass
-class SpreadConfig:
-    """DTO representing the hocon config file used to load the spread type's prompt templates."""
-    spreads: Dict[str, str]
+SpreadConfig = Dict[SpreadType, SpreadLayout]
+"""Type alias for the spread type to layout dictionary."""
 
 
 class SpreadBuilder:
     """Service that builds Tarot spread DTOs and prompts for the given parameters."""
     def __init__(self, location: str = realpath(dirname(dirname(__file__)) + "/config/spreads.conf")):
         spread_config: SpreadConfig = dataconf.file(location, SpreadConfig)
-        self.type_to_template: Dict[SpreadType, str] = {SpreadType(spread_type): template
-                                                        for (spread_type, template) in spread_config.spreads.items()}
+        self.type_to_template: Dict[SpreadType, str] = {spread_type: cleandoc(layout.template)
+                                                        for (spread_type, layout) in spread_config.items()}
 
     def build(self, spread_type: SpreadType, tarot_cards: List[TarotCard],
               additional_parameters: Optional[Dict[str, str]] = None) -> Spread:
