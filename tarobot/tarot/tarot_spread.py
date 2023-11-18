@@ -3,7 +3,7 @@
 """This module contains knowledge about some different common tarot spreads and card layouts."""
 
 from dataclasses import dataclass
-from enum import StrEnum
+from enum import Enum
 from inspect import cleandoc
 from os.path import dirname, realpath
 import re
@@ -14,7 +14,7 @@ import dataconf
 from . tarot_card import TarotCard
 
 
-class SpreadType(StrEnum):
+class SpreadType(str, Enum):
     """Enumeration representing some common types of Tarot card spreads."""
     ONE_CARD = "one-card"
     CARD_LIST = "card-list"

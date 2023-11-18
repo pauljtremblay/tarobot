@@ -2,10 +2,10 @@
 
 """Module containing the major/minor archana enumeration."""
 
-from enum import StrEnum
+from enum import Enum
 
 
-class Archana(StrEnum):
+class Archana(str, Enum):
     """An enumeration representing the different archana."""
 
     MAJOR = "major"
