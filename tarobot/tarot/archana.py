@@ -5,8 +5,8 @@
 from enum import Enum
 
 
-class Archana(Enum):
+class Archana(str, Enum):
     """An enumeration representing the different archana."""
 
-    MAJOR = 1
-    MINOR = 2
+    MAJOR = "major"
+    MINOR = "minor"

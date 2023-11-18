@@ -2,10 +2,10 @@
 
 """This module represents the different card values for all the minor archana cards."""
 
-from enum import Enum
+from enum import IntEnum
 
 
-class CardValue(Enum):
+class CardValue(IntEnum):
     """An enumeration representing the different card values of a minor archana suit."""
 
     ACE = 1
