@@ -1,2 +1,5 @@
 # Auto detect text files and perform LF normalization
 * text eol=lf
+
+# Fix syntax highlighting for .conf hocon files
+**/*.conf linguist-language=HOCON
