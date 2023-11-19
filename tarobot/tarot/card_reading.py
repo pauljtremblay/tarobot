@@ -4,7 +4,8 @@
 
 from dataclasses import dataclass
 import json
-from typing import Dict, List, Optional
+import re
+from typing import ClassVar, Dict, List, Optional
 
 from dataclasses_json import dataclass_json
 
@@ -44,6 +45,7 @@ class Metadata(AbstractBaseClass):
 @dataclass
 class CardReading(AbstractBaseClass):
     """Stores the query, response, and associated metadata for an openai tarot card reading."""
+    ignored_parameter_regex: ClassVar[str] = r'card_(list|\d)'
     metadata: Metadata
     spread: List[TarotCard]
     prompt: str
@@ -61,9 +63,9 @@ class CardReading(AbstractBaseClass):
         self.summary = summary
         self.parameters = {}
         if parameters is not None:
-            for (name, value) in parameters.items():
-                if name not in ['card_list', 'card_1', 'card_2', 'card_3', 'card_4', 'card_5']:
-                    self.parameters[name] = value
+            for (param_name, param_value) in parameters.items():
+                if re.match(CardReading.ignored_parameter_regex, param_name) is None:
+                    self.parameters[param_name] = param_value
 
     def __str__(self):
         return json.dumps(json.loads(self.to_json()), indent=4)

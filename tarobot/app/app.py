@@ -22,13 +22,16 @@ logger = logging.getLogger(__name__)
 class App:
     """This class processes input from command line arguments and executes the request."""
 
-    def __init__(self, config_opt: Optional[Config] = None):
+    def __init__(self, config_opt: Optional[Config] = None, openai_client: OpenAI = None):
         # load app config
         if config_opt is not None:
             self.__config = config_opt
         else:
             self.__config = CONFIG
-        self.openai_client = OpenAI(api_key=self.__config.openai.api_key)
+        if openai_client is not None:
+            self.openai_client = openai_client
+        else:
+            self.openai_client = OpenAI(api_key=self.__config.openai.api_key)
         self.parser = CommandParser(self.__config)
         self.command: Optional[CommandDto] = None
         self.spread: Optional[Spread] = None

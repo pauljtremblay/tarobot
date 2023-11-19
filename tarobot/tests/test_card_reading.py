@@ -4,9 +4,7 @@
 
 from datetime import datetime
 import unittest
-from unittest.mock import patch
-
-from openai import Completion
+from unittest.mock import patch, Mock
 
 from tarobot.app.app import persist_card_reading
 from tarobot.db.card_reading_entity import CardReadingEntity
@@ -27,12 +25,15 @@ class TestCommandParser(unittest.TestCase):
             "teller": "Bob"
         }
         # And:   a mocked up openai Completion response
-        completion = Completion(id='cmpl-444555',
-                                engine='generate',
-                                response_ms=1234)
-        completion['model'] = 'scatgpt-4'
-        completion['created'] = 1681571451
-        completion['usage'] = {'prompt_tokens': 30, 'completion_tokens': 200, 'total_tokens': 230}
+        completion = Mock()
+        completion.id = 'cmpl-444555'
+        completion.engine = 'generate'
+        completion.model = 'scatgpt-4'
+        completion.created = 1681571451
+        completion.usage = Mock()
+        completion.usage.prompt_tokens = 30
+        completion.usage.completion_tokens = 200
+        completion.usage.total_tokens = 230
 
         # When:  the CardReading is constructed from the Completion and card reading attributes
         card_reading = CardReading(completion, spread, prompt, response, parameters, summary)
@@ -46,7 +47,6 @@ class TestCommandParser(unittest.TestCase):
         self.assertEqual("cmpl-444555", metadata.openai_id)
         self.assertEqual("scatgpt-4", metadata.model)
         self.assertEqual(1681571451, metadata.created_ts)
-        self.assertEqual(1234, metadata.response_ms)
         self.assertEqual(30, metadata.prompt_tokens)
         self.assertEqual(200, metadata.completion_tokens)
         self.assertEqual(230, metadata.total_tokens)
@@ -67,10 +67,15 @@ class TestCommandParser(unittest.TestCase):
         prompt = "Tarot card reading for the seeker blah blah blah"
         response = "Yo, good things are gonna come to you"
         summary = "Positive"
-        completion = Completion(id='cmpl-444555', engine='generate', response_ms=1234)
-        completion['model'] = 'scatgpt-4'
-        completion['created'] = 1681571451
-        completion['usage'] = {'prompt_tokens': 30, 'completion_tokens': 200, 'total_tokens': 230}
+        completion = Mock()
+        completion.id = 'cmpl-444555'
+        completion.engine = 'generate'
+        completion.model = 'scatgpt-4'
+        completion.created = 1681571451
+        completion.usage = Mock()
+        completion.usage.prompt_tokens = 30
+        completion.usage.completion_tokens = 200
+        completion.usage.total_tokens = 230
         card_reading = CardReading(completion, spread, prompt, response, parameters, summary)
         card_reading.metadata.max_tokens = 2000
         card_reading.metadata.top_p = 0.1
@@ -93,7 +98,6 @@ class TestCommandParser(unittest.TestCase):
         self.assertEqual("cmpl-444555", entity.openai_id)
         self.assertEqual("scatgpt-4", entity.model)
         self.assertEqual(datetime.fromtimestamp(1681571451), entity.created_ts)
-        self.assertEqual(1234, entity.response_ms)
         self.assertEqual(2000, entity.max_tokens)
         self.assertEqual(30, entity.prompt_tokens)
         self.assertEqual(200, entity.completion_tokens)
