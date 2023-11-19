@@ -59,7 +59,6 @@ SpreadConfig = Dict[SpreadType, SpreadTemplate]
 class SpreadBuilder:
     """Service class that transforms a tarot spread request into a prompt-ready package for OpenAI."""
 
-    """Service that builds Tarot spread DTOs and prompts for the given parameters."""
     def __init__(self, location: str = realpath(dirname(dirname(__file__)) + "/config/spreads.conf")):
         spread_types: List[SpreadTemplate] = dataconf.file(location, List[SpreadTemplate])
         self.spread_type_to_template: SpreadConfig = {spread_template.type: spread_template

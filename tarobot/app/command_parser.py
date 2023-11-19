@@ -104,7 +104,7 @@ def _build_parser(config: Config) -> ArgumentParser:
         dest='spread_type',
         help='spread-type help',
         required=True)
-    for (spread_type, spread_template) in spread_builder.spread_type_to_template.items():
+    for spread_template in spread_builder.spread_type_to_template.values():
         _build_spread_type_parser(spread_type_subparsers, spread_template, tarot)
     return parser
 
