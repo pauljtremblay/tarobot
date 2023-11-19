@@ -2,13 +2,15 @@
 
 """Main entry point for the utility from the root directory. Configures the app's logging before running."""
 
-from logging import getLogger, Formatter, StreamHandler, DEBUG, INFO
+from logging import getLogger, Formatter, StreamHandler, DEBUG, INFO, WARNING
 import sys
 
 from tarobot import App
 
 # log levels for different third-party libraries
 log_appender_configs = {
+    'httpcore': INFO,
+    'httpx': WARNING,
     'openai': INFO,
     'urllib3': INFO
 }
