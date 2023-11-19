@@ -23,8 +23,10 @@ class TestApp(BaseTestWithConfig):
         # Given: a mocked up number of cards to draw
         app = App(self.test_config)
         command = CommandDto(spread_type=SpreadType.CARD_LIST,
-                             seeker='the seeker',
-                             teller='a mystic')
+                             spread_parameters={
+                                 'seeker': 'the seeker',
+                                 'teller': 'a mystic'
+                             })
         command.card_count = 4
         app.command = command
 
@@ -38,8 +40,10 @@ class TestApp(BaseTestWithConfig):
         # Given: a mocked up request with specified cards
         app = App(self.test_config)
         app.command = CommandDto(spread_type=SpreadType.CARD_LIST,
-                                 seeker='the seeker',
-                                 teller='a mystic',
+                                 spread_parameters={
+                                     'seeker': 'the seeker',
+                                     'teller': 'a mystic'
+                                 },
                                  given_cards=[TarotCard.TheMagician, TarotCard.SixOfWands, TarotCard.TheTower])
 
         # When:  the tarot card spread is created
@@ -59,13 +63,14 @@ class TestApp(BaseTestWithConfig):
         command.show_prompt = True
         command.show_diagnostics = True
         command.persist_reading = True
-        command.seeker = "the seeker"
-        command.teller = "Dr Seuss"
+        command.spread_type = SpreadType.CARD_LIST
+        parameters = {'seeker': 'the seeker', 'teller': 'Dr Seuss'}
+        command.spread_parameters = parameters
         # And:  a mocked up tarot spread
         tarot_cards = [TarotCard.TheMagician, TarotCard.TheTower]
         app.spread = Spread(spread_type=app.command.spread_type,
                             tarot_cards=tarot_cards,
-                            parameters={'seeker': 'the seeker', 'teller': 'Dr Seuss'},
+                            parameters=parameters,
                             prompt=('Tarot card reading for the seeker '
                                     'with the cards The Magician, The Tower '
                                     'in the style of Dr Seuss.'))
@@ -108,8 +113,7 @@ class TestApp(BaseTestWithConfig):
         self.assertEqual(app.spread.prompt, card_reading.prompt)
         self.assertEqual("one fish two fish red fish dead fish", card_reading.response)
         self.assertEqual("Mixed", card_reading.summary)
-        self.assertEqual("the seeker", card_reading.subject)
-        self.assertEqual("Dr Seuss", card_reading.teller)
+        self.assertEqual(parameters, card_reading.parameters)
 
     @patch('tarobot.app.app.App.interpret_tarot_spread')
     @patch('tarobot.app.app.App.create_tarot_spread')

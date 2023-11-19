@@ -2,10 +2,10 @@
 
 """Module that represents for the four different suits of the minor archana."""
 
-from enum import Enum
+from enum import IntEnum
 
 
-class Suit(Enum):
+class Suit(IntEnum):
     """An enumeration representing the different suits of the minor archana."""
 
     WANDS = 1
