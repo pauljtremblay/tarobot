@@ -12,7 +12,7 @@ import openai
 from .. db import session_factory, CardReadingEntity
 from .. tarot import TarotDeck, CardReading, Spread, spread_builder
 from .. tarot.card_reading import Metadata
-from . command_parser import CommandParser
+from . command_parser import CommandDto, CommandParser
 from . config import Completion, CONFIG, Config
 
 
@@ -31,7 +31,7 @@ class App:
         # initialize openai module, or error out if api key is not defined
         openai.api_key = self.__config.openai.api_key
         self.parser = CommandParser(self.__config)
-        self.command = None
+        self.command: Optional[CommandDto] = None
         self.spread: Optional[Spread] = None
 
     def main(self) -> None:
@@ -79,8 +79,7 @@ class App:
         completion_kwargs = _make_openai_completion_request(self.__config.openai.generate_reading, prompt)
         completion, response = _execute_completion_request(completion_kwargs)
         command = self.command
-        card_reading = CardReading(completion, self.spread.tarot_cards, prompt, response, None,
-                                   command.seeker, command.teller)
+        card_reading = CardReading(completion, self.spread.tarot_cards, prompt, response, command.spread_parameters)
         card_reading.metadata.max_tokens = self.__config.openai.generate_reading.max_tokens
         if 'temperature' in completion_kwargs:
             card_reading.metadata.temperature = completion_kwargs['temperature']

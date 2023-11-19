@@ -3,6 +3,7 @@
 """Module for the card reading database entity. Used to insert tarot card readings in a relational database."""
 
 from datetime import datetime
+from json import dumps
 
 from sqlalchemy import Column, Float, Integer, String, Text, TIMESTAMP
 
@@ -21,9 +22,8 @@ class CardReadingEntity(Base):
     card_three = Column(Integer, nullable=True)
     card_four = Column(Integer, nullable=True)
     card_five = Column(Integer, nullable=True)
-    subject = Column(String(64), nullable=True)
-    teller = Column(String(64), nullable=True)
-    prompt = Column(String(256), nullable=False)
+    parameters = Column(String(256), nullable=False)
+    prompt = Column(String(1024), nullable=False)
     response = Column(Text, nullable=False)
     summary = Column(Text, nullable=True)
     model = Column(String(64), nullable=True)
@@ -46,8 +46,8 @@ class CardReadingEntity(Base):
             self.card_four = dto.spread[3].value
         if len(dto.spread) > 4:
             self.card_five = dto.spread[4].value
-        self.subject = dto.subject
-        self.teller = dto.teller
+        if dto.parameters is not None:
+            self.parameters = dumps(dto.parameters)
         self.prompt = dto.prompt
         self.response = dto.response
         self.summary = dto.summary
