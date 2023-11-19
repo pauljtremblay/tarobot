@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from typing import Dict, List, Optional, Tuple
 
 from . config import Config, Tarot as TarotConfig
-from .. tarot import resolver, spread_builder, SpreadTemplate, SpreadType, TarotCard, TarotDeck
+from .. tarot import spread_builder, resolver, SpreadTemplate, SpreadType, TarotCard, TarotDeck
 
 
 @dataclass
