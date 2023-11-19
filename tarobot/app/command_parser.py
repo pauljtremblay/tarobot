@@ -114,6 +114,7 @@ def _build_spread_type_parser(spread_type_subparsers, template: SpreadTemplate, 
     spread_type_parser = spread_type_subparsers.add_parser(
         template.type,
         description=template.description,
+        help=template.description,
         exit_on_error=False)
     _build_card_count_or_card_list_parser(spread_type_parser, template, tarot)
     if template.required_parameters is not None:
