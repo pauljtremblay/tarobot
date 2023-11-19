@@ -4,10 +4,10 @@
 
 from argparse import ArgumentParser
 from dataclasses import dataclass
-from typing import List
+from typing import Dict, List, Optional, Tuple
 
-from . config import Config
-from .. tarot import resolver, SpreadType, TarotCard, TarotDeck
+from . config import Config, Tarot as TarotConfig
+from .. tarot import resolver, spread_builder, SpreadTemplate, SpreadType, TarotCard, TarotDeck
 
 
 @dataclass
@@ -17,12 +17,9 @@ class CommandDto:
     show_diagnostics: bool = False
     persist_reading: bool = False
     spread_type: SpreadType = SpreadType.CARD_LIST
+    spread_parameters: Optional[Dict[str, str]] = None
     given_cards: List[TarotCard] = None
     card_count: int = 3
-    seeker: str = None
-    teller: str = None
-    situation: str = None
-    obstacle: str = None
 
 
 class CommandParser:
@@ -32,86 +29,8 @@ class CommandParser:
         self.parser: ArgumentParser
         self.command: CommandDto
         self.parsed_args = None
-        self.__config = config
-        self.__build_parser(config)
-
-    def __build_parser(self, config: Config):
-        """The command line argument parser config for the tarobot application."""
-        tarot = self.__config.tarot
-        self.parser = ArgumentParser(
-            prog=config.app_name.lower(),
-            description='Tarot deck cartomancy application',
-            exit_on_error=False)
-        self.parser.add_argument(
-            '--show-prompt',
-            help='displays the generated prompt ahead of the response',
-            action='store_true')
-        self.parser.add_argument(
-            '--show-diagnostics',
-            help='displays diagnostic output from the completion response returned from openai',
-            action='store_true')
-        self.parser.add_argument(
-            '--persist-reading',
-            help='inserts a record of the tarot card reading (inputs, prompt, result, metadata) in the database',
-            action='store_true')
-        spread_type_subparsers = self.parser.add_subparsers(
-            title='spread-type',
-            dest='spread_type',
-            help='spread-type help',
-            required=True)
-        card_list_parser = spread_type_subparsers.add_parser(
-            'card-list',
-            exit_on_error=False,
-            help='Perform a tarot card spread on a list of cards, with a fortune teller and seeker')
-        card_count_or_list_mutex_args = card_list_parser.add_mutually_exclusive_group()
-        card_count_or_list_mutex_args.add_argument(
-            '--card-count',
-            help=f"number of tarot cards to draw in the spread [{tarot.min_cards}-{tarot.max_cards}]"
-                 f"\n\tdefault: {tarot.default_cards} card spread",
-            type=int,
-            choices=range(tarot.min_cards, tarot.max_cards + 1),
-            default=tarot.default_cards)
-        card_count_or_list_mutex_args.add_argument(
-            '--card',
-            help='takes specific card[s] from the user instead of a random draw from the deck',
-            type=str,
-            nargs='+')
-        card_list_parser.add_argument(
-            '--seeker',
-            help='tarot reading recipient\n\tdefault: "the seeker"',
-            type=str,
-            default='the seeker')
-        card_list_parser.add_argument(
-            '--teller',
-            help='person performing tarot reading\n\tdefault: "a mystic"',
-            type=str,
-            default='a mystic')
-        spread_type_subparsers.add_parser(
-            'one-card',
-            exit_on_error=False,
-            help='Perform a simple one card tarot card spread')
-        spread_type_subparsers.add_parser(
-            'past-present-future',
-            exit_on_error=False,
-            help='Perform a three card tarot card spread: C1 = past, C2 = present, C3 = future')
-        spread_type_subparsers.add_parser(
-            'seeker-subject-relationship',
-            exit_on_error=False,
-            help='Perform a three card tarot card spread: C1 = seeker, C2 = subject, C3 = relationship')
-        situation_obstacle_advice_parser = spread_type_subparsers.add_parser(
-            'situation-obstacle-advice',
-            exit_on_error=False,
-            help='Perform a three card tarot card spread: C1 = situation, C2 = obstacle, C3 = advice')
-        situation_obstacle_advice_parser.add_argument(
-            '--situation',
-            help='situation being explored by tarot card reading',
-            type=str,
-            required=True)
-        situation_obstacle_advice_parser.add_argument(
-            '--obstacle',
-            help='obstacle in the situation being addressed by the tarot card reading',
-            type=str,
-            required=True)
+        self.config = config
+        self.parser = _build_parser(config)
 
     def parse_command_line_args(self, command_line_args: List[str]):
         """Parses the given command line args into a command dto."""
@@ -121,28 +40,19 @@ class CommandParser:
         parsed_command.show_diagnostics = self.parsed_args.show_diagnostics
         parsed_command.persist_reading = self.parsed_args.persist_reading
         parsed_command.spread_type = SpreadType(self.parsed_args.spread_type)
-        # handle spread-specific parameters conditionally
-        match parsed_command.spread_type:
-            case SpreadType.CARD_LIST:
-                self._parse_card_list_subcommand(parsed_command)
-
-            case SpreadType.SITUATION_OBSTACLE_ADVICE:
-                parsed_command.situation = self.parsed_args.situation
-                parsed_command.obstacle = self.parsed_args.obstacle
+        parsed_command.card_count = self.parsed_args.card_count
+        spread_template: SpreadTemplate = [template
+                                           for template in spread_builder.spread_type_to_template.values()
+                                           if template.type == parsed_command.spread_type][0]
+        if self.parsed_args.card is not None:
+            parsed_command.given_cards = self.parse_given_tarot_cards(spread_template)
+        parsed_command.spread_parameters = {}
+        if spread_template.required_parameters is not None:
+            for parameter in spread_template.required_parameters.keys():
+                parsed_command.spread_parameters[parameter] = getattr(self.parsed_args, parameter)
         return parsed_command
 
-    def _parse_card_list_subcommand(self, parsed_command):
-        """Helper method that parses the card-list subcommand, tarot card spread."""
-        parsed_command.seeker = self.parsed_args.seeker
-        parsed_command.teller = self.parsed_args.teller
-        parsed_command.card_count = self.parsed_args.card_count
-        if self.parsed_args.card is not None:
-            parsed_command.given_cards = self.parse_given_tarot_cards()
-            tarot = self.__config.tarot
-            if len(parsed_command.given_cards) not in range(tarot.min_cards, tarot.max_cards + 1):
-                raise ValueError(f"Only [{tarot.min_cards}-{tarot.max_cards}] cards allowed in the tarot card spread")
-
-    def parse_given_tarot_cards(self):
+    def parse_given_tarot_cards(self, spread_template: SpreadTemplate):
         """Helper method for validating and parsing the given tarot cards."""
         # ensure the cards are valid tarot cards
         parsed_cards = []
@@ -158,6 +68,9 @@ class CommandParser:
                 tarot_deck.cards.remove(card)
             except ValueError as cause:
                 raise ValueError(f"Duplicate card: {card}") from cause
+        min_cards, max_cards = _get_min_max_card_count_for_template(spread_template, self.config.tarot)
+        if len(parsed_cards) not in range(min_cards, max_cards + 1):
+            raise ValueError(f"Only [{min_cards}-{max_cards}] cards allowed in the tarot card spread")
         return parsed_cards
 
     def print_parse_error_and_exit(self, arg_error):
@@ -165,3 +78,79 @@ class CommandParser:
 
         Used so fatal argparse errors can be unit tested."""
         self.parser.error(arg_error)
+
+
+def _build_parser(config: Config) -> ArgumentParser:
+    """The command line argument parser config for the tarobot application."""
+    tarot = config.tarot
+    parser: ArgumentParser = ArgumentParser(
+        prog=config.app_name.lower(),
+        description='Tarot deck cartomancy application',
+        exit_on_error=False)
+    parser.add_argument(
+        '--show-prompt',
+        help='displays the generated prompt ahead of the response',
+        action='store_true')
+    parser.add_argument(
+        '--show-diagnostics',
+        help='displays diagnostic output from the completion response returned from openai',
+        action='store_true')
+    parser.add_argument(
+        '--persist-reading',
+        help='inserts a record of the tarot card reading (inputs, prompt, result, metadata) in the database',
+        action='store_true')
+    spread_type_subparsers = parser.add_subparsers(
+        title='spread-type',
+        dest='spread_type',
+        help='spread-type help',
+        required=True)
+    for (spread_type, spread_template) in spread_builder.spread_type_to_template.items():
+        _build_spread_type_parser(spread_type_subparsers, spread_template, tarot)
+    return parser
+
+
+def _build_spread_type_parser(spread_type_subparsers, template: SpreadTemplate, tarot: TarotConfig) -> None:
+    """Constructs a subparser for the given tarot pread template configuration."""
+    spread_type_parser = spread_type_subparsers.add_parser(
+        template.type,
+        exit_on_error=False,
+        help=template.description)
+    _build_card_count_or_card_list_parser(spread_type_parser, template, tarot)
+    if template.required_parameters is not None:
+        for (param_name, parameter) in template.required_parameters.items():
+            description = parameter.description
+            if parameter.default_value is not None:
+                description += f"\n\tdefault: \"{parameter.default_value}\""
+            spread_type_parser.add_argument(
+                f"--{param_name}",
+                help=description,
+                default=parameter.default_value,
+                required=parameter.default_value is None)
+
+
+def _build_card_count_or_card_list_parser(spread_type_parser, template: SpreadTemplate, tarot: TarotConfig) -> None:
+    """Constructs a mutually exclusive parser that either specifies a card count or a list of specified cards."""
+    card_count_or_list_mutex_args = spread_type_parser.add_mutually_exclusive_group()
+    min_cards, max_cards = _get_min_max_card_count_for_template(template, tarot)
+    card_count_or_list_mutex_args.add_argument(
+        '--card-count',
+        help=f"number of tarot cards to draw in the spread [{min_cards}-{max_cards}]"
+             f"\n\tdefault: {tarot.default_cards} card spread",
+        type=int,
+        choices=range(min_cards, max_cards + 1),
+        default=tarot.default_cards)
+    card_count_or_list_mutex_args.add_argument(
+        '--card',
+        help='takes specific card[s] from the user instead of a random draw from the deck',
+        type=str,
+        nargs='+')
+
+
+def _get_min_max_card_count_for_template(template: SpreadTemplate, tarot: TarotConfig) -> Tuple[int, int]:
+    if template.required_card_count is None:
+        min_cards = tarot.min_cards
+        max_cards = tarot.max_cards
+    else:
+        min_cards = template.required_card_count
+        max_cards = template.required_card_count
+    return min_cards, max_cards

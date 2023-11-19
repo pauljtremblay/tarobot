@@ -23,8 +23,10 @@ class TestApp(BaseTestWithConfig):
         # Given: a mocked up number of cards to draw
         app = App(self.test_config)
         command = CommandDto(spread_type=SpreadType.CARD_LIST,
-                             seeker='the seeker',
-                             teller='a mystic')
+                             spread_parameters={
+                                 'seeker': 'the seeker',
+                                 'teller': 'a mystic'
+                             })
         command.card_count = 4
         app.command = command
 
@@ -38,8 +40,10 @@ class TestApp(BaseTestWithConfig):
         # Given: a mocked up request with specified cards
         app = App(self.test_config)
         app.command = CommandDto(spread_type=SpreadType.CARD_LIST,
-                                 seeker='the seeker',
-                                 teller='a mystic',
+                                 spread_parameters={
+                                     'seeker': 'the seeker',
+                                     'teller': 'a mystic'
+                                 },
                                  given_cards=[TarotCard.TheMagician, TarotCard.SixOfWands, TarotCard.TheTower])
 
         # When:  the tarot card spread is created

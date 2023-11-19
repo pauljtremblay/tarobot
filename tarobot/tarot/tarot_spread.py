@@ -27,12 +27,20 @@ class SpreadType(str, Enum):
 
 
 @dataclass
+class TemplateParameter:
+    """DTO representing a required parameter for a template."""
+    description: str
+    default_value: Optional[str] = None
+
+
+@dataclass
 class SpreadTemplate:
     """DTO representing a tarot card reading's query in terms of the cards, parameters, and message layout."""
+    type: SpreadType
     description: str
     layout: str
     required_card_count: Optional[int] = None
-    required_parameters: Optional[List[str]] = None
+    required_parameters: Optional[Dict[str, TemplateParameter]] = None
 
 
 @dataclass
@@ -49,10 +57,13 @@ SpreadConfig = Dict[SpreadType, SpreadTemplate]
 
 
 class SpreadBuilder:
+    """Service class that transforms a tarot spread request into a prompt-ready package for OpenAI."""
 
     """Service that builds Tarot spread DTOs and prompts for the given parameters."""
     def __init__(self, location: str = realpath(dirname(dirname(__file__)) + "/config/spreads.conf")):
-        self.spread_type_to_template: SpreadConfig = dataconf.file(location, SpreadConfig)
+        spread_types: List[SpreadTemplate] = dataconf.file(location, List[SpreadTemplate])
+        self.spread_type_to_template: SpreadConfig = {spread_template.type: spread_template
+                                                      for spread_template in spread_types}
         for spread_template in self.spread_type_to_template.values():
             spread_template.layout = cleandoc(spread_template.layout)
 
@@ -66,7 +77,7 @@ class SpreadBuilder:
         if spread_template.required_card_count is not None:
             _validate_tarot_cards(spread_type, tarot_cards, spread_template.required_card_count)
         if spread_template.required_parameters is not None:
-            _validate_spread_parameters(spread_type, parameters, set(spread_template.required_parameters))
+            _validate_spread_parameters(spread_type, parameters, set(spread_template.required_parameters.keys()))
         for n, tarot_card in enumerate(tarot_cards, start=1):
             parameters[f"card_{n}"] = str(tarot_card)
         parameters["card_list"] = ", ".join(str(tarot_card) for tarot_card in tarot_cards)
