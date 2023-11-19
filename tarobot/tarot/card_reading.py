@@ -4,7 +4,7 @@
 
 from dataclasses import dataclass
 import json
-from typing import List, Optional
+from typing import Dict, List, Optional
 
 from dataclasses_json import dataclass_json
 from openai import Completion
@@ -49,19 +49,22 @@ class CardReading(AbstractBaseClass):
     spread: List[TarotCard]
     prompt: str
     response: str
-    summary: str
-    subject: str
-    teller: Optional[str]
+    parameters: Optional[Dict[str, str]] = None
+    summary: Optional[str] = None
 
-    def __init__(self, completion: Completion, spread: List[TarotCard], prompt, response, summary, subject,
-                 teller=None):
+    def __init__(self, completion: Completion, spread: List[TarotCard], prompt: str, response: str,
+                 parameters: Optional[Dict[str, str]] = None,
+                 summary: Optional[str] = None):
         self.metadata = Metadata(completion)
         self.spread = spread
         self.prompt = prompt
         self.response = response
         self.summary = summary
-        self.subject = subject
-        self.teller = teller
+        self.parameters = {}
+        if parameters is not None:
+            for (name, value) in parameters.items():
+                if name not in ['card_list', 'card_1', 'card_2', 'card_3', 'card_4', 'card_5']:
+                    self.parameters[name] = value
 
     def __str__(self):
         return json.dumps(json.loads(self.to_json()), indent=4)

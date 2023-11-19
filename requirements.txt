@@ -5,7 +5,7 @@ attrs==23.1.0
 certifi==2023.7.22
 charset-normalizer==3.2.0
 colorama==0.4.6
-dataclasses-json==0.5.13
+dataclasses-json==0.6.1
 dataconf==2.2.1
 distlib==0.3.7
 filelock==3.12.2
@@ -14,13 +14,13 @@ idna==3.4
 multidict==6.0.4
 mysql-connector-python==8.1.0
 openai==0.27.8
-platformdirs==3.9.1
-pylint==2.17.4
+platformdirs==3.11.0
+pylint==3.0.1
 python-dateutil==2.8.2
 python-dotenv==1.0.0
 pyhocon==0.3.60
 pyparsing==3.1.1
-PyYAML==6.0
+PyYAML==6.0.1
 requests==2.31.0
 six==1.16.0
 SQLAlchemy==2.0.19
