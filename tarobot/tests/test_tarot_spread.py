@@ -96,5 +96,4 @@ class TestTarotSpread(unittest.TestCase):
                           'The Magician representing the advice. '
                           'The seeker wants advice about challenges at work. '
                           'The obstacle in their situation is difficulties with a co-worker.'), spread.prompt)
-
 # pylint: enable=C0115,C0116
