@@ -22,8 +22,10 @@ class TestCommandParser(unittest.TestCase):
         prompt = "Tarot card reading for the seeker blah blah blah"
         response = "Yo, good things are gonna come to you"
         summary = "Positive"
-        subject = "the seeker"
-        teller = "Bob"
+        parameters = {
+            "subject": "the seeker",
+            "teller": "Bob"
+        }
         # And:   a mocked up openai Completion response
         completion = Completion(id='cmpl-444555',
                                 engine='generate',
@@ -33,14 +35,13 @@ class TestCommandParser(unittest.TestCase):
         completion['usage'] = {'prompt_tokens': 30, 'completion_tokens': 200, 'total_tokens': 230}
 
         # When:  the CardReading is constructed from the Completion and card reading attributes
-        card_reading = CardReading(completion, spread, prompt, response, summary, subject, teller)
+        card_reading = CardReading(completion, spread, prompt, response, parameters, summary)
 
         # Then:  the attributes are unpacked and stored in the expected fields of CardReading, Metadata DTOs
         self.assertEqual(spread, card_reading.spread)
         self.assertEqual(prompt, card_reading.prompt)
         self.assertEqual(response, card_reading.response)
-        self.assertEqual(subject, card_reading.subject)
-        self.assertEqual(teller, card_reading.teller)
+        self.assertEqual(parameters, card_reading.parameters)
         metadata = card_reading.metadata
         self.assertEqual("cmpl-444555", metadata.openai_id)
         self.assertEqual("scatgpt-4", metadata.model)
@@ -59,16 +60,18 @@ class TestCommandParser(unittest.TestCase):
         card_4 = TarotCard.TheMagician
         card_5 = TarotCard.TheEmpress
         spread = [card_1, card_2, card_3, card_4, card_5]
+        parameters = {
+            "subject": "the seeker",
+            "teller": "Bob"
+        }
         prompt = "Tarot card reading for the seeker blah blah blah"
         response = "Yo, good things are gonna come to you"
         summary = "Positive"
-        subject = "the seeker"
-        teller = "Bob"
         completion = Completion(id='cmpl-444555', engine='generate', response_ms=1234)
         completion['model'] = 'scatgpt-4'
         completion['created'] = 1681571451
         completion['usage'] = {'prompt_tokens': 30, 'completion_tokens': 200, 'total_tokens': 230}
-        card_reading = CardReading(completion, spread, prompt, response, summary, subject, teller)
+        card_reading = CardReading(completion, spread, prompt, response, parameters, summary)
         card_reading.metadata.max_tokens = 2000
         card_reading.metadata.top_p = 0.1
 
@@ -83,8 +86,7 @@ class TestCommandParser(unittest.TestCase):
         self.assertEqual(0, entity.card_three)
         self.assertEqual(1, entity.card_four)
         self.assertEqual(3, entity.card_five)
-        self.assertEqual("the seeker", entity.subject)
-        self.assertEqual("Bob", entity.teller)
+        self.assertEqual('{"subject": "the seeker", "teller": "Bob"}', entity.parameters)
         self.assertEqual("Tarot card reading for the seeker blah blah blah", entity.prompt)
         self.assertEqual("Yo, good things are gonna come to you", entity.response)
         self.assertEqual("Positive", entity.summary)
