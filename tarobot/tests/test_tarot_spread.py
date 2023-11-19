@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+"""Module containing unit tests around tarot spread functionality."""
 
 import unittest
 
@@ -7,6 +8,7 @@ from tarobot.tarot.tarot_card import TarotCard
 from tarobot.tarot.tarot_spread import Spread, SpreadType, SpreadBuilder
 
 
+# pylint: disable=C0115,C0116
 class TestTarotSpread(unittest.TestCase):
 
     def setUp(self) -> None:
@@ -94,3 +96,4 @@ class TestTarotSpread(unittest.TestCase):
                           'The Magician representing the advice. '
                           'The seeker wants advice about challenges at work. '
                           'The obstacle in their situation is difficulties with a co-worker.'), spread.prompt)
+# pylint: enable=C0115,C0116
