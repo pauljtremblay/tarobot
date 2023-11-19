@@ -7,7 +7,6 @@ import json
 from typing import Dict, List, Optional
 
 from dataclasses_json import dataclass_json
-from openai import Completion
 
 from . tarot_card import TarotCard
 
@@ -23,7 +22,7 @@ class Metadata(AbstractBaseClass):
     openai_id: str
     model: str
     created_ts: int
-    response_ms: int
+    # response_ms: int
     max_tokens: int
     prompt_tokens: int
     completion_tokens: int
@@ -31,14 +30,14 @@ class Metadata(AbstractBaseClass):
     temperature: Optional[float] = None
     top_p: Optional[float] = None
 
-    def __init__(self, completion: Completion):
-        self.openai_id = completion.openai_id
+    def __init__(self, completion):
+        self.openai_id = completion.id
         self.model = completion.model
         self.created_ts = completion.created
-        self.response_ms = completion.response_ms
-        self.prompt_tokens = completion['usage']['prompt_tokens']
-        self.completion_tokens = completion['usage']['completion_tokens']
-        self.total_tokens = completion['usage']['total_tokens']
+        # self.response_ms = completion.response_ms
+        self.prompt_tokens = completion.usage.prompt_tokens
+        self.completion_tokens = completion.usage.completion_tokens
+        self.total_tokens = completion.usage.total_tokens
 
 
 @dataclass_json
@@ -52,7 +51,7 @@ class CardReading(AbstractBaseClass):
     parameters: Optional[Dict[str, str]] = None
     summary: Optional[str] = None
 
-    def __init__(self, completion: Completion, spread: List[TarotCard], prompt: str, response: str,
+    def __init__(self, completion, spread: List[TarotCard], prompt: str, response: str,
                  parameters: Optional[Dict[str, str]] = None,
                  summary: Optional[str] = None):
         self.metadata = Metadata(completion)

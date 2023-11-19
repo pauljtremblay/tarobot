@@ -54,7 +54,7 @@ class CardReadingEntity(Base):
         self.openai_id = dto.metadata.openai_id
         self.model = dto.metadata.model
         self.created_ts = datetime.fromtimestamp(dto.metadata.created_ts)
-        self.response_ms = dto.metadata.response_ms
+        # self.response_ms = dto.metadata.response_ms
         self.max_tokens = dto.metadata.max_tokens
         self.prompt_tokens = dto.metadata.prompt_tokens
         self.completion_tokens = dto.metadata.completion_tokens
