@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from typing import Dict, List, Optional, Tuple
 
 from . config import Config, Tarot as TarotConfig
-from .. tarot import resolver, spread_builder, SpreadTemplate, SpreadType, TarotCard, TarotDeck
+from .. tarot import spread_builder, resolver, SpreadTemplate, SpreadType, TarotCard, TarotDeck
 
 
 @dataclass
@@ -113,14 +113,15 @@ def _build_spread_type_parser(spread_type_subparsers, template: SpreadTemplate, 
     """Constructs a subparser for the given tarot pread template configuration."""
     spread_type_parser = spread_type_subparsers.add_parser(
         template.type,
-        exit_on_error=False,
-        help=template.description)
+        description=template.description,
+        help=template.description,
+        exit_on_error=False)
     _build_card_count_or_card_list_parser(spread_type_parser, template, tarot)
     if template.required_parameters is not None:
         for (param_name, parameter) in template.required_parameters.items():
             description = parameter.description
             if parameter.default_value is not None:
-                description += f"\n\tdefault: \"{parameter.default_value}\""
+                description += f", default: \"{parameter.default_value}\""
             spread_type_parser.add_argument(
                 f"--{param_name}",
                 help=description,
@@ -132,21 +133,34 @@ def _build_card_count_or_card_list_parser(spread_type_parser, template: SpreadTe
     """Constructs a mutually exclusive parser that either specifies a card count or a list of specified cards."""
     card_count_or_list_mutex_args = spread_type_parser.add_mutually_exclusive_group()
     min_cards, max_cards = _get_min_max_card_count_for_template(template, tarot)
+    if min_cards == max_cards:
+        card = 'card' if max_cards == 1 else 'cards'
+        help_descr = f"number of tarot cards to draw in the spread, exactly {max_cards} {card} allowed"
+    else:
+        card = 'cards'
+        help_descr = (f"number of tarot cards to draw in the spread [{min_cards}-{max_cards}]"
+                      f", default: {tarot.default_cards} card spread")
     card_count_or_list_mutex_args.add_argument(
         '--card-count',
-        help=f"number of tarot cards to draw in the spread [{min_cards}-{max_cards}]"
-             f"\n\tdefault: {tarot.default_cards} card spread",
+        help=help_descr,
         type=int,
         choices=range(min_cards, max_cards + 1),
         default=tarot.default_cards)
+    if min_cards == max_cards:
+        help_descr = f"takes specific {card} from the user "\
+                     f"instead of a random draw from the deck"f", exactly {max_cards} {card} allowed"
+    else:
+        help_descr = f"takes specific cards from the user instead of a random draw from the deck"\
+                     f", [{min_cards}-{max_cards}] cards allowed"
     card_count_or_list_mutex_args.add_argument(
         '--card',
-        help='takes specific card[s] from the user instead of a random draw from the deck',
+        help=help_descr,
         type=str,
         nargs='+')
 
 
 def _get_min_max_card_count_for_template(template: SpreadTemplate, tarot: TarotConfig) -> Tuple[int, int]:
+    """Computes the allowed card count range based on spread rules if specified, otherwise uses app defaults."""
     if template.required_card_count is None:
         min_cards = tarot.min_cards
         max_cards = tarot.max_cards
