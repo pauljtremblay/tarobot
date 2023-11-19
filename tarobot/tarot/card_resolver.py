@@ -13,17 +13,12 @@ from . suit import Suit
 from . tarot_card import TarotCard
 
 
-# pylint: disable=R0903
-class AbstractBaseClass:
-    """Base class for this module's dataclasses."""
-
-
 @dataclass
-class AliasConfig(AbstractBaseClass):
+class AliasConfig:
     """Data class used for storing all tarot card alias information."""
-    card_aliases: Dict[str, List[str]]
-    suit_aliases: Dict[str, List[str]]
-    rank_aliases: Dict[str, List[str]]
+    cards: Dict[str, List[str]]
+    suits: Dict[str, List[str]]
+    ranks: Dict[str, List[str]]
 # pylint: enable=R0903
 
 
@@ -31,7 +26,7 @@ class CardResolver:
     """Utility class for mapping tarot cards, suits, and values from aliases to their strongly-typed enum values."""
 
     def __init__(self, location):
-        self.config = dataconf.file(location, AliasConfig)
+        self.aliases = dataconf.file(location, AliasConfig)
         self.card_aliases: Dict[str, TarotCard] = {}
         self.suit_aliases: Dict[str, Suit] = {}
         self.rank_aliases: Dict[str, CardValue] = {}
@@ -43,26 +38,26 @@ class CardResolver:
         for card_value in list(CardValue):
             self.rank_aliases[repr(card_value).lower()] = card_value
         # populate typed alias -> card map from given config file
-        for (card_str, aliases) in self.config.card_aliases.items():
+        for (card_str, card_aliases) in self.aliases.cards.items():
             tarot_card = TarotCard[card_str]
-            for alias in aliases:
-                key = alias.lower().replace(" ", "")
+            for card_alias in card_aliases:
+                key = card_alias.lower().replace(" ", "")
                 if key in self.card_aliases:
                     raise ValueError(f"duplicate card alias for {key}")
                 self.card_aliases[key] = tarot_card
         # populate typed alias -> suit map
-        for (suit_str, aliases) in self.config.suit_aliases.items():
+        for (suit_str, suit_aliases) in self.aliases.suits.items():
             tarot_suit = Suit[suit_str]
-            for alias in aliases:
-                key = alias.lower().replace(" ", "")
+            for suit_alias in suit_aliases:
+                key = suit_alias.lower().replace(" ", "")
                 if key in self.suit_aliases:
                     raise ValueError(f"duplicate card suit for {key}")
                 self.suit_aliases[key] = tarot_suit
         # populate typed alias -> rank map
-        for (rank_str, aliases) in self.config.rank_aliases.items():
+        for (rank_str, rank_aliases) in self.aliases.ranks.items():
             suit_rank = CardValue[rank_str]
-            for alias in aliases:
-                key = alias.lower().replace(" ", "")
+            for rank_alias in rank_aliases:
+                key = rank_alias.lower().replace(" ", "")
                 if key in self.rank_aliases:
                     raise ValueError(f"duplicate card rank for {key}")
                 self.rank_aliases[key] = suit_rank

@@ -2,7 +2,7 @@
 
 """Utility module that contains the tarot trait logic that is later mixed into the TarotCard enumeration."""
 
-from enum import Enum
+from enum import IntEnum
 import re
 
 from . archana import Archana
@@ -10,7 +10,7 @@ from . card_value import CardValue
 from . suit import Suit
 
 
-class TarotTrait(Enum):
+class TarotTrait(IntEnum):
     """A trait for all tarot cards, including both major and minor archana."""
 
     def archana(self):
