@@ -26,7 +26,7 @@ class TestTarotSpread(unittest.TestCase):
         # Then:  the expected prompt is generated
         self.assertEqual('Tarot card reading for King of Pentacles.', spread.prompt)
 
-    def test_build_for_card_list_with_seeker_and_teller(self):
+    def test_build_for_card_list(self):
         # Given: a list of cards in a tarot spread
         cards = [TarotCard.KingOfPentacles, TarotCard.KnightOfWands, TarotCard.TheMagician]
         # And:   the type of tarot spread
@@ -45,11 +45,11 @@ class TestTarotSpread(unittest.TestCase):
                           'with the cards King of Pentacles, Knight of Wands, The Magician '
                           'in the style of Dr Seuss.'), spread.prompt)
 
-    def test_build_for_past_present_future(self):
+    def test_build_for_timeline(self):
         # Given: a list of cards in a tarot spread
         cards = [TarotCard.KingOfPentacles, TarotCard.KnightOfWands, TarotCard.TheMagician]
         # And:   the type of tarot spread
-        spread_type = SpreadType.PAST_PRESENT_FUTURE
+        spread_type = SpreadType.TIMELINE
 
         # When:  the spread is built
         spread: Spread = self.spread_builder.build(spread_type, cards)
@@ -60,11 +60,11 @@ class TestTarotSpread(unittest.TestCase):
                           'Knight of Wands representing the present, '
                           'The Magician representing the future.'), spread.prompt)
 
-    def test_build_for_seeker_subject_relationship(self):
+    def test_build_for_relationship(self):
         # Given: a list of cards in a tarot spread
         cards = [TarotCard.KingOfPentacles, TarotCard.KnightOfWands, TarotCard.TheMagician]
         # And:   the type of tarot spread
-        spread_type = SpreadType.SEEKER_SUBJECT_RELATIONSHIP
+        spread_type = SpreadType.RELATIONSHIP
 
         # When:  the spread is built
         spread: Spread = self.spread_builder.build(spread_type, cards)
@@ -75,11 +75,11 @@ class TestTarotSpread(unittest.TestCase):
                           'Knight of Wands representing the subject, '
                           'The Magician representing the relationship.'), spread.prompt)
 
-    def test_build_for_situation_obstacle_advice(self):
+    def test_build_for_situation(self):
         # Given: a list of cards in a tarot spread
         cards = [TarotCard.KingOfPentacles, TarotCard.KnightOfWands, TarotCard.TheMagician]
         # And:   the type of tarot spread
-        spread_type = SpreadType.SITUATION_OBSTACLE_ADVICE
+        spread_type = SpreadType.SITUATION
         # And:   some additional parameters for the spread
         parameters = {
             'situation': 'challenges at work',
