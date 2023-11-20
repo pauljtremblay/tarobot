@@ -40,10 +40,13 @@ class CommandParser:
         parsed_command.show_diagnostics = self.parsed_args.show_diagnostics
         parsed_command.persist_reading = self.parsed_args.persist_reading
         parsed_command.spread_type = SpreadType(self.parsed_args.spread_type)
-        parsed_command.card_count = self.parsed_args.card_count
         spread_template: SpreadTemplate = [template
                                            for template in spread_builder.spread_type_to_template.values()
                                            if template.type == parsed_command.spread_type][0]
+        if spread_template.required_card_count is not None:
+            parsed_command.card_count = spread_template.required_card_count
+        else:
+            parsed_command.card_count = self.parsed_args.card_count
         if self.parsed_args.card is not None:
             parsed_command.given_cards = self.parse_given_tarot_cards(spread_template)
         parsed_command.spread_parameters = {}
