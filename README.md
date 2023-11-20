@@ -44,8 +44,8 @@ options:
 
 
 spread-type:
-  commands which type of tarot spread to use for the reading
-  one of: one-card, card-list, timeline, relationship, situation
+    commands which type of tarot spread to use for the reading
+    one of:  one-card, card-list, timeline, relationship, situation
 
     one-card            single-card spread
     card-list           n-card spread on a list of cards
@@ -89,15 +89,12 @@ options:
 `python -m tarobot one-card --help`
 ```text
 usage: tarobot one-card [-h]
-                        [--card-count {1} | --card CARD [CARD ...]]
+                        [--card CARD [CARD ...]]
 
 Single-card spread.
 
 options:
   -h, --help            show this help message and exit
-
-  --card-count {1}      number of tarot cards to draw in the spread
-                        exactly 1 card allowed
 
   --card CARD [CARD ...]
                         give specific card for the spread
@@ -108,7 +105,7 @@ options:
 `python -m tarobot timeline --help`
 ```text
 usage: tarobot timeline [-h]
-                        [--card-count {3} | --card CARD [CARD ...]]
+                        [--card CARD [CARD ...]]
 
 Three-card spread examining the seeker's timeline.
 
@@ -118,9 +115,6 @@ Card 3 represents the seeker's future.
 
 options:
   -h, --help            show this help message and exit
-
-  --card-count {3}      number of tarot cards to draw in the spread
-                        exactly 3 cards allowed
 
   --card CARD [CARD ...]
                         give specific cards for the spread
@@ -133,7 +127,7 @@ options:
 usage: tarobot situation [-h]
                          --situation SITUATION
                          --obstacle OBSTACLE
-                         [--card-count {3} | --card CARD [CARD ...]]
+                         [--card CARD [CARD ...]]
 
 Three-card spread on a specified situation.
 
@@ -149,9 +143,6 @@ options:
 
   --obstacle OBSTACLE   obstacle in the situation that concerns the seeker
 
-  --card-count {3}      number of tarot cards to draw in the spread
-                        exactly 3 cards allowed
-
   --card CARD [CARD ...]
                         give specific cards for the spread
                         exactly 3 cards allowed
@@ -161,7 +152,7 @@ options:
 `python -m tarobot relationship --help`
 ```text
 usage: tarobot relationship [-h]
-                            [--card-count {3} | --card CARD [CARD ...]]
+                            [--card CARD [CARD ...]]
 
 Three-card spread on a relationship in the seeker's life.
 
@@ -171,9 +162,6 @@ Card 3 represents the relationship itself.
 
 options:
   -h, --help            show this help message and exit
-
-  --card-count {3}      number of tarot cards to draw in the spread
-                        exactly 3 cards allowed
 
   --card CARD [CARD ...]
                         give specific cards for the spread

@@ -135,32 +135,27 @@ def _build_card_count_or_card_list_parser(spread_type_parser, template: SpreadTe
     """Constructs a mutually exclusive parser that either specifies a card count or a list of specified cards."""
     card_count_or_list_mutex_args = spread_type_parser.add_mutually_exclusive_group()
     min_cards, max_cards = _get_min_max_card_count_for_template(template, tarot)
-    if min_cards == max_cards:
-        card = 'card' if max_cards == 1 else 'cards'
-        help_descr = "number of tarot cards to draw in the spread"\
-                     f"\nexactly {max_cards} {card} allowed"
-
-    else:
-        card = 'cards'
+    if min_cards != max_cards:
+        # only add this option if spread type allows for a variable number of cards
         help_descr = f"number of tarot cards to draw in the spread [{min_cards}-{max_cards}]"\
                      f"\ndefault: {tarot.default_cards} card spread"
-    card_count_or_list_mutex_args.add_argument(
-        '--card-count',
-        help=f"{help_descr}\n\n",
-        type=int,
-        choices=range(min_cards, max_cards + 1),
-        default=tarot.default_cards)
-    if min_cards == max_cards:
-        help_descr = f"give specific {card} for the spread"\
-                     f"\nexactly {max_cards} {card} allowed"
-    else:
+        card_count_or_list_mutex_args.add_argument(
+            '--card-count',
+            help=f"{help_descr}\n\n",
+            type=int,
+            choices=range(min_cards, max_cards + 1),
+            default=tarot.default_cards)
         help_descr = f"give specific cards for the spread"\
                      f"\n[{min_cards}-{max_cards}] cards allowed"
+    else:
+        card = 'card' if max_cards == 1 else 'cards'
+        help_descr = f"give specific {card} for the spread"\
+                     f"\nexactly {max_cards} {card} allowed"
     card_count_or_list_mutex_args.add_argument(
-        '--card',
-        help=f"{help_descr}\n\n",
-        type=str,
-        nargs='+')
+            '--card',
+            help=f"{help_descr}\n\n",
+            type=str,
+            nargs='+')
 
 
 def _get_min_max_card_count_for_template(template: SpreadTemplate, tarot: TarotConfig) -> Tuple[int, int]:
