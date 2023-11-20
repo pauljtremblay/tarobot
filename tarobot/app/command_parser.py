@@ -155,10 +155,10 @@ def _build_card_count_or_card_list_parser(spread_type_parser, template: SpreadTe
         help_descr = f"give specific {card} for the spread"\
                      f"\nexactly {max_cards} {card} allowed"
     card_count_or_list_mutex_args.add_argument(
-            '--card',
-            help=f"{help_descr}\n\n",
-            type=str,
-            nargs='+')
+        '--card',
+        help=f"{help_descr}\n\n",
+        type=str,
+        nargs='+')
 
 
 def _get_min_max_card_count_for_template(template: SpreadTemplate, tarot: TarotConfig) -> Tuple[int, int]:
