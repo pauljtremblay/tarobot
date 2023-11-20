@@ -25,133 +25,147 @@ Then you can simply call the tarobot script and have it draw 3 tarot cards at ra
 it will generate a tarot card reading for your spread.
 `python -m tarobot --help`
 ```text
-usage: tarobot [-h] [--show-prompt] [--show-diagnostics] [--persist-reading]
-               {one-card,card-list,past-present-future,seeker-subject-relationship,situation-obstacle-advice}
-               ...
+usage: tarobot [-h]
+               [--show-prompt]
+               [--show-diagnostics]
+               [--persist-reading]
+               {one-card, card-list, timeline, relationship, situation} ...
 
-Tarot deck cartomancy application
+A tarot-based cartomancy (card reading) application.
 
 options:
   -h, --help            show this help message and exit
+
   --show-prompt         displays the generated prompt ahead of the response
-  --show-diagnostics    displays diagnostic output from the completion
-                        response returned from openai
-  --persist-reading     inserts a record of the tarot card reading (inputs,
-                        prompt, result, metadata) in the database
+
+  --show-diagnostics    displays diagnostic info for response from openai
+
+  --persist-reading     records card reading (inputs, prompt, result, metadata) in the database
+
 
 spread-type:
-  {one-card,card-list,past-present-future,seeker-subject-relationship,situation-obstacle-advice}
-                        spread-type help
-    one-card            Performs a simple one card tarot card spread
-    card-list           Performs a tarot card spread on a list of cards, with
-                        a fortune teller and seeker
-    past-present-future
-                        Performs a three card tarot card spread: C1 -> the
-                        past, C2 -> the present, C3 -> the future
-    seeker-subject-relationship
-                        Perform a three card tarot card spread: C1 = seeker,
-                        C2 = subject, C3 = relationship
-    situation-obstacle-advice
-                        Performs a three card tarot card spread: C1 -> the
-                        situation, C2 -> the obstacle, C3 -> the advice
+    commands which type of tarot spread to use for the reading
+    one of:  one-card, card-list, timeline, relationship, situation
+
+    one-card            single-card spread
+    card-list           n-card spread on a list of cards
+    timeline            three-card spread examining the seeker's timeline
+    relationship        three-card spread on a relationship in the seeker's life
+    situation           three-card spread on a specified situation
 ```
 
 ## Reading from a list of cards
 `python -m tarobot card-list --help`
 ```text
 usage: tarobot card-list [-h]
+                         [--seeker SEEKER]
+                         [--teller TELLER]
                          [--card-count {1,2,3,4,5} | --card CARD [CARD ...]]
-                         [--seeker SEEKER] [--teller TELLER]
 
-Performs a tarot card spread on a list of cards, with a fortune teller and
-seeker
+N-card spread on a list of cards.
+
+This layout specifies who is interpreting the spread (the "teller"),
+and who is receiving the fortune (the "seeker").
 
 options:
   -h, --help            show this help message and exit
+
+  --seeker SEEKER       tarot reading recipient
+                        default: "the seeker"
+
+  --teller TELLER       person performing tarot reading
+                        default: "a mystic"
+
   --card-count {1,2,3,4,5}
-                        number of tarot cards to draw in the spread [1-5],
+                        number of tarot cards to draw in the spread [1-5]
                         default: 3 card spread
+
   --card CARD [CARD ...]
-                        takes specific cards from the user instead of a random
-                        draw from the deck, [1-5] cards allowed
-  --seeker SEEKER       tarot reading recipient, default: "the seeker"
-  --teller TELLER       person performing tarot reading, default: "a mystic"
+                        give specific cards for the spread
+                        [1-5] cards allowed
 ```
 
 ## Reading from a single card
 `python -m tarobot one-card --help`
 ```text
-usage: tarobot one-card [-h] [--card-count {1} | --card CARD [CARD ...]]
+usage: tarobot one-card [-h]
+                        [--card CARD [CARD ...]]
 
-Performs a simple one card tarot card spread
+Single-card spread.
 
 options:
   -h, --help            show this help message and exit
-  --card-count {1}      number of tarot cards to draw in the spread, exactly 1
-                        card allowed
+
   --card CARD [CARD ...]
-                        takes specific card from the user instead of a random
-                        draw from the deck, exactly 1 card allowed
+                        give specific card for the spread
+                        exactly 1 card allowed
 ```
 
 ## Reading about the past, present, and future
-`python -m tarobot past-present-future --help`
+`python -m tarobot timeline --help`
 ```text
-usage: tarobot past-present-future [-h]
-                                   [--card-count {3} | --card CARD [CARD ...]]
+usage: tarobot timeline [-h]
+                        [--card CARD [CARD ...]]
 
-Performs a three card tarot card spread: C1 -> the past, C2 -> the present, C3
--> the future
+Three-card spread examining the seeker's timeline.
+
+Card 1 represents the seeker's past.
+Card 2 represents the seeker's present time.
+Card 3 represents the seeker's future.
 
 options:
   -h, --help            show this help message and exit
-  --card-count {3}      number of tarot cards to draw in the spread, exactly 3
-                        cards allowed
+
   --card CARD [CARD ...]
-                        takes specific cards from the user instead of a random
-                        draw from the deck, exactly 3 cards allowed
+                        give specific cards for the spread
+                        exactly 3 cards allowed
 ```
 
 ## Reading about a situation with an obstacle, seeking advice
-`python -m tarobot situation-obstacle-advice --help`
+`python -m tarobot situation --help`
 ```text
-usage: tarobot situation-obstacle-advice [-h]
-                                         [--card-count {3} | --card CARD [CARD ...]]
-                                         --situation SITUATION --obstacle
-                                         OBSTACLE
+usage: tarobot situation [-h]
+                         --situation SITUATION
+                         --obstacle OBSTACLE
+                         [--card CARD [CARD ...]]
 
-Performs a three card tarot card spread: C1 -> the situation, C2 -> the
-obstacle, C3 -> the advice
+Three-card spread on a specified situation.
+
+Card 1 represents the situation.
+Card 2 represents an obstacle in the situation of concern for the seeker.
+Card 3 represents the advice for the seeker regarding this situation.
 
 options:
   -h, --help            show this help message and exit
-  --card-count {3}      number of tarot cards to draw in the spread, exactly 3
-                        cards allowed
-  --card CARD [CARD ...]
-                        takes specific cards from the user instead of a random
-                        draw from the deck, exactly 3 cards allowed
+
   --situation SITUATION
-                        situation being explored by tarot card reading
-  --obstacle OBSTACLE   obstacle in the situation being addressed by the tarot
-                        card reading
+                        situation being examined in the reading
+
+  --obstacle OBSTACLE   obstacle in the situation that concerns the seeker
+
+  --card CARD [CARD ...]
+                        give specific cards for the spread
+                        exactly 3 cards allowed
 ```
 
 ## Reading about relationship queries
-`python -m tarobot seeker-subject-relationship --help`
+`python -m tarobot relationship --help`
 ```text
-usage: tarobot seeker-subject-relationship [-h]
-                                           [--card-count {3} | --card CARD [CARD ...]]
+usage: tarobot relationship [-h]
+                            [--card CARD [CARD ...]]
 
-Perform a three card tarot card spread: C1 = seeker, C2 = subject, C3 =
-relationship
+Three-card spread on a relationship in the seeker's life.
+
+Card 1 represents the seeker themselves.
+Card 2 represents the other subject in the relationship being examined.
+Card 3 represents the relationship itself.
 
 options:
   -h, --help            show this help message and exit
-  --card-count {3}      number of tarot cards to draw in the spread, exactly 3
-                        cards allowed
+
   --card CARD [CARD ...]
-                        takes specific cards from the user instead of a random
-                        draw from the deck, exactly 3 cards allowed
+                        give specific cards for the spread
+                        exactly 3 cards allowed
 ```
 
 <br />
@@ -200,9 +214,9 @@ it looks like you've got some major breakthroughs headed your way!
 ```
 
 ### Try tarobot's hand at relationship advice (actually, don't)
-` python -m tarobot --show-prompt seeker-subject-relationship`
+` python -m tarobot --show-prompt relationship`
 ```text
-Generating a seeker-subject-relationship tarot card reading for the following cards:
+Generating a relationship tarot card reading for the following cards:
         Three of Pentacles, Nine of Swords, Seven of Pentacles
 
 Prompt:
@@ -259,11 +273,11 @@ Defeating fate and triumphant stand.
 ```
 
 ### Ask tarobot for some potentially deep advice on challenges in life:
-`python -m tarobot --show-prompt situation-obstacle-advice
+`python -m tarobot --show-prompt situation
  --situation "being overlooked at work"
  --obstacle "not being seen or appreciated"`
 ```text
-Generating a situation-obstacle-advice tarot card reading for the following cards:
+Generating a situation tarot card reading for the following cards:
         Justice, Three of Pentacles, The Wheel of Fortune
 
 Prompt:

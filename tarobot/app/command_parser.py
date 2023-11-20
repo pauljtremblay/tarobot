@@ -2,7 +2,7 @@
 
 """Utility that parses the user input into commands and options for tarobot."""
 
-from argparse import ArgumentParser
+from argparse import ArgumentParser, RawTextHelpFormatter
 from dataclasses import dataclass
 from typing import Dict, List, Optional, Tuple
 
@@ -40,10 +40,13 @@ class CommandParser:
         parsed_command.show_diagnostics = self.parsed_args.show_diagnostics
         parsed_command.persist_reading = self.parsed_args.persist_reading
         parsed_command.spread_type = SpreadType(self.parsed_args.spread_type)
-        parsed_command.card_count = self.parsed_args.card_count
         spread_template: SpreadTemplate = [template
                                            for template in spread_builder.spread_type_to_template.values()
                                            if template.type == parsed_command.spread_type][0]
+        if spread_template.required_card_count is not None:
+            parsed_command.card_count = spread_template.required_card_count
+        else:
+            parsed_command.card_count = self.parsed_args.card_count
         if self.parsed_args.card is not None:
             parsed_command.given_cards = self.parse_given_tarot_cards(spread_template)
         parsed_command.spread_parameters = {}
@@ -85,24 +88,25 @@ def _build_parser(config: Config) -> ArgumentParser:
     tarot = config.tarot
     parser: ArgumentParser = ArgumentParser(
         prog=config.app_name.lower(),
-        description='Tarot deck cartomancy application',
-        exit_on_error=False)
+        description='A tarot-based cartomancy (card reading) application.',
+        exit_on_error=False,
+        formatter_class=RawTextHelpFormatter)
     parser.add_argument(
         '--show-prompt',
-        help='displays the generated prompt ahead of the response',
+        help='displays the generated prompt ahead of the response\n\n',
         action='store_true')
     parser.add_argument(
         '--show-diagnostics',
-        help='displays diagnostic output from the completion response returned from openai',
+        help='displays diagnostic info for response from openai\n\n',
         action='store_true')
     parser.add_argument(
         '--persist-reading',
-        help='inserts a record of the tarot card reading (inputs, prompt, result, metadata) in the database',
+        help='records card reading (inputs, prompt, result, metadata) in the database\n\n',
         action='store_true')
     spread_type_subparsers = parser.add_subparsers(
         title='spread-type',
         dest='spread_type',
-        help='spread-type help',
+        description='commands which type of tarot spread to use for the reading\n\n',
         required=True)
     for spread_template in spread_builder.spread_type_to_template.values():
         _build_spread_type_parser(spread_type_subparsers, spread_template, tarot)
@@ -113,48 +117,46 @@ def _build_spread_type_parser(spread_type_subparsers, template: SpreadTemplate, 
     """Constructs a subparser for the given tarot pread template configuration."""
     spread_type_parser = spread_type_subparsers.add_parser(
         template.type,
-        description=template.description,
-        help=template.description,
+        help=_first_line_only(template.description),
+        description=f"{template.description}\n",
+        formatter_class=RawTextHelpFormatter,
         exit_on_error=False)
-    _build_card_count_or_card_list_parser(spread_type_parser, template, tarot)
     if template.required_parameters is not None:
         for (param_name, parameter) in template.required_parameters.items():
             description = parameter.description
             if parameter.default_value is not None:
-                description += f", default: \"{parameter.default_value}\""
+                description += f"\ndefault: \"{parameter.default_value}\""
             spread_type_parser.add_argument(
                 f"--{param_name}",
-                help=description,
+                help=f"{description}\n\n",
                 default=parameter.default_value,
                 required=parameter.default_value is None)
+    _build_card_count_or_card_list_parser(spread_type_parser, template, tarot)
 
 
 def _build_card_count_or_card_list_parser(spread_type_parser, template: SpreadTemplate, tarot: TarotConfig) -> None:
     """Constructs a mutually exclusive parser that either specifies a card count or a list of specified cards."""
     card_count_or_list_mutex_args = spread_type_parser.add_mutually_exclusive_group()
     min_cards, max_cards = _get_min_max_card_count_for_template(template, tarot)
-    if min_cards == max_cards:
+    if min_cards != max_cards:
+        # only add this option if spread type allows for a variable number of cards
+        help_descr = f"number of tarot cards to draw in the spread [{min_cards}-{max_cards}]"\
+                     f"\ndefault: {tarot.default_cards} card spread"
+        card_count_or_list_mutex_args.add_argument(
+            '--card-count',
+            help=f"{help_descr}\n\n",
+            type=int,
+            choices=range(min_cards, max_cards + 1),
+            default=tarot.default_cards)
+        help_descr = f"give specific cards for the spread"\
+                     f"\n[{min_cards}-{max_cards}] cards allowed"
+    else:
         card = 'card' if max_cards == 1 else 'cards'
-        help_descr = f"number of tarot cards to draw in the spread, exactly {max_cards} {card} allowed"
-    else:
-        card = 'cards'
-        help_descr = (f"number of tarot cards to draw in the spread [{min_cards}-{max_cards}]"
-                      f", default: {tarot.default_cards} card spread")
-    card_count_or_list_mutex_args.add_argument(
-        '--card-count',
-        help=help_descr,
-        type=int,
-        choices=range(min_cards, max_cards + 1),
-        default=tarot.default_cards)
-    if min_cards == max_cards:
-        help_descr = f"takes specific {card} from the user "\
-                     f"instead of a random draw from the deck"f", exactly {max_cards} {card} allowed"
-    else:
-        help_descr = f"takes specific cards from the user instead of a random draw from the deck"\
-                     f", [{min_cards}-{max_cards}] cards allowed"
+        help_descr = f"give specific {card} for the spread"\
+                     f"\nexactly {max_cards} {card} allowed"
     card_count_or_list_mutex_args.add_argument(
         '--card',
-        help=help_descr,
+        help=f"{help_descr}\n\n",
         type=str,
         nargs='+')
 
@@ -168,3 +170,8 @@ def _get_min_max_card_count_for_template(template: SpreadTemplate, tarot: TarotC
         min_cards = template.required_card_count
         max_cards = template.required_card_count
     return min_cards, max_cards
+
+
+def _first_line_only(multiline_text: str) -> str:
+    """Returns only the first line of possibly multi-line description, a flash briefing."""
+    return multiline_text.split("\n")[0].lower().strip(".")

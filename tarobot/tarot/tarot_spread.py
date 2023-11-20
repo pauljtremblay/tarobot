@@ -18,9 +18,9 @@ class SpreadType(str, Enum):
     """Enumeration representing some common types of Tarot card spreads."""
     ONE_CARD = "one-card"
     CARD_LIST = "card-list"
-    PAST_PRESENT_FUTURE = "past-present-future"
-    SITUATION_OBSTACLE_ADVICE = "situation-obstacle-advice"
-    SEEKER_SUBJECT_RELATIONSHIP = "seeker-subject-relationship"
+    TIMELINE = "timeline"
+    SITUATION = "situation"
+    RELATIONSHIP = "relationship"
 
     def __str__(self):
         return self.value
@@ -64,6 +64,7 @@ class SpreadBuilder:
         self.spread_type_to_template: SpreadConfig = {spread_template.type: spread_template
                                                       for spread_template in spread_types}
         for spread_template in self.spread_type_to_template.values():
+            spread_template.description = cleandoc(spread_template.description)
             spread_template.layout = cleandoc(spread_template.layout)
 
     def build(self, spread_type: SpreadType, tarot_cards: List[TarotCard],
