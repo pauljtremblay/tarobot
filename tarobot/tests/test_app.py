@@ -86,20 +86,7 @@ class TestApp(BaseTestWithConfig):
         reading_choice = Choice()
         reading_choice.text = 'one fish two fish red fish dead fish'
         reading_completion.choices = [reading_choice]
-        summary_completion = Mock()
-        summary_completion.id = 'cmpl-555666'
-        summary_completion.engine = 'generate'
-        summary_completion.model = 'scatgpt-4'
-        summary_completion.created = 1681571455
-        summary_completion.usage = Mock()
-        summary_completion.usage.prompt_tokens = 50
-        summary_completion.usage.completion_tokens = 5
-        summary_completion.usage.total_tokens = 55
-        summary_completion.top_p = 0.1
-        summary_choice = Choice()
-        summary_choice.text = 'Mixed'
-        summary_completion.choices = [summary_choice]
-        mock_openai_client.completions.create.side_effect = [reading_completion]  # , summary_completion]
+        mock_openai_client.completions.create.side_effect = [reading_completion]
 
         # When:  the app interprets the tarot spread via openai
         card_reading: CardReading = app.interpret_tarot_spread()
@@ -117,7 +104,6 @@ class TestApp(BaseTestWithConfig):
         self.assertEqual([TarotCard.TheMagician, TarotCard.TheTower], card_reading.spread)
         self.assertEqual(app.spread.prompt, card_reading.prompt)
         self.assertEqual("one fish two fish red fish dead fish", card_reading.response)
-        # self.assertEqual("Mixed", card_reading.summary)
         self.assertEqual(parameters, card_reading.parameters)
 
     @patch('tarobot.app.app.App.interpret_tarot_spread')

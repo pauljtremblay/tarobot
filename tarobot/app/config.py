@@ -34,7 +34,6 @@ class OpenAI(AbstractBaseClass):
     """Data class used for storing all openai-related configuration."""
     api_key: str
     generate_reading: Completion
-    summarize_reading: Completion
 
 
 @dataclass

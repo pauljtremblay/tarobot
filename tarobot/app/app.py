@@ -11,7 +11,6 @@ from openai import OpenAI
 
 from .. db import session_factory, CardReadingEntity
 from .. tarot import TarotDeck, CardReading, Spread, spread_builder
-from .. tarot.card_reading import Metadata
 from . command_parser import CommandDto, CommandParser
 from . config import Completion, CONFIG, Config
 
@@ -73,8 +72,6 @@ class App:
         card_reading = self.ask_openai_to_generate_card_reading(self.spread.prompt)
         card_reading.metadata.max_tokens = self.__config.openai.generate_reading.max_tokens
         logger.info("Response:\n%s", card_reading.response)
-        # FIXME: prompt needs more help in generating briefer summary
-        # self.ask_openai_to_summarize_card_reading(card_reading)
         return card_reading
 
     def ask_openai_to_generate_card_reading(self, prompt: str) -> CardReading:
@@ -89,21 +86,6 @@ class App:
         if 'top_p' in completion_kwargs:
             card_reading.metadata.top_p = completion_kwargs['top_p']
         return card_reading
-
-    def ask_openai_to_summarize_card_reading(self, card_reading) -> str:
-        """Asks openai to interpret the tone of the tarot card reading it just generated and adds to the DTO."""
-        prompt = f'Briefly classify the sentiment of this tarot card reading: "{card_reading.response}"'
-        completion_kwargs = _make_openai_completion_request(self.__config.openai.summarize_reading, prompt)
-        summary_completion, summary_response = _execute_completion_request(self.openai_client, completion_kwargs)
-        logger.info("The tarot card reading sentiment:\n%s", summary_response)
-        summary_metadata = Metadata(summary_completion)
-        card_reading.summary = summary_response
-        # card_reading.metadata.response_ms += summary_metadata.response_ms
-        card_reading.metadata.max_tokens += self.__config.openai.summarize_reading.max_tokens
-        card_reading.metadata.total_tokens += summary_metadata.total_tokens
-        card_reading.metadata.prompt_tokens += summary_metadata.prompt_tokens
-        card_reading.metadata.completion_tokens += summary_metadata.completion_tokens
-        return summary_response
 
 
 def _make_openai_completion_request(completion_config: Completion, prompt: str) -> Dict[str, any]:

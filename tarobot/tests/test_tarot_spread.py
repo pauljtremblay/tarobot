@@ -81,14 +81,14 @@ class TestTarotSpread(unittest.TestCase):
         spread: Spread = self.spread_builder.build(spread_type, cards)
 
         # Then:  the expected prompt is generated
-        self.assertEqual(('You are a mystic that uses Tarot cards to divine answers for a seeker specific to their '
-                          'love life. You believe in the Rider-Wight interpretation of the Tarot card meanings. If the '
-                          'relationship appears to face major challenges, identify some key areas for the seeker and '
-                          'their partner to work on. For this Tarot card reading about love and relationships, the '
-                          'fortune-teller pulled the following Tarot cards: King of Pentacles, representing the '
-                          'seeker. Knight of Wands, representing their partner. The Magician, representing the '
-                          'relationship. In the last sentence remind the seeker that Tarot is just a tool for '
-                          'guidance, and that they choose their own path in life.'), spread.prompt)
+        self.assertEqual(('You are a mystical fortune-teller that uses Tarot cards to divine answers for a seeker '
+                          'specific to their love life. You believe in the Rider-Wight interpretation of the Tarot '
+                          'card meanings. If the relationship appears to face major challenges, identify some key '
+                          'areas for the seeker and their partner to work on. For this Tarot card reading about love '
+                          'and relationships, the fortune-teller pulled the following Tarot cards: King of Pentacles, '
+                          'representing the seeker. Knight of Wands, representing their partner. The Magician, '
+                          'representing the relationship. In the last sentence remind the seeker that Tarot is just a '
+                          'tool for guidance, and that they choose their own path in life.'), spread.prompt)
 
     def test_build_for_situation(self):
         # Given: a list of cards in a tarot spread
