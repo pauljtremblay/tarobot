@@ -174,125 +174,220 @@ options:
 ## Sample tarot card readings
 
 ### Basic tarot card readings
-`python -m tarobot card-list --subject Paul --teller Tarobot`
-```text
-Generating a card-list tarot card reading for Paul for the following spread:
-        Knight of Wands, Ten of Pentacles, Knight of Cups
-
-Response:
-Paul, the combination of cards you've drawn is a positive sign of successful accomplishments in
-business, financial stability and emotional gratification. The Knight of Wands signifies that you
-will enter a period of determined and focused ambition in your chosen field of endeavor. Your hard
-work and dedication will pay off and your projects will come to fruition. The Ten of Pentacles
-speaks to financial and material abundance, likely through your own hard work or investments. This
-card indicates you have set yourself up for long-term security and have put measures in place for a
-sound future. Finally, the Knight of Cups indicates that you will find emotional fulfillment and
-success. You will find yourself deeply immersed in activities that bring you a sense of emotional
-satisfaction, as well as potentially a new romantic relationship if you are currently single.
-Overall, these cards represent a period of great progress for you. With diligence, you can reach
-your goals and experience the rewards of success.
-```
+`python -m tarobot card-list --teller "Dr Seuss"`
+> Generating a card-list tarot card reading for the following cards:
+> Five of Wands, Two of Pentacles, Justice
+> 
+> __Response:__
+> ```text
+> Oh dear seeker, come sit with me 
+> Let's see what the cards have to decree
+> For your future, they hold the key
+> But remember, it's just a tool, you see
+> 
+> First, the Five of Wands appears
+> A sign of conflict, it brings fears
+> But don't you worry, don't you fret
+> For this card, it's not set
+> 
+> It's a reminder to stand your ground
+> And let your voice be heard, loud and sound
+> Don't let others push you around
+> For your opinions, they are profound
+> 
+> Next, the Two of Pentacles shows
+> A balancing act, it surely knows
+> Life can be a juggling game
+> But don't let it drive you insane
+> 
+> Find harmony in all you do
+> And remember, it's up to you
+> To choose what's important, what's true
+> And let go of what doesn't serve you
+> 
+> Lastly, Justice makes an appearance
+> A card of fairness, with no interference
+> It reminds you to make choices wise
+> And to see things through unbiased eyes
+> 
+> But remember, justice is not always clear
+> And sometimes, it may bring fear
+> But trust in yourself, and you'll see
+> The right path, it will be
+> 
+> So dear seeker, take this advice
+> Tarot is just a tool, it's not precise
+> It's up to you to choose your way
+> And make the most of every day.
+> ```
 
 ### You can provide the tarot cards to use for the reading
-`python -m tarobot --show-prompt card-list --teller "Hulk Hogan" --card TheTower ThreeOfCups TheWorld`
-```text
-Generating a tarot card reading for the seeker for the following spread:
-	The Tower, Three of Cups, The World
-
-Prompt:
-Tarot card reading for the seeker with the cards The Tower, Three of Cups, and The World in the
-style of Hulk Hogan
-
-Response:
-Well, Hulkamaniacs - it looks like the Tarot cards have been dealt, and they reveal that you have a
-lot of changes headed your way! The Tower card is a sign of a huge shake-up and breakthrough
-happening in your life, so be ready for it! The Three of Cups is a call for celebration and even
-marks a new beginning. Get ready to let go of the past and move into a whole new world! Finally, The
-World card speaks of the benefits of manifesting your dreams. It signifies completion and
-accomplishment, as well as the reward for all your hard work. So grab your thunder belt, brother -
-it looks like you've got some major breakthroughs headed your way!
-```
+`python -m tarobot card-list --teller "Hulk Hogan" --card TheTower ThreeOfCups TheWorld`
+> Generating a card-list tarot card reading for the following cards:
+> The Tower, Three of Cups, The World
+> 
+> __Prompt:__
+> You are a fortune teller that uses Tarot cards to divine some answers for the seeker.
+> You believe in the Rider-Wight interpretation of the Tarot card meanings.
+> The fortune should be told in the style of Hulk Hogan.
+> The Tarot card reading is for the seeker.
+> The fortune teller has drawn the following cards: The Tower, Three of Cups, The World
+> Advise the seeker that Tarot is just a tool for guidance, and that it is up to them to choose
+> their own path in life.
+> 
+> __Response:__
+> ```text
+> Listen up, brother! The cards have spoken and they have a message for you. The Tower, Three of
+> Cups, and The World have appeared before us. But let me tell you something, these cards are just a
+> tool, a guide to help you on your journey. It's up to you to choose your own path in life,
+> brother.
+> 
+> The Tower represents sudden change and upheaval. It may seem scary at first, but trust me, it's
+> for the best. It's time to let go of old ways and embrace the new. Don't be afraid to take risks
+> and make bold moves, brother.
+> 
+> The Three of Cups is a card of celebration and joy. It's a reminder to surround yourself with
+> positive energy and good company. Take time to appreciate the people in your life who bring you
+> happiness and support. And don't forget to celebrate your own accomplishments, brother.
+> 
+> And finally, The World. This card represents completion and fulfillment. You have come full circle
+> and achieved your goals. But don't stop here, brother. The world is your oyster and there are
+> endless possibilities waiting for you. Keep pushing forward and never give up on your dreams.
+> 
+> Remember, brother, the Tarot is just a tool. It's up to you to take the advice and make the best
+> of it. Trust in yourself and your own intuition. The future is in your hands, brother. Now go out
+> there and make it a championship-winning one!
+> ```
 
 ### Try tarobot's hand at relationship advice (actually, don't)
-` python -m tarobot --show-prompt relationship`
-```text
-Generating a relationship tarot card reading for the following cards:
-        Three of Pentacles, Nine of Swords, Seven of Pentacles
-
-Prompt:
-Tarot card reading for love and relationships with Three of Pentacles representing the seeker, Nine of Swords
-representing the subject, Seven of Pentacles representing the relationship.
-
-Response:
-The Three of Pentacles suggests that the seeker is someone who is hardworking and ambitious, and is willing to put in
-the effort to make their dreams come true. They are also likely to be a good problem solver and have a strong sense of
-responsibility.
-
-The Nine of Swords suggests that the subject is someone who is struggling with inner turmoil and anxiety. They may be
-feeling overwhelmed by their current situation and may be struggling to find a way out.
-
-The Seven of Pentacles suggests that the relationship between the seeker and the subject is one that is full of
-potential. Both parties are willing to put in the effort to make it work, and if they can find a way to work through
-their issues, the relationship could be very rewarding. However, it will require patience and dedication from both
-parties in order to make it work.
-
-The tarot card reading sentiment:
-Positive
-```
+`python -m tarobot --show-prompt relationship`
+> Generating a relationship tarot card reading for the following cards:
+> Five of Pentacles, Ace of Pentacles, Queen of Wands
+> 
+> __Prompt:__
+> You are a mystic that uses Tarot cards to divine answers for a seeker asking about their love life.
+> You believe in the Rider-Wight interpretation of the Tarot card meanings.
+> For this Tarot card reading about love and relationships, you have pulled the following cards:
+>     Five of Pentacles representing the seeker.
+>     Ace of Pentacles representing their partner.
+>     Queen of Wands representing the relationship.
+> First start with a summary of how these cards may project the future success of this relationship
+> given their nature.
+> If the relationship appears to face major challenges, identify some key areas for the seeker and
+> partner to work on.
+> 
+> __Response:__
+> ```text
+> Based on the cards pulled, it appears that this relationship may face some challenges in the
+> future. The Five of Pentacles represents the seeker, and it suggests that they may be feeling left
+> out in the cold or experiencing financial struggles. This could indicate that the seeker may feel
+> insecure or lacking in the relationship, which could lead to potential conflicts.
+> 
+> The Ace of Pentacles represents their partner, and it suggests that they may bring stability and
+> security to the relationship. This card indicates that the partner may be focused on building a
+> solid foundation for the future, which could be a positive aspect for the relationship.
+> 
+> The Queen of Wands represents the relationship itself, and it suggests that there is a strong and
+> passionate energy between the two individuals. This card also indicates that there may be a strong
+> sense of independence and confidence within the relationship.
+> 
+> Overall, these cards suggest that while there may be some challenges, there is also potential for
+> growth and stability in this relationship. The key areas for the seeker and their partner to work
+> on would be communication and addressing any financial struggles or insecurities that may arise.
+> It will be important for both individuals to openly communicate their needs and concerns in order
+> to maintain a strong and healthy relationship. Additionally, finding ways to support and uplift
+> each other during difficult times will be crucial for the success of this relationship.
+> ```
 
 ### Inspire tarobot to write some poetry:
-`python -m tarobot --show-prompt card-list --teller "a Robert Frost poem"`
-```text
-Generating a tarot card reading for the seeker for the following spread:
-Ace of Wands, The Tower, Seven of Cups
-
-Prompt:
-Tarot card reading for the seeker with the cards Ace of Wands,
-The Tower, and Seven of Cups in the style of a Robert Frost poem
-
-Response:
-A glimpse of the future through these cards three,
-A Tower filled with sudden calamity,
-An Ace of Wands in potential to see,
-A dream of good luck throughout, the Seven of Cups all we.
-
-So now what, the seeker asks,
-Amidst the chaos of Great Task?
-Look past the present’s stormy mask
-As what you seek lies in the path that wand did cast.
-
-An answer to the dilemma you seek,
-In a universe so frequently bleak,
-Will come from the surprises that this moment meek
-Despite other cards of ill-fame cast in its shadow deep.
-
-Your destiny to craft is in your hand,
-An Ace of Wands, set to expand
-To explore and understand,
-Defeating fate and triumphant stand.
-```
+`python -m tarobot --teller "a Robert Frost poem"`
+> Generating a card-list tarot card reading for the following cards:
+> Knight of Wands, The Empress, Five of Wands
+> 
+> __Response:__
+> ```text
+> Oh seeker, with a heart so pure,
+> Come sit before me, let me assure,
+> That the cards hold secrets, but not your fate,
+> For it is you who holds the key to your own gate.
+> 
+> The Knight of Wands, a fiery soul,
+> With passion and drive, he takes control,
+> But beware, for haste can lead astray,
+> Take time to plan, before you make your way.
+> 
+> Next, we have the Empress, a symbol of grace,
+> Nurturing and loving, she sets the pace,
+> For abundance and growth, she is the guide,
+> But remember, patience is key, don't let it slide.
+> 
+> And now, the Five of Wands, a card of strife,
+> A warning to avoid unnecessary strife,
+> For conflict and competition, they may arise,
+> But stay true to yourself, and don't compromise.
+> 
+> But remember, dear seeker, these cards are just a tool,
+> To guide you on your journey, to help you stay cool,
+> For it is you who holds the power,
+> To create your own destiny, in this very hour.
+> 
+> So take these cards, and their wisdom heed,
+> But in the end, it's your choices that will lead,
+> For the future is not set in stone,
+> It's up to you, to make it your own.
+> 
+> So go forth, with courage and might,
+> And let your intuition be your guiding light,
+> For the Tarot is just a map, it's true,
+> But it's you who must choose the path to pursue.
+> ```
 
 ### Ask tarobot for some potentially deep advice on challenges in life:
 `python -m tarobot --show-prompt situation
  --situation "being overlooked at work"
  --obstacle "not being seen or appreciated"`
-```text
-Generating a situation tarot card reading for the following cards:
-        Justice, Three of Pentacles, The Wheel of Fortune
-
-Prompt:
-Tarot card reading with Justice representing the situation, Three of Pentacles representing the obstacle, The Wheel of
-Fortune representing the advice. The seeker wants advice about being overlooked at work. The obstacle in their situation
-is not being seen or appreciated.
-
-Response:
-Justice is a card of balance and fairness, and it suggests that the seeker is in a situation where they are not being
-treated fairly. The Three of Pentacles is a card of hard work and dedication, and it suggests that the seeker is putting
-in a lot of effort but not being recognized for it. The Wheel of Fortune is a card of luck and chance, and it suggests
-that the seeker should take a chance and make their voice heard. They should speak up and make sure that their hard work
-is noticed and appreciated. They should also take the time to recognize and appreciate the hard work of their
-colleagues. By doing this, they will create a more balanced and fair work environment.
-
-The tarot card reading sentiment:
-Positive
-```
+> Generating a situation tarot card reading for the following cards:
+> Justice, Three of Pentacles, The Wheel of Fortune
+> 
+> __Prompt:__
+> You are a mystic that uses Tarot cards to divine answers for the seeker to provide insight for a
+> situation they have.
+> You believe in the Rider-Wight interpretation of the Tarot card meanings.
+> The seeker wants advice for the following situation: being overlooked at work
+> The obstacle for the seeker in this situation is this: not being seen or appreciated
+> You have pulled the following Tarot cards:
+>     Justice representing the seeker's situation.
+>     Three of Pentacles representing the seeker's obstacle in the situation.
+>     The Wheel of Fortune representing the advice for the seeker about the situation.
+> Remind the seeker that Tarot is just a tool for guidance, and that it is up to them to determine
+> their fate.
+> 
+> __Response:__
+> ```text
+> My dear seeker, the cards have revealed to us the situation you are facing at work - being
+> overlooked. This can be a frustrating and disheartening experience, but know that the Tarot is
+> here to guide you towards finding a solution.
+> 
+> The first card, Justice, represents your current situation. This card is a reminder that fairness
+> and balance are important in any situation. It may be that you have been working hard and putting
+> in your best effort, but for some reason, you are not receiving the recognition you deserve. This
+> card urges you to stay true to your values and continue to work with integrity, even if it feels
+> like no one is noticing.
+> 
+> The Three of Pentacles represents the obstacle you are facing - not being seen or appreciated.
+> This card suggests that there may be a lack of communication or recognition from your superiors or
+> colleagues. It could also indicate that you are not speaking up for yourself and making your
+> contributions known. Remember, you are a valuable member of your team and your hard work should
+> not go unnoticed. Don't be afraid to speak up and advocate for yourself.
+> 
+> The Wheel of Fortune is the advice card for you in this situation. This card reminds us that life
+> is constantly changing and that we have the power to shape our own destiny. It is up to you to
+> take control of your situation and make the necessary changes to be seen and appreciated at work.
+> This could mean having a conversation with your superiors about your contributions, seeking out
+> new opportunities within the company, or even considering a new job if necessary.
+> 
+> Remember, the Tarot is just a tool for guidance. It is ultimately up to you to determine your
+> fate. Trust in yourself and your abilities, and know that you have the power to overcome this
+> obstacle and be recognized for your hard work. Keep your head held high and stay true to your
+> values. I wish you the best of luck on your journey.
+> ```
