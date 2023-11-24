@@ -38,7 +38,11 @@ class SpreadTemplate:
     """DTO representing a tarot card reading's query in terms of the cards, parameters, and message layout."""
     type: SpreadType
     description: str
-    layout: str
+    roles: Dict[str, str]
+    beliefs: Dict[str, str]
+    disclaimers: Dict[str, str]
+    body: str
+    prompt_template: Optional[str] = None
     required_card_count: Optional[int] = None
     required_parameters: Optional[Dict[str, TemplateParameter]] = None
 
@@ -63,9 +67,13 @@ class SpreadBuilder:
         spread_types: List[SpreadTemplate] = dataconf.file(location, List[SpreadTemplate])
         self.spread_type_to_template: SpreadConfig = {spread_template.type: spread_template
                                                       for spread_template in spread_types}
-        for spread_template in self.spread_type_to_template.values():
-            spread_template.description = cleandoc(spread_template.description)
-            spread_template.layout = cleandoc(spread_template.layout)
+        for template in self.spread_type_to_template.values():
+            template.description = cleandoc(template.description)
+            # assemble the prompt template as a summation of all the roles, beliefs, body, and disclaimers
+            template.prompt_template = " ".join(list(template.roles.values()) +
+                                                list(template.beliefs.values()) +
+                                                [cleandoc(template.body)] +
+                                                list(template.disclaimers.values()))
 
     def build(self, spread_type: SpreadType, tarot_cards: List[TarotCard],
               additional_parameters: Optional[Dict[str, str]] = None) -> Spread:
@@ -84,7 +92,7 @@ class SpreadBuilder:
         return Spread(spread_type=spread_type,
                       tarot_cards=tarot_cards,
                       parameters=parameters,
-                      prompt=_replace_tokens(spread_template.layout, parameters))
+                      prompt=_replace_tokens(spread_template.prompt_template, parameters))
 
 
 def _validate_tarot_cards(spread_type: SpreadType, tarot_cards: List[TarotCard], required_card_count: int) -> None:
