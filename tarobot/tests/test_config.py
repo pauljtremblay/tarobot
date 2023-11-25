@@ -21,10 +21,8 @@ class TestConfig(unittest.TestCase):
         # Then:  the configuration is loaded into the data classes
         config = loader.config
         self.assertIsNotNone(config.app_name)
-        # And:   the openai configuration is set
+        # And:   the openai api configuration is set
         self.assertIsNotNone(config.openai.api_key)
-        self.assertIsNotNone(config.openai.generate_reading)
-        self.assertIsNotNone(config.openai.summarize_reading)
         # And:   the persistence layer settings are present
         self.assertIsNotNone(config.db)
         # And:   the tarot card spread rules are logically consistent
