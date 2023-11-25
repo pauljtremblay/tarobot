@@ -34,13 +34,15 @@ class TemplateParameter:
 
 
 @dataclass
-class CompletionParameters:
-    """OpenAI completion api request configuration."""
+class ChatCompletionParameters:
+    """OpenAI chat completion api request configuration."""
     model: str
     max_tokens: int = 20
     n: Optional[int] = None
     temperature: Optional[float] = None
     top_p: Optional[float] = None
+    frequency_penalty: Optional[float] = None
+    presence_penalty: Optional[float] = None
 
 
 @dataclass
@@ -52,7 +54,7 @@ class SpreadTemplate:
     rules: Dict[str, str]
     disclaimers: Dict[str, str]
     body: str
-    completion_parameters: CompletionParameters
+    chat_completion_parameters: ChatCompletionParameters
     prompt_template: Optional[str] = None
     required_card_count: Optional[int] = None
     required_parameters: Optional[Dict[str, TemplateParameter]] = None
@@ -64,7 +66,7 @@ class Spread:
     spread_type: SpreadType
     tarot_cards: List[TarotCard]
     parameters: Dict[str, str]
-    completion_config: CompletionParameters
+    chat_completion_config: ChatCompletionParameters
     prompt: str
 
 
@@ -104,7 +106,7 @@ class SpreadBuilder:
         return Spread(spread_type=spread_type,
                       tarot_cards=tarot_cards,
                       parameters=parameters,
-                      completion_config=spread_template.completion_parameters,
+                      chat_completion_config=spread_template.chat_completion_parameters,
                       prompt=_replace_tokens(spread_template.prompt_template, parameters))
 
 

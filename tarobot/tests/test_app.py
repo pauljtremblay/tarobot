@@ -6,15 +6,11 @@ from unittest.mock import patch, Mock, MagicMock
 # pylint: disable=E0401
 from base_test_with_config import BaseTestWithConfig
 # pylint: enable=E0401
-from tarobot.tarot import CardReading, CompletionParameters, Spread, SpreadType, TarotCard
+from tarobot.tarot import CardReading, ChatCompletionParameters, Spread, SpreadType, TarotCard
 from tarobot.app import App, CommandDto
 
 
 # pylint: disable=C0115,C0116,R0903
-class Choice:
-    text: str
-
-
 class TestApp(BaseTestWithConfig):
 
     def test_create_tarot_spread_by_deck(self):
@@ -69,7 +65,7 @@ class TestApp(BaseTestWithConfig):
         app.spread = Spread(spread_type=app.command.spread_type,
                             tarot_cards=tarot_cards,
                             parameters=parameters,
-                            completion_config=CompletionParameters(
+                            chat_completion_config=ChatCompletionParameters(
                                 model='scatgpt-4',
                                 max_tokens=500,
                                 top_p=0.1
@@ -88,10 +84,10 @@ class TestApp(BaseTestWithConfig):
         reading_completion.usage.completion_tokens = 200
         reading_completion.usage.total_tokens = 230
         reading_completion.top_p = 0.1
-        reading_choice = Choice()
-        reading_choice.text = 'one fish two fish red fish dead fish'
+        reading_choice = Mock()
+        reading_choice.message.content = 'one fish two fish red fish dead fish'
         reading_completion.choices = [reading_choice]
-        mock_openai_client.completions.create.side_effect = [reading_completion]
+        mock_openai_client.chat.completions.create.side_effect = [reading_completion]
 
         # When:  the app interprets the tarot spread via openai
         card_reading: CardReading = app.interpret_tarot_spread()

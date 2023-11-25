@@ -18,6 +18,9 @@ from . config import CONFIG, Config
 logger = logging.getLogger(__name__)
 
 
+STOP_SEQUENCE = "END-OF-TRANSMISSION"
+
+
 class App:
     """This class processes input from command line arguments and executes the request."""
 
@@ -70,30 +73,34 @@ class App:
         if self.command.show_prompt:
             logger.info("Prompt:\n%s\n", self.spread.prompt)
         card_reading = self.ask_openai_to_generate_card_reading(self.spread.prompt)
-        card_reading.metadata.max_tokens = self.spread.completion_config.max_tokens
+        card_reading.metadata.max_tokens = self.spread.chat_completion_config.max_tokens
         logger.info("Response:\n%s", card_reading.response)
         return card_reading
 
     def ask_openai_to_generate_card_reading(self, prompt: str) -> CardReading:
         """Displays the prompt to and associated response from openai."""
-        completion_kwargs = self._construct_openai_completion_request()
-        completion, response = _execute_completion_request(self.openai_client, completion_kwargs)
+        completion_kwargs = self._construct_openai_chat_completion_request()
+        completion, response = _execute_chat_completion_request(self.openai_client, completion_kwargs)
         command = self.command
         card_reading = CardReading(completion, self.spread.tarot_cards, prompt, response, command.spread_parameters)
-        card_reading.metadata.max_tokens = self.spread.completion_config.max_tokens
+        card_reading.metadata.max_tokens = self.spread.chat_completion_config.max_tokens
         if 'temperature' in completion_kwargs:
             card_reading.metadata.temperature = completion_kwargs['temperature']
         if 'top_p' in completion_kwargs:
             card_reading.metadata.top_p = completion_kwargs['top_p']
         return card_reading
 
-    def _construct_openai_completion_request(self) -> Dict[str, any]:
-        """Builds the keyword arguments for an openai completion request for the associated configuration and prompt."""
-        completion_config = self.spread.completion_config
+    def _construct_openai_chat_completion_request(self) -> Dict[str, any]:
+        """Builds the keyword arguments for an openai chat completion request for the spread."""
+        completion_config = self.spread.chat_completion_config
         completion_kwargs = {
             'model': completion_config.model,
             'max_tokens': completion_config.max_tokens,
-            'prompt': self.spread.prompt
+            'messages': [
+                {'role': 'assistant', 'content': "you are a helpful assistant."},
+                {'role': 'user', 'content': f"{self.spread.prompt}\n{STOP_SEQUENCE}"}
+            ]
+            # 'prompt': self.spread.prompt
         }
         if completion_config.n is not None:
             completion_kwargs['n'] = completion_config.n
@@ -104,11 +111,14 @@ class App:
         return completion_kwargs
 
 
-def _execute_completion_request(openai_client: OpenAI, completion_kwargs) -> Tuple[any, str]:
+def _execute_chat_completion_request(openai_client: OpenAI, chat_completion_kwargs) -> Tuple[any, str]:
     """Executes an openai completion request, returning a tuple of the Completion object and the response string."""
-    completion = openai_client.completions.create(**completion_kwargs)
-    response = "\n".join(list(choice.text for choice in completion.choices)).strip()
-    return completion, response
+    # tell the api this conversation is over
+    chat_completion_kwargs['stop'] = STOP_SEQUENCE
+    chat_completion = openai_client.chat.completions.create(**chat_completion_kwargs)
+    response = "\n".join([choice.message.content.strip()
+                          for choice in chat_completion.choices])
+    return chat_completion, response
 
 
 def persist_card_reading(card_reading_dto: CardReading) -> None:
