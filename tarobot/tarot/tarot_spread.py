@@ -34,14 +34,25 @@ class TemplateParameter:
 
 
 @dataclass
+class CompletionParameters:
+    """OpenAI completion api request configuration."""
+    model: str
+    max_tokens: int = 20
+    n: Optional[int] = None
+    temperature: Optional[float] = None
+    top_p: Optional[float] = None
+
+
+@dataclass
 class SpreadTemplate:
     """DTO representing a tarot card reading's query in terms of the cards, parameters, and message layout."""
     type: SpreadType
     description: str
     roles: Dict[str, str]
-    beliefs: Dict[str, str]
+    rules: Dict[str, str]
     disclaimers: Dict[str, str]
     body: str
+    completion_parameters: CompletionParameters
     prompt_template: Optional[str] = None
     required_card_count: Optional[int] = None
     required_parameters: Optional[Dict[str, TemplateParameter]] = None
@@ -53,6 +64,7 @@ class Spread:
     spread_type: SpreadType
     tarot_cards: List[TarotCard]
     parameters: Dict[str, str]
+    completion_config: CompletionParameters
     prompt: str
 
 
@@ -69,9 +81,9 @@ class SpreadBuilder:
                                                       for spread_template in spread_types}
         for template in self.spread_type_to_template.values():
             template.description = cleandoc(template.description)
-            # assemble the prompt template as a summation of all the roles, beliefs, body, and disclaimers
+            # assemble the prompt template as a summation of all the roles, rules, body, and disclaimers
             template.prompt_template = " ".join(list(template.roles.values()) +
-                                                list(template.beliefs.values()) +
+                                                list(template.rules.values()) +
                                                 [cleandoc(template.body)] +
                                                 list(template.disclaimers.values()))
 
@@ -92,6 +104,7 @@ class SpreadBuilder:
         return Spread(spread_type=spread_type,
                       tarot_cards=tarot_cards,
                       parameters=parameters,
+                      completion_config=spread_template.completion_parameters,
                       prompt=_replace_tokens(spread_template.prompt_template, parameters))
 
 
@@ -112,7 +125,7 @@ def _replace_tokens(template: str, replacements: Dict[str, str]) -> str:
     """Replaces all placeholder tokens with their replacement value in the prompt template, not unlike "mad libs".
 
     Raises ValueError if any placeholder tokens remain empty."""
-    # normalize whitespace: filter out newlines and redundant spaces
+    # eliminate redundant whitespace
     prompt = template
     prompt = prompt.replace('\n', ' ')
     prompt = re.sub(r'\s{2,}', ' ', prompt)

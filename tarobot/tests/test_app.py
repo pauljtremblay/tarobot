@@ -6,7 +6,7 @@ from unittest.mock import patch, Mock, MagicMock
 # pylint: disable=E0401
 from base_test_with_config import BaseTestWithConfig
 # pylint: enable=E0401
-from tarobot.tarot import CardReading, Spread, SpreadType, TarotCard
+from tarobot.tarot import CardReading, CompletionParameters, Spread, SpreadType, TarotCard
 from tarobot.app import App, CommandDto
 
 
@@ -69,6 +69,11 @@ class TestApp(BaseTestWithConfig):
         app.spread = Spread(spread_type=app.command.spread_type,
                             tarot_cards=tarot_cards,
                             parameters=parameters,
+                            completion_config=CompletionParameters(
+                                model='scatgpt-4',
+                                max_tokens=500,
+                                top_p=0.1
+                            ),
                             prompt=('Tarot card reading for the seeker '
                                     'with the cards The Magician, The Tower '
                                     'in the style of Dr Seuss.'))
@@ -95,7 +100,7 @@ class TestApp(BaseTestWithConfig):
         self.assertEqual("cmpl-444555", card_reading.metadata.openai_id)
         self.assertEqual("scatgpt-4", card_reading.metadata.model)
         self.assertEqual(1681571451, card_reading.metadata.created_ts)
-        self.assertEqual(self.test_config.openai.generate_reading.max_tokens, card_reading.metadata.max_tokens)
+        self.assertEqual(500, card_reading.metadata.max_tokens)
         self.assertEqual(30, card_reading.metadata.prompt_tokens)
         self.assertEqual(200, card_reading.metadata.completion_tokens)
         self.assertEqual(230, card_reading.metadata.total_tokens)

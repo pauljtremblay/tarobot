@@ -23,7 +23,6 @@ class TestConfig(unittest.TestCase):
         self.assertIsNotNone(config.app_name)
         # And:   the openai api configuration is set
         self.assertIsNotNone(config.openai.api_key)
-        self.assertIsNotNone(config.openai.generate_reading)
         # And:   the persistence layer settings are present
         self.assertIsNotNone(config.db)
         # And:   the tarot card spread rules are logically consistent
