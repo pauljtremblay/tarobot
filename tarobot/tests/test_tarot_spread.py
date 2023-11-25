@@ -114,13 +114,12 @@ class TestTarotSpread(unittest.TestCase):
         # Then:  the expected prompt is generated
         self.assertEqual(('You are a fortune-teller, a spiritual guide that uses Tarot cards to divine answers for the '
                           'seeker. The seeker is consulting the fortune-teller to provide insight for a specific '
-                          'situation the seeker is concerned about. The seeker wants advice for the following '
-                          'situation: challenges at work. The obstacle for the seeker in this situation is this: '
-                          'difficulties with a co-worker. Use the Rider-Wight interpretation of the Tarot card '
-                          'meanings. Do not address the seeker with "dear", "mr", "sir", etc. The fortune-teller '
-                          "pulled the following Tarot cards: King of Pentacles, representing the seeker's situation. "
-                          "Knight of Wands, representing the seeker's obstacle in the situation. The Magician, "
-                          'representing the advice for the seeker about the situation. In the last sentence remind the '
-                          'seeker that Tarot is just a tool for guidance, and that they choose their own path in '
-                          'life.'), spread.prompt)
+                          'situation the seeker is concerned about. Use the Rider-Wight interpretation of the Tarot '
+                          'card meanings. Do not address the seeker with "dear", "mr", "sir", etc. The seeker wants '
+                          'advice for the following situation: challenges at work. The obstacle for the seeker in this '
+                          'situation is this: difficulties with a co-worker. The fortune-teller pulled the following '
+                          "Tarot cards: King of Pentacles, representing the seeker's situation. Knight of Wands, "
+                          "representing the seeker's obstacle in the situation. The Magician, representing the advice "
+                          'for the seeker about the situation. In the last sentence remind the seeker that Tarot is '
+                          'just a tool for guidance, and that they choose their own path in life.'), spread.prompt)
 # pylint: enable=C0115,C0116
