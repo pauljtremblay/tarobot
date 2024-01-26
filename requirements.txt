@@ -1,5 +1,5 @@
 dataclasses-json==0.6.3
-dataconf==2.3.0
+dataconf==2.4.0
 mysql-connector-python==8.3.0
 openai==1.6.1
 pylint==3.0.3
