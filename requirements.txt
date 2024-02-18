@@ -5,4 +5,4 @@ openai==1.10.0
 pylint==3.0.3
 python-dateutil==2.8.2
 python-dotenv==1.0.1
-SQLAlchemy==2.0.25
+SQLAlchemy==2.0.27
